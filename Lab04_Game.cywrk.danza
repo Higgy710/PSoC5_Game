@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CyXmlSerializer>
+<!--This file is machine generated and read. It is not intended to be edited by hand.-->
+<!--Due to this, there is no schema for this file.-->
+<CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21 type_name="CyDesigner.Common.ProjMgmt.Model.CyPrjMgmtWrkspcCustomData" version="4">
+<CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997 type_name="CyDesigner.Common.Base.CyCustomData" version="2">
+<userData>
+<dataGuid v="1b906a0f-a7b6-4e4d-a428-82f98b53cb35">
+<CyGuid_1b906a0f-a7b6-4e4d-a428-82f98b53cb35 type_name="CyDesigner.Common.ProjMgmt.GUI.CyExplorerWindow+CyExplorerWindowState" version="3" SelectedTab="Source">
+<TreeKeys>
+<v>Source</v>
+<v>Components</v>
+<v>Output</v>
+</TreeKeys>
+<TreeStates>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="Lab04_Game\Lab04_Game\Generated_Source\PSoC5\LCD\LCD.h">
+<ExpandedNodeIds>
+<v>Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game\TopDesign</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\Pins</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\Analog</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\Clocks</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\Interrupts</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\DMA</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\System</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\Directives</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\Flash Security</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.cydwr\EEPROM</v>
+<v>Lab04_Game\Lab04_Game\Header Files</v>
+<v>Lab04_Game\Lab04_Game\Header Files\cyapicallbacks.h</v>
+<v>Lab04_Game\Lab04_Game\Source Files</v>
+<v>Lab04_Game\Lab04_Game\Source Files\main.c</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source\PSoC5</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source\PSoC5\Control</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source\PSoC5\CONTROL_ISR</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source\PSoC5\LCD</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source\PSoC5\PWM</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source\PSoC5\REFRESH_ISR</v>
+<v>Lab04_Game\Lab04_Game\Generated_Source\PSoC5\Refresh_Timer</v>
+</ExpandedNodeIds>
+<VisibleNodeIds />
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<ExpandedNodeIds>
+<v>Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game\TopDesign</v>
+<v>Lab04_Game\Lab04_Game\TopDesign\TopDesign.cysch</v>
+</ExpandedNodeIds>
+<VisibleNodeIds />
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<ExpandedNodeIds>
+<v>Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game\CortexM3</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\Cm3Start.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\Control.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\CONTROL_ISR.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\cy_em_eeprom.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\CyBootAsmGnu.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\CyDmac.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\cyfitter_cfg.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\CyFlash.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\CyLib.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\cymetadata.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\cyPm.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\CySpc.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\cyutils.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\LCD.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\LCD_CustChars.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\LCD_LCDPort.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\LCD_PM.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\main.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\PRS.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\PRS_CLK.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\PRS_PM.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\PWM.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\PWM_CLK.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\PWM_OUT.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\PWM_PM.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\REFRESH_ISR.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\Refresh_Timer.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\Refresh_Timer_PM.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Listing Files\timer_clock.lst</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Lab04_Game.elf</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Lab04_Game.hex</v>
+<v>Lab04_Game\Lab04_Game\CortexM3\ARM_GCC_541\Debug\Lab04_Game.map</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.gpdsc</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game.rpt</v>
+<v>Lab04_Game\Lab04_Game\Lab04_Game_timing.html</v>
+</ExpandedNodeIds>
+<VisibleNodeIds />
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+</TreeStates>
+<TreeKeysV2>
+<v>Datasheet</v>
+</TreeKeysV2>
+<TreeStatesV2>
+<CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237 type_name="CyDesigner.Common.Base.Controls.CyTreeViewState" version="1" SelectedNodeId="">
+<ExpandedNodeIds>
+<v>Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game</v>
+<v>Lab04_Game\Lab04_Game\PSoC 5LP Architecture TRM</v>
+<v>Lab04_Game\Lab04_Game\CY8C58LP Family Datasheet</v>
+<v>Lab04_Game\Lab04_Game\System Reference Guides</v>
+<v>Lab04_Game\Lab04_Game\System Reference Guides\cy_boot_v5_90</v>
+<v>Lab04_Game\Lab04_Game\CharLCD_v2_20.pdf</v>
+<v>Lab04_Game\Lab04_Game\cy_clock_v2_20</v>
+<v>Lab04_Game\Lab04_Game\cy_clock_v2_20\cy_clock_v2_20.pdf</v>
+<v>Lab04_Game\Lab04_Game\cy_constant_v1_0</v>
+<v>Lab04_Game\Lab04_Game\cy_constant_v1_0\cy_constant_v1_0.pdf</v>
+<v>Lab04_Game\Lab04_Game\cy_isr_v1_70</v>
+<v>Lab04_Game\Lab04_Game\cy_isr_v1_70\cy_isr_v1_70.pdf</v>
+<v>Lab04_Game\Lab04_Game\cy_pins_v2_20</v>
+<v>Lab04_Game\Lab04_Game\cy_pins_v2_20\cy_pins_v2_20.pdf</v>
+<v>Lab04_Game\Lab04_Game\PRS_v2_40.pdf</v>
+<v>Lab04_Game\Lab04_Game\PWM_v3_30.pdf</v>
+<v>Lab04_Game\Lab04_Game\Timer_v2_80.pdf</v>
+<v>Lab04_Game\Lab04_Game\ZeroTerminal.pdf</v>
+</ExpandedNodeIds>
+<VisibleNodeIds />
+</CyGuid_2a325b3b-c96a-4e9f-b7a0-2c44ecb5f237>
+</TreeStatesV2>
+</CyGuid_1b906a0f-a7b6-4e4d-a428-82f98b53cb35>
+</dataGuid>
+<dataGuid v="5f2be1a5-0687-4501-bb8c-cf21cb8211bf">
+<CyGuid_5f2be1a5-0687-4501-bb8c-cf21cb8211bf type_name="CyDesigner.Common.ProjMgmt.GUI.CyBookmarkData" version="1">
+<indicators />
+</CyGuid_5f2be1a5-0687-4501-bb8c-cf21cb8211bf>
+</dataGuid>
+</userData>
+</CyGuid_fdba8dfd-b15b-4469-9bbb-9e40c3e70997>
+<Unloaded />
+<OpenDocs>
+<name v=".\Lab04_Game.cydsn\Lab04_Game.cydwr" />
+<name v=".\Lab04_Game.cydsn\TopDesign\TopDesign.cysch" />
+<name v=".\Lab04_Game.cydsn\main.c" />
+<name v=".\Lab04_Game.cydsn\Generated_Source\PSoC5\REFRESH_ISR.c" />
+<name v=".\Lab04_Game.cydsn\Generated_Source\PSoC5\CONTROL_ISR.c" />
+</OpenDocs>
+<OpenDocsLayout><![CDATA[<?xml version="1.0"?><!--
+
+  Actipro Docking/MDI for WinForms
+  Copyright (c) 2001-2016 Actipro Software LLC.  All rights reserved.
+  http://www.actiprosoftware.com
+
+--><DocumentLayout Version="1.0"><LayoutData><TabbedMdiRootContainer Orientation="Horizontal"><TabbedMdiContainer Size="2060, 1081" SelectedTabbedMdiWindow="228f50f2-ba7c-457f-8fc5-dea8d9e66036"><DocumentWindow Key="C:\ECE381_Labs\Lab04_Game\Lab04_Game.cydsn\Lab04_Game.cydwr" Guid="d942b509-bf87-43bd-91d2-d31cb1ba7b73" /><DocumentWindow Key="C:\ECE381_Labs\Lab04_Game\Lab04_Game.cydsn\TopDesign\TopDesign.cysch" Guid="92ff0d28-2f31-4b2a-aee4-309593dee4f5" /><DocumentWindow Key="C:\ECE381_Labs\Lab04_Game\Lab04_Game.cydsn\main.c" Guid="dbd1675e-44c8-4010-b3c3-a6280e92c447" /><DocumentWindow Key="C:\ECE381_Labs\Lab04_Game\Lab04_Game.cydsn\Generated_Source\PSoC5\REFRESH_ISR.c" Guid="228f50f2-ba7c-457f-8fc5-dea8d9e66036" /><DocumentWindow Key="C:\ECE381_Labs\Lab04_Game\Lab04_Game.cydsn\Generated_Source\PSoC5\CONTROL_ISR.c" Guid="59b2acd5-9c22-4af1-8293-1a2feaa1b04c" /><ToolWindow Key="Start Page:bd4649ab-da6b-4d04-a663-c722b8bf99db:Start Page" Guid="1b5f84d8-4252-4f81-9182-c115a46be703" /></TabbedMdiContainer></TabbedMdiRootContainer><FloatingContainers /></LayoutData></DocumentLayout>]]></OpenDocsLayout>
+<config v="" />
+<AutoUpdate v="true" />
+</CyGuid_843a90a4-0c4b-4e44-991d-05e7fb117a21>
+</CyXmlSerializer>

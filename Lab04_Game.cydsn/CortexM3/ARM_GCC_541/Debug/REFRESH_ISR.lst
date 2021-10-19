@@ -1,0 +1,3186 @@
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"REFRESH_ISR.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.global	__aeabi_i2d
+  20              		.global	__aeabi_dmul
+  21              		.global	__aeabi_d2uiz
+  22              		.section	.text.REFRESH_ISR_Interrupt,"ax",%progbits
+  23              		.align	2
+  24              		.global	REFRESH_ISR_Interrupt
+  25              		.thumb
+  26              		.thumb_func
+  27              		.type	REFRESH_ISR_Interrupt, %function
+  28              	REFRESH_ISR_Interrupt:
+  29              	.LFB3:
+  30              		.file 1 "Generated_Source\\PSoC5\\REFRESH_ISR.c"
+   1:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/REFRESH_ISR.c **** * File Name: REFRESH_ISR.c  
+   3:Generated_Source\PSoC5/REFRESH_ISR.c **** * Version 1.70
+   4:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+   5:Generated_Source\PSoC5/REFRESH_ISR.c **** *  Description:
+   6:Generated_Source\PSoC5/REFRESH_ISR.c **** *   API for controlling the state of an interrupt.
+   7:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+   8:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+   9:Generated_Source\PSoC5/REFRESH_ISR.c **** *  Note:
+  10:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+  11:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+  12:Generated_Source\PSoC5/REFRESH_ISR.c **** * Copyright 2008-2015, Cypress Semiconductor Corporation.  All rights reserved.
+  13:Generated_Source\PSoC5/REFRESH_ISR.c **** * You may use this file only in accordance with the license, terms, conditions, 
+  14:Generated_Source\PSoC5/REFRESH_ISR.c **** * disclaimers, and limitations in the end user license agreement accompanying 
+  15:Generated_Source\PSoC5/REFRESH_ISR.c **** * the software package with which this file was provided.
+  16:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+  17:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  18:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  19:Generated_Source\PSoC5/REFRESH_ISR.c **** #include <cydevice_trm.h>
+  20:Generated_Source\PSoC5/REFRESH_ISR.c **** #include <CyLib.h>
+  21:Generated_Source\PSoC5/REFRESH_ISR.c **** #include <REFRESH_ISR.h>
+  22:Generated_Source\PSoC5/REFRESH_ISR.c **** #include "cyapicallbacks.h"
+  23:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  24:Generated_Source\PSoC5/REFRESH_ISR.c **** #if !defined(REFRESH_ISR__REMOVED) /* Check for removal by optimization */
+  25:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  26:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+  27:Generated_Source\PSoC5/REFRESH_ISR.c **** *  Place your includes, defines and code here 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 2
+
+
+  28:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************/
+  29:Generated_Source\PSoC5/REFRESH_ISR.c **** /* `#START REFRESH_ISR_intc` */
+  30:Generated_Source\PSoC5/REFRESH_ISR.c ****     #include "Refresh_Timer.h"
+  31:Generated_Source\PSoC5/REFRESH_ISR.c ****     #include "LCD.h"
+  32:Generated_Source\PSoC5/REFRESH_ISR.c ****     #include "Control.h"
+  33:Generated_Source\PSoC5/REFRESH_ISR.c ****     #include "CONTROL_ISR.h"
+  34:Generated_Source\PSoC5/REFRESH_ISR.c ****     #include "PRS.h"
+  35:Generated_Source\PSoC5/REFRESH_ISR.c ****     #include "PWM.h"
+  36:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  37:Generated_Source\PSoC5/REFRESH_ISR.c ****     int random;
+  38:Generated_Source\PSoC5/REFRESH_ISR.c ****     int lives = 3;
+  39:Generated_Source\PSoC5/REFRESH_ISR.c ****     int period;
+  40:Generated_Source\PSoC5/REFRESH_ISR.c ****     char Player = LCD_CUSTOM_0;
+  41:Generated_Source\PSoC5/REFRESH_ISR.c ****     char Obstacle = LCD_CUSTOM_1;
+  42:Generated_Source\PSoC5/REFRESH_ISR.c ****     char Obstacle2 = LCD_CUSTOM_2;
+  43:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  44:Generated_Source\PSoC5/REFRESH_ISR.c ****     volatile int CharacterPos = 0;
+  45:Generated_Source\PSoC5/REFRESH_ISR.c ****     
+  46:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle1Col = 7;
+  47:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle1Row = 0;
+  48:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle2Col = 10;
+  49:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle2Row = 1;
+  50:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle3Col = 13;
+  51:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle3Row = 0;
+  52:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle4Col = 16;
+  53:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle4Row = 1;
+  54:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle5Col = 19;
+  55:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle5Row = 0;
+  56:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle6Col = 21;
+  57:Generated_Source\PSoC5/REFRESH_ISR.c ****     int Obstacle6Row = 1;
+  58:Generated_Source\PSoC5/REFRESH_ISR.c ****     
+  59:Generated_Source\PSoC5/REFRESH_ISR.c **** /* `#END` */
+  60:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  61:Generated_Source\PSoC5/REFRESH_ISR.c **** #ifndef CYINT_IRQ_BASE
+  62:Generated_Source\PSoC5/REFRESH_ISR.c **** #define CYINT_IRQ_BASE      16
+  63:Generated_Source\PSoC5/REFRESH_ISR.c **** #endif /* CYINT_IRQ_BASE */
+  64:Generated_Source\PSoC5/REFRESH_ISR.c **** #ifndef CYINT_VECT_TABLE
+  65:Generated_Source\PSoC5/REFRESH_ISR.c **** #define CYINT_VECT_TABLE    ((cyisraddress **) CYREG_NVIC_VECT_OFFSET)
+  66:Generated_Source\PSoC5/REFRESH_ISR.c **** #endif /* CYINT_VECT_TABLE */
+  67:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  68:Generated_Source\PSoC5/REFRESH_ISR.c **** /* Declared in startup, used to set unused interrupts to. */
+  69:Generated_Source\PSoC5/REFRESH_ISR.c **** CY_ISR_PROTO(IntDefaultHandler);
+  70:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  71:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  72:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+  73:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_Start
+  74:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+  75:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+  76:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+  77:Generated_Source\PSoC5/REFRESH_ISR.c **** *  Set up the interrupt and enable it. This function disables the interrupt, 
+  78:Generated_Source\PSoC5/REFRESH_ISR.c **** *  sets the default interrupt vector, sets the priority from the value in the
+  79:Generated_Source\PSoC5/REFRESH_ISR.c **** *  Design Wide Resources Interrupt Editor, then enables the interrupt to the 
+  80:Generated_Source\PSoC5/REFRESH_ISR.c **** *  interrupt controller.
+  81:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+  82:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:  
+  83:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+  84:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 3
+
+
+  85:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+  86:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+  87:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+  88:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+  89:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_Start(void)
+  90:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+  91:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* For all we know the interrupt is active. */
+  92:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_Disable();
+  93:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  94:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Set the ISR to point to the REFRESH_ISR Interrupt. */
+  95:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_SetVector(&REFRESH_ISR_Interrupt);
+  96:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+  97:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Set the priority. */
+  98:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_SetPriority((uint8)REFRESH_ISR_INTC_PRIOR_NUMBER);
+  99:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 100:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Enable it. */
+ 101:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_Enable();
+ 102:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 103:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 104:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 105:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 106:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_StartEx
+ 107:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 108:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 109:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 110:Generated_Source\PSoC5/REFRESH_ISR.c **** *  Sets up the interrupt and enables it. This function disables the interrupt,
+ 111:Generated_Source\PSoC5/REFRESH_ISR.c **** *  sets the interrupt vector based on the address passed in, sets the priority 
+ 112:Generated_Source\PSoC5/REFRESH_ISR.c **** *  from the value in the Design Wide Resources Interrupt Editor, then enables 
+ 113:Generated_Source\PSoC5/REFRESH_ISR.c **** *  the interrupt to the interrupt controller.
+ 114:Generated_Source\PSoC5/REFRESH_ISR.c **** *  
+ 115:Generated_Source\PSoC5/REFRESH_ISR.c **** *  When defining ISR functions, the CY_ISR and CY_ISR_PROTO macros should be 
+ 116:Generated_Source\PSoC5/REFRESH_ISR.c **** *  used to provide consistent definition across compilers:
+ 117:Generated_Source\PSoC5/REFRESH_ISR.c **** *  
+ 118:Generated_Source\PSoC5/REFRESH_ISR.c **** *  Function definition example:
+ 119:Generated_Source\PSoC5/REFRESH_ISR.c **** *   CY_ISR(MyISR)
+ 120:Generated_Source\PSoC5/REFRESH_ISR.c **** *   {
+ 121:Generated_Source\PSoC5/REFRESH_ISR.c **** *   }
+ 122:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Function prototype example:
+ 123:Generated_Source\PSoC5/REFRESH_ISR.c **** *   CY_ISR_PROTO(MyISR);
+ 124:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 125:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:  
+ 126:Generated_Source\PSoC5/REFRESH_ISR.c **** *   address: Address of the ISR to set in the interrupt vector table.
+ 127:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 128:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 129:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 130:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 131:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 132:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_StartEx(cyisraddress address)
+ 133:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 134:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* For all we know the interrupt is active. */
+ 135:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_Disable();
+ 136:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 137:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Set the ISR to point to the REFRESH_ISR Interrupt. */
+ 138:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_SetVector(address);
+ 139:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 140:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Set the priority. */
+ 141:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_SetPriority((uint8)REFRESH_ISR_INTC_PRIOR_NUMBER);
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 4
+
+
+ 142:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 143:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Enable it. */
+ 144:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_Enable();
+ 145:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 146:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 147:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 148:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 149:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_Stop
+ 150:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 151:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 152:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 153:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Disables and removes the interrupt.
+ 154:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 155:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:  
+ 156:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 157:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 158:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 159:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 160:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 161:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 162:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_Stop(void)
+ 163:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 164:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Disable this interrupt. */
+ 165:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_Disable();
+ 166:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 167:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Set the ISR to point to the passive one. */
+ 168:Generated_Source\PSoC5/REFRESH_ISR.c ****     REFRESH_ISR_SetVector(&IntDefaultHandler);
+ 169:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 170:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 171:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 172:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 173:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_Interrupt
+ 174:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 175:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 176:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 177:Generated_Source\PSoC5/REFRESH_ISR.c **** *   The default Interrupt Service Routine for REFRESH_ISR.
+ 178:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 179:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Add custom code between the coments to keep the next version of this file
+ 180:Generated_Source\PSoC5/REFRESH_ISR.c **** *   from over writting your code.
+ 181:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 182:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:  
+ 183:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 184:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 185:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 186:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 187:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 188:Generated_Source\PSoC5/REFRESH_ISR.c **** CY_ISR(REFRESH_ISR_Interrupt)
+ 189:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+  31              		.loc 1 189 0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35 0000 38B5     		push	{r3, r4, r5, lr}
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 3, -16
+  38              		.cfi_offset 4, -12
+  39              		.cfi_offset 5, -8
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 5
+
+
+  40              		.cfi_offset 14, -4
+ 190:Generated_Source\PSoC5/REFRESH_ISR.c ****     #ifdef REFRESH_ISR_INTERRUPT_INTERRUPT_CALLBACK
+ 191:Generated_Source\PSoC5/REFRESH_ISR.c ****         REFRESH_ISR_Interrupt_InterruptCallback();
+ 192:Generated_Source\PSoC5/REFRESH_ISR.c ****     #endif /* REFRESH_ISR_INTERRUPT_INTERRUPT_CALLBACK */ 
+ 193:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 194:Generated_Source\PSoC5/REFRESH_ISR.c ****     /*  Place your Interrupt code here. */
+ 195:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* `#START REFRESH_ISR_Interrupt` */
+ 196:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 197:Generated_Source\PSoC5/REFRESH_ISR.c ****     random = (PRS_Read() % 2);
+  41              		.loc 1 197 0
+  42 0002 FFF7FEFF 		bl	PRS_Read
+  43              	.LVL0:
+  44 0006 00F00100 		and	r0, r0, #1
+  45 000a 894B     		ldr	r3, .L24+8
+  46 000c 1860     		str	r0, [r3]
+ 198:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 199:Generated_Source\PSoC5/REFRESH_ISR.c ****     
+ 200:Generated_Source\PSoC5/REFRESH_ISR.c ****     if(Obstacle1Col == 0)           // Obstacl 1 reaches left side of screen
+  47              		.loc 1 200 0
+  48 000e 894B     		ldr	r3, .L24+12
+  49 0010 1B68     		ldr	r3, [r3]
+  50 0012 2BB9     		cbnz	r3, .L2
+ 201:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 202:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle1Col = 15;          // Move obstacle1 back to right side of screen
+  51              		.loc 1 202 0
+  52 0014 0F22     		movs	r2, #15
+  53 0016 874B     		ldr	r3, .L24+12
+  54 0018 1A60     		str	r2, [r3]
+ 203:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle1Row = random;      // Randomly pick top or bottom for obstacle
+  55              		.loc 1 203 0
+  56 001a 874B     		ldr	r3, .L24+16
+  57 001c 1860     		str	r0, [r3]
+  58 001e 02E0     		b	.L3
+  59              	.L2:
+ 204:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 205:Generated_Source\PSoC5/REFRESH_ISR.c ****     else                            // Obstacle1 not at the far left of the screen yet
+ 206:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 207:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle1Col--;             // Move obstacle1 to the left
+  60              		.loc 1 207 0
+  61 0020 013B     		subs	r3, r3, #1
+  62 0022 844A     		ldr	r2, .L24+12
+  63 0024 1360     		str	r3, [r2]
+  64              	.L3:
+ 208:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 209:Generated_Source\PSoC5/REFRESH_ISR.c ****     if(Obstacle2Col == 0)           // Obstacle2 reaches left side of screen
+  65              		.loc 1 209 0
+  66 0026 834B     		ldr	r3, .L24+12
+  67 0028 5B68     		ldr	r3, [r3, #4]
+  68 002a 33B9     		cbnz	r3, .L4
+ 210:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 211:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle2Col = 15;          // Move obstacle2 back to right side of screen
+  69              		.loc 1 211 0
+  70 002c 814B     		ldr	r3, .L24+12
+  71 002e 0F22     		movs	r2, #15
+  72 0030 5A60     		str	r2, [r3, #4]
+ 212:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle2Row = random;      // Randomly pick top or bottom for obstacle
+  73              		.loc 1 212 0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 6
+
+
+  74 0032 7F4A     		ldr	r2, .L24+8
+  75 0034 1268     		ldr	r2, [r2]
+  76 0036 9A60     		str	r2, [r3, #8]
+  77 0038 02E0     		b	.L5
+  78              	.L4:
+ 213:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 214:Generated_Source\PSoC5/REFRESH_ISR.c ****     else                            // Obstacle2 not at the far left of the screen yet
+ 215:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 216:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle2Col--;             // Move obstacle2 to the left
+  79              		.loc 1 216 0
+  80 003a 013B     		subs	r3, r3, #1
+  81 003c 7D4A     		ldr	r2, .L24+12
+  82 003e 5360     		str	r3, [r2, #4]
+  83              	.L5:
+ 217:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 218:Generated_Source\PSoC5/REFRESH_ISR.c ****     if(Obstacle3Col == 0)           // Obstacle3 reaches left side of screen
+  84              		.loc 1 218 0
+  85 0040 7C4B     		ldr	r3, .L24+12
+  86 0042 DB68     		ldr	r3, [r3, #12]
+  87 0044 3BB9     		cbnz	r3, .L6
+ 219:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 220:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle3Col = 15;          // Move obstacle3 back to right side of screen
+  88              		.loc 1 220 0
+  89 0046 0F22     		movs	r2, #15
+  90 0048 7A4B     		ldr	r3, .L24+12
+  91 004a DA60     		str	r2, [r3, #12]
+ 221:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle3Row = random;      // Randomly pick top or bottom for obstacle
+  92              		.loc 1 221 0
+  93 004c 784B     		ldr	r3, .L24+8
+  94 004e 1A68     		ldr	r2, [r3]
+  95 0050 794B     		ldr	r3, .L24+16
+  96 0052 5A60     		str	r2, [r3, #4]
+  97 0054 02E0     		b	.L7
+  98              	.L6:
+ 222:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 223:Generated_Source\PSoC5/REFRESH_ISR.c ****     else                            // Obstacle3 not at the far left of the screen yet
+ 224:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 225:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle3Col--;             // Move obstacle3 to the left
+  99              		.loc 1 225 0
+ 100 0056 013B     		subs	r3, r3, #1
+ 101 0058 764A     		ldr	r2, .L24+12
+ 102 005a D360     		str	r3, [r2, #12]
+ 103              	.L7:
+ 226:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 227:Generated_Source\PSoC5/REFRESH_ISR.c ****     if(Obstacle4Col == 0)           // Obstacle4 reaches left side of screen
+ 104              		.loc 1 227 0
+ 105 005c 754B     		ldr	r3, .L24+12
+ 106 005e 1B69     		ldr	r3, [r3, #16]
+ 107 0060 33B9     		cbnz	r3, .L8
+ 228:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 229:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle4Col = 15;          // Move obstacle4 back to right side of screen
+ 108              		.loc 1 229 0
+ 109 0062 744B     		ldr	r3, .L24+12
+ 110 0064 0F22     		movs	r2, #15
+ 111 0066 1A61     		str	r2, [r3, #16]
+ 230:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle4Row = random;      // Randomly pick top or bottom for obstacle
+ 112              		.loc 1 230 0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 7
+
+
+ 113 0068 714A     		ldr	r2, .L24+8
+ 114 006a 1268     		ldr	r2, [r2]
+ 115 006c 5A61     		str	r2, [r3, #20]
+ 116 006e 02E0     		b	.L9
+ 117              	.L8:
+ 231:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 232:Generated_Source\PSoC5/REFRESH_ISR.c ****     else                            // Obstacle4 not at the far left of the screen yet
+ 233:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 234:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle4Col--;             // Move obstacle4 to the left
+ 118              		.loc 1 234 0
+ 119 0070 013B     		subs	r3, r3, #1
+ 120 0072 704A     		ldr	r2, .L24+12
+ 121 0074 1361     		str	r3, [r2, #16]
+ 122              	.L9:
+ 235:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 236:Generated_Source\PSoC5/REFRESH_ISR.c ****     if(Obstacle5Col == 0)           // Obstacle5 reaches left side of screen
+ 123              		.loc 1 236 0
+ 124 0076 6F4B     		ldr	r3, .L24+12
+ 125 0078 9B69     		ldr	r3, [r3, #24]
+ 126 007a 3BB9     		cbnz	r3, .L10
+ 237:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 238:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle5Col = 15;          // Move obstacle5 back to right side of screen
+ 127              		.loc 1 238 0
+ 128 007c 0F22     		movs	r2, #15
+ 129 007e 6D4B     		ldr	r3, .L24+12
+ 130 0080 9A61     		str	r2, [r3, #24]
+ 239:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle5Row = random;      // Randomly pick top or bottom for obstacle
+ 131              		.loc 1 239 0
+ 132 0082 6B4B     		ldr	r3, .L24+8
+ 133 0084 1A68     		ldr	r2, [r3]
+ 134 0086 6C4B     		ldr	r3, .L24+16
+ 135 0088 9A60     		str	r2, [r3, #8]
+ 136 008a 02E0     		b	.L11
+ 137              	.L10:
+ 240:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 241:Generated_Source\PSoC5/REFRESH_ISR.c ****     else                            // Obstacle5 not at the far left of the screen yet
+ 242:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 243:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle5Col--;             // Move obstacle5 to the left
+ 138              		.loc 1 243 0
+ 139 008c 013B     		subs	r3, r3, #1
+ 140 008e 694A     		ldr	r2, .L24+12
+ 141 0090 9361     		str	r3, [r2, #24]
+ 142              	.L11:
+ 244:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 245:Generated_Source\PSoC5/REFRESH_ISR.c ****     if(Obstacle6Col == 0)           // Obstacle6 reaches left side of screen
+ 143              		.loc 1 245 0
+ 144 0092 684B     		ldr	r3, .L24+12
+ 145 0094 DB69     		ldr	r3, [r3, #28]
+ 146 0096 A3B9     		cbnz	r3, .L12
+ 246:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 247:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle6Col = 15;          // Move obstacle6 back to right side of screen
+ 147              		.loc 1 247 0
+ 148 0098 664B     		ldr	r3, .L24+12
+ 149 009a 0F22     		movs	r2, #15
+ 150 009c DA61     		str	r2, [r3, #28]
+ 248:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle6Row = random;      // Randomly pick top or bottom for obstacle
+ 151              		.loc 1 248 0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 8
+
+
+ 152 009e 644A     		ldr	r2, .L24+8
+ 153 00a0 1268     		ldr	r2, [r2]
+ 154 00a2 1A62     		str	r2, [r3, #32]
+ 249:Generated_Source\PSoC5/REFRESH_ISR.c ****         Refresh_Timer_WritePeriod(period*0.9);
+ 155              		.loc 1 249 0
+ 156 00a4 654B     		ldr	r3, .L24+20
+ 157 00a6 1868     		ldr	r0, [r3]
+ 158 00a8 FFF7FEFF 		bl	__aeabi_i2d
+ 159              	.LVL1:
+ 160 00ac 5EA3     		adr	r3, .L24
+ 161 00ae D3E90023 		ldrd	r2, [r3]
+ 162 00b2 FFF7FEFF 		bl	__aeabi_dmul
+ 163              	.LVL2:
+ 164 00b6 FFF7FEFF 		bl	__aeabi_d2uiz
+ 165              	.LVL3:
+ 166 00ba 80B2     		uxth	r0, r0
+ 167 00bc FFF7FEFF 		bl	Refresh_Timer_WritePeriod
+ 168              	.LVL4:
+ 169 00c0 02E0     		b	.L13
+ 170              	.L12:
+ 250:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 251:Generated_Source\PSoC5/REFRESH_ISR.c ****     else                            // Obstacle6 not at the far left of the screen yet
+ 252:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 253:Generated_Source\PSoC5/REFRESH_ISR.c ****         Obstacle6Col--;             // Move obstacle6 to the left
+ 171              		.loc 1 253 0
+ 172 00c2 013B     		subs	r3, r3, #1
+ 173 00c4 5B4A     		ldr	r2, .L24+12
+ 174 00c6 D361     		str	r3, [r2, #28]
+ 175              	.L13:
+ 254:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 255:Generated_Source\PSoC5/REFRESH_ISR.c ****     
+ 256:Generated_Source\PSoC5/REFRESH_ISR.c ****     if (lives > 0)
+ 176              		.loc 1 256 0
+ 177 00c8 5A4B     		ldr	r3, .L24+12
+ 178 00ca 5B6A     		ldr	r3, [r3, #36]
+ 179 00cc 002B     		cmp	r3, #0
+ 180 00ce 40F39080 		ble	.L14
+ 257:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 258:Generated_Source\PSoC5/REFRESH_ISR.c ****     
+ 259:Generated_Source\PSoC5/REFRESH_ISR.c ****         if( (Obstacle6Row == CharacterPos && Obstacle6Col == 0) ||
+ 181              		.loc 1 259 0
+ 182 00d2 584B     		ldr	r3, .L24+12
+ 183 00d4 1A6A     		ldr	r2, [r3, #32]
+ 184 00d6 584B     		ldr	r3, .L24+16
+ 185 00d8 DB68     		ldr	r3, [r3, #12]
+ 186 00da 9A42     		cmp	r2, r3
+ 187 00dc 03D1     		bne	.L15
+ 188              		.loc 1 259 0 is_stmt 0 discriminator 1
+ 189 00de 554B     		ldr	r3, .L24+12
+ 190 00e0 DB69     		ldr	r3, [r3, #28]
+ 191 00e2 002B     		cmp	r3, #0
+ 192 00e4 29D0     		beq	.L16
+ 193              	.L15:
+ 260:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle5Row == CharacterPos && Obstacle5Col == 0) ||
+ 194              		.loc 1 260 0 is_stmt 1 discriminator 3
+ 195 00e6 544B     		ldr	r3, .L24+16
+ 196 00e8 9A68     		ldr	r2, [r3, #8]
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 9
+
+
+ 197 00ea DB68     		ldr	r3, [r3, #12]
+ 259:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle5Row == CharacterPos && Obstacle5Col == 0) ||
+ 198              		.loc 1 259 0 discriminator 3
+ 199 00ec 9A42     		cmp	r2, r3
+ 200 00ee 02D1     		bne	.L17
+ 201              		.loc 1 260 0
+ 202 00f0 504B     		ldr	r3, .L24+12
+ 203 00f2 9B69     		ldr	r3, [r3, #24]
+ 204 00f4 0BB3     		cbz	r3, .L16
+ 205              	.L17:
+ 261:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle4Row == CharacterPos && Obstacle4Col == 0) ||
+ 206              		.loc 1 261 0 discriminator 1
+ 207 00f6 4F4B     		ldr	r3, .L24+12
+ 208 00f8 5A69     		ldr	r2, [r3, #20]
+ 209 00fa 4F4B     		ldr	r3, .L24+16
+ 210 00fc DB68     		ldr	r3, [r3, #12]
+ 260:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle5Row == CharacterPos && Obstacle5Col == 0) ||
+ 211              		.loc 1 260 0 discriminator 1
+ 212 00fe 9A42     		cmp	r2, r3
+ 213 0100 02D1     		bne	.L18
+ 214              		.loc 1 261 0
+ 215 0102 4C4B     		ldr	r3, .L24+12
+ 216 0104 1B69     		ldr	r3, [r3, #16]
+ 217 0106 C3B1     		cbz	r3, .L16
+ 218              	.L18:
+ 262:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle3Row == CharacterPos && Obstacle3Col == 0) ||
+ 219              		.loc 1 262 0 discriminator 1
+ 220 0108 4B4B     		ldr	r3, .L24+16
+ 221 010a 5A68     		ldr	r2, [r3, #4]
+ 222 010c DB68     		ldr	r3, [r3, #12]
+ 261:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle4Row == CharacterPos && Obstacle4Col == 0) ||
+ 223              		.loc 1 261 0 discriminator 1
+ 224 010e 9A42     		cmp	r2, r3
+ 225 0110 02D1     		bne	.L19
+ 226              		.loc 1 262 0
+ 227 0112 484B     		ldr	r3, .L24+12
+ 228 0114 DB68     		ldr	r3, [r3, #12]
+ 229 0116 83B1     		cbz	r3, .L16
+ 230              	.L19:
+ 263:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle2Row == CharacterPos && Obstacle2Col == 0) ||
+ 231              		.loc 1 263 0 discriminator 1
+ 232 0118 464B     		ldr	r3, .L24+12
+ 233 011a 9A68     		ldr	r2, [r3, #8]
+ 234 011c 464B     		ldr	r3, .L24+16
+ 235 011e DB68     		ldr	r3, [r3, #12]
+ 262:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle3Row == CharacterPos && Obstacle3Col == 0) ||
+ 236              		.loc 1 262 0 discriminator 1
+ 237 0120 9A42     		cmp	r2, r3
+ 238 0122 02D1     		bne	.L20
+ 239              		.loc 1 263 0
+ 240 0124 434B     		ldr	r3, .L24+12
+ 241 0126 5B68     		ldr	r3, [r3, #4]
+ 242 0128 3BB1     		cbz	r3, .L16
+ 243              	.L20:
+ 264:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle1Row == CharacterPos && Obstacle1Col == 0)     )
+ 244              		.loc 1 264 0 discriminator 1
+ 245 012a 434B     		ldr	r3, .L24+16
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 10
+
+
+ 246 012c 1A68     		ldr	r2, [r3]
+ 247 012e DB68     		ldr	r3, [r3, #12]
+ 263:Generated_Source\PSoC5/REFRESH_ISR.c ****             (Obstacle2Row == CharacterPos && Obstacle2Col == 0) ||
+ 248              		.loc 1 263 0 discriminator 1
+ 249 0130 9A42     		cmp	r2, r3
+ 250 0132 1DD1     		bne	.L21
+ 251              		.loc 1 264 0
+ 252 0134 3F4B     		ldr	r3, .L24+12
+ 253 0136 1B68     		ldr	r3, [r3]
+ 254 0138 D3B9     		cbnz	r3, .L21
+ 255              	.L16:
+ 265:Generated_Source\PSoC5/REFRESH_ISR.c ****         {   
+ 266:Generated_Source\PSoC5/REFRESH_ISR.c ****             /* If obstacle and player are in same spot,
+ 267:Generated_Source\PSoC5/REFRESH_ISR.c ****             reduce lives by 1 and display # lives left */
+ 268:Generated_Source\PSoC5/REFRESH_ISR.c ****             PWM_Start();            // Play sound player loses a live
+ 256              		.loc 1 268 0
+ 257 013a FFF7FEFF 		bl	PWM_Start
+ 258              	.LVL5:
+ 269:Generated_Source\PSoC5/REFRESH_ISR.c ****             lives--;
+ 259              		.loc 1 269 0
+ 260 013e 3D4C     		ldr	r4, .L24+12
+ 261 0140 636A     		ldr	r3, [r4, #36]
+ 262 0142 013B     		subs	r3, r3, #1
+ 263 0144 6362     		str	r3, [r4, #36]
+ 270:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_ClearDisplay();
+ 264              		.loc 1 270 0
+ 265 0146 0120     		movs	r0, #1
+ 266 0148 FFF7FEFF 		bl	LCD_WriteControl
+ 267              	.LVL6:
+ 271:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(0,0);
+ 268              		.loc 1 271 0
+ 269 014c 0021     		movs	r1, #0
+ 270 014e 0846     		mov	r0, r1
+ 271 0150 FFF7FEFF 		bl	LCD_Position
+ 272              	.LVL7:
+ 272:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PrintString("OOF!");
+ 273              		.loc 1 272 0
+ 274 0154 3A48     		ldr	r0, .L24+24
+ 275 0156 FFF7FEFF 		bl	LCD_PrintString
+ 276              	.LVL8:
+ 273:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(1,0);
+ 277              		.loc 1 273 0
+ 278 015a 0021     		movs	r1, #0
+ 279 015c 0120     		movs	r0, #1
+ 280 015e FFF7FEFF 		bl	LCD_Position
+ 281              	.LVL9:
+ 274:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PrintString("Lives: ");
+ 282              		.loc 1 274 0
+ 283 0162 3848     		ldr	r0, .L24+28
+ 284 0164 FFF7FEFF 		bl	LCD_PrintString
+ 285              	.LVL10:
+ 275:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PrintDecUint16(lives);
+ 286              		.loc 1 275 0
+ 287 0168 A08C     		ldrh	r0, [r4, #36]
+ 288 016a FFF7FEFF 		bl	LCD_PrintU32Number
+ 289              	.LVL11:
+ 290 016e 53E0     		b	.L22
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 11
+
+
+ 291              	.L21:
+ 276:Generated_Source\PSoC5/REFRESH_ISR.c ****         }
+ 277:Generated_Source\PSoC5/REFRESH_ISR.c ****         else
+ 278:Generated_Source\PSoC5/REFRESH_ISR.c ****         {
+ 279:Generated_Source\PSoC5/REFRESH_ISR.c ****             // Display 6 obstacles on LCD
+ 280:Generated_Source\PSoC5/REFRESH_ISR.c ****             PWM_Stop();
+ 292              		.loc 1 280 0
+ 293 0170 FFF7FEFF 		bl	PWM_Stop
+ 294              	.LVL12:
+ 281:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_ClearDisplay();
+ 295              		.loc 1 281 0
+ 296 0174 0120     		movs	r0, #1
+ 297 0176 FFF7FEFF 		bl	LCD_WriteControl
+ 298              	.LVL13:
+ 282:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(CharacterPos, 0);
+ 299              		.loc 1 282 0
+ 300 017a 2F4D     		ldr	r5, .L24+16
+ 301 017c E868     		ldr	r0, [r5, #12]
+ 302 017e 0021     		movs	r1, #0
+ 303 0180 C0B2     		uxtb	r0, r0
+ 304 0182 FFF7FEFF 		bl	LCD_Position
+ 305              	.LVL14:
+ 283:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PutChar(Player);
+ 306              		.loc 1 283 0
+ 307 0186 287C     		ldrb	r0, [r5, #16]	@ zero_extendqisi2
+ 308 0188 FFF7FEFF 		bl	LCD_PutChar
+ 309              	.LVL15:
+ 284:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(Obstacle1Row, Obstacle1Col);
+ 310              		.loc 1 284 0
+ 311 018c 294C     		ldr	r4, .L24+12
+ 312 018e 2178     		ldrb	r1, [r4]	@ zero_extendqisi2
+ 313 0190 2878     		ldrb	r0, [r5]	@ zero_extendqisi2
+ 314 0192 FFF7FEFF 		bl	LCD_Position
+ 315              	.LVL16:
+ 285:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PutChar(Obstacle);
+ 316              		.loc 1 285 0
+ 317 0196 94F82800 		ldrb	r0, [r4, #40]	@ zero_extendqisi2
+ 318 019a FFF7FEFF 		bl	LCD_PutChar
+ 319              	.LVL17:
+ 286:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(Obstacle2Row, Obstacle2Col);
+ 320              		.loc 1 286 0
+ 321 019e 2179     		ldrb	r1, [r4, #4]	@ zero_extendqisi2
+ 322 01a0 207A     		ldrb	r0, [r4, #8]	@ zero_extendqisi2
+ 323 01a2 FFF7FEFF 		bl	LCD_Position
+ 324              	.LVL18:
+ 287:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PutChar(Obstacle2);
+ 325              		.loc 1 287 0
+ 326 01a6 94F82900 		ldrb	r0, [r4, #41]	@ zero_extendqisi2
+ 327 01aa FFF7FEFF 		bl	LCD_PutChar
+ 328              	.LVL19:
+ 288:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(Obstacle3Row, Obstacle3Col);
+ 329              		.loc 1 288 0
+ 330 01ae 217B     		ldrb	r1, [r4, #12]	@ zero_extendqisi2
+ 331 01b0 2879     		ldrb	r0, [r5, #4]	@ zero_extendqisi2
+ 332 01b2 FFF7FEFF 		bl	LCD_Position
+ 333              	.LVL20:
+ 289:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PutChar(Obstacle);
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 12
+
+
+ 334              		.loc 1 289 0
+ 335 01b6 94F82800 		ldrb	r0, [r4, #40]	@ zero_extendqisi2
+ 336 01ba FFF7FEFF 		bl	LCD_PutChar
+ 337              	.LVL21:
+ 290:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(Obstacle4Row, Obstacle4Col);
+ 338              		.loc 1 290 0
+ 339 01be 217C     		ldrb	r1, [r4, #16]	@ zero_extendqisi2
+ 340 01c0 207D     		ldrb	r0, [r4, #20]	@ zero_extendqisi2
+ 341 01c2 FFF7FEFF 		bl	LCD_Position
+ 342              	.LVL22:
+ 291:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PutChar(Obstacle2);
+ 343              		.loc 1 291 0
+ 344 01c6 94F82900 		ldrb	r0, [r4, #41]	@ zero_extendqisi2
+ 345 01ca FFF7FEFF 		bl	LCD_PutChar
+ 346              	.LVL23:
+ 292:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(Obstacle5Row, Obstacle5Col);
+ 347              		.loc 1 292 0
+ 348 01ce 217E     		ldrb	r1, [r4, #24]	@ zero_extendqisi2
+ 349 01d0 287A     		ldrb	r0, [r5, #8]	@ zero_extendqisi2
+ 350 01d2 FFF7FEFF 		bl	LCD_Position
+ 351              	.LVL24:
+ 293:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PutChar(Obstacle);
+ 352              		.loc 1 293 0
+ 353 01d6 94F82800 		ldrb	r0, [r4, #40]	@ zero_extendqisi2
+ 354 01da FFF7FEFF 		bl	LCD_PutChar
+ 355              	.LVL25:
+ 294:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_Position(Obstacle6Row, Obstacle6Col);
+ 356              		.loc 1 294 0
+ 357 01de 217F     		ldrb	r1, [r4, #28]	@ zero_extendqisi2
+ 358 01e0 94F82000 		ldrb	r0, [r4, #32]	@ zero_extendqisi2
+ 359 01e4 FFF7FEFF 		bl	LCD_Position
+ 360              	.LVL26:
+ 295:Generated_Source\PSoC5/REFRESH_ISR.c ****             LCD_PutChar(Obstacle2);
+ 361              		.loc 1 295 0
+ 362 01e8 94F82900 		ldrb	r0, [r4, #41]	@ zero_extendqisi2
+ 363 01ec FFF7FEFF 		bl	LCD_PutChar
+ 364              	.LVL27:
+ 365 01f0 12E0     		b	.L22
+ 366              	.L14:
+ 296:Generated_Source\PSoC5/REFRESH_ISR.c ****         }
+ 297:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 298:Generated_Source\PSoC5/REFRESH_ISR.c ****     else
+ 299:Generated_Source\PSoC5/REFRESH_ISR.c ****     {
+ 300:Generated_Source\PSoC5/REFRESH_ISR.c ****         /* If number of lives are 0,
+ 301:Generated_Source\PSoC5/REFRESH_ISR.c ****            Display end game screen */
+ 302:Generated_Source\PSoC5/REFRESH_ISR.c ****         PWM_Stop();
+ 367              		.loc 1 302 0
+ 368 01f2 FFF7FEFF 		bl	PWM_Stop
+ 369              	.LVL28:
+ 303:Generated_Source\PSoC5/REFRESH_ISR.c ****         LCD_ClearDisplay();
+ 370              		.loc 1 303 0
+ 371 01f6 0120     		movs	r0, #1
+ 372 01f8 FFF7FEFF 		bl	LCD_WriteControl
+ 373              	.LVL29:
+ 304:Generated_Source\PSoC5/REFRESH_ISR.c ****         LCD_Position(0,3);
+ 374              		.loc 1 304 0
+ 375 01fc 0321     		movs	r1, #3
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 13
+
+
+ 376 01fe 0020     		movs	r0, #0
+ 377 0200 FFF7FEFF 		bl	LCD_Position
+ 378              	.LVL30:
+ 305:Generated_Source\PSoC5/REFRESH_ISR.c ****         LCD_PrintString("GAMEOVER!!");
+ 379              		.loc 1 305 0
+ 380 0204 1048     		ldr	r0, .L24+32
+ 381 0206 FFF7FEFF 		bl	LCD_PrintString
+ 382              	.LVL31:
+ 306:Generated_Source\PSoC5/REFRESH_ISR.c ****         LCD_Position(1,0);
+ 383              		.loc 1 306 0
+ 384 020a 0021     		movs	r1, #0
+ 385 020c 0120     		movs	r0, #1
+ 386 020e FFF7FEFF 		bl	LCD_Position
+ 387              	.LVL32:
+ 307:Generated_Source\PSoC5/REFRESH_ISR.c ****         LCD_PrintString("Reset to restart");
+ 388              		.loc 1 307 0
+ 389 0212 0E48     		ldr	r0, .L24+36
+ 390 0214 FFF7FEFF 		bl	LCD_PrintString
+ 391              	.LVL33:
+ 392              	.L22:
+ 308:Generated_Source\PSoC5/REFRESH_ISR.c ****     }
+ 309:Generated_Source\PSoC5/REFRESH_ISR.c ****     
+ 310:Generated_Source\PSoC5/REFRESH_ISR.c ****     period = Refresh_Timer_ReadPeriod();
+ 393              		.loc 1 310 0
+ 394 0218 FFF7FEFF 		bl	Refresh_Timer_ReadPeriod
+ 395              	.LVL34:
+ 396 021c 074B     		ldr	r3, .L24+20
+ 397 021e 1860     		str	r0, [r3]
+ 311:Generated_Source\PSoC5/REFRESH_ISR.c ****     Refresh_Timer_ReadStatusRegister();
+ 398              		.loc 1 311 0
+ 399 0220 FFF7FEFF 		bl	Refresh_Timer_ReadStatusRegister
+ 400              	.LVL35:
+ 401 0224 38BD     		pop	{r3, r4, r5, pc}
+ 402              	.L25:
+ 403 0226 00BF     		.align	3
+ 404              	.L24:
+ 405 0228 CDCCCCCC 		.word	-858993459
+ 406 022c CCCCEC3F 		.word	1072483532
+ 407 0230 00000000 		.word	random
+ 408 0234 00000000 		.word	.LANCHOR0
+ 409 0238 00000000 		.word	.LANCHOR1
+ 410 023c 00000000 		.word	period
+ 411 0240 00000000 		.word	.LC0
+ 412 0244 08000000 		.word	.LC1
+ 413 0248 10000000 		.word	.LC2
+ 414 024c 1C000000 		.word	.LC3
+ 415              		.cfi_endproc
+ 416              	.LFE3:
+ 417              		.size	REFRESH_ISR_Interrupt, .-REFRESH_ISR_Interrupt
+ 418              		.section	.text.REFRESH_ISR_SetVector,"ax",%progbits
+ 419              		.align	2
+ 420              		.global	REFRESH_ISR_SetVector
+ 421              		.thumb
+ 422              		.thumb_func
+ 423              		.type	REFRESH_ISR_SetVector, %function
+ 424              	REFRESH_ISR_SetVector:
+ 425              	.LFB4:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 14
+
+
+ 312:Generated_Source\PSoC5/REFRESH_ISR.c ****     
+ 313:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* `#END` */
+ 314:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 315:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 316:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 317:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 318:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_SetVector
+ 319:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 320:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 321:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 322:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Change the ISR vector for the Interrupt. Note calling REFRESH_ISR_Start
+ 323:Generated_Source\PSoC5/REFRESH_ISR.c **** *   will override any effect this method would have had. To set the vector 
+ 324:Generated_Source\PSoC5/REFRESH_ISR.c **** *   before the component has been started use REFRESH_ISR_StartEx instead.
+ 325:Generated_Source\PSoC5/REFRESH_ISR.c **** * 
+ 326:Generated_Source\PSoC5/REFRESH_ISR.c **** *   When defining ISR functions, the CY_ISR and CY_ISR_PROTO macros should be 
+ 327:Generated_Source\PSoC5/REFRESH_ISR.c **** *   used to provide consistent definition across compilers:
+ 328:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 329:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Function definition example:
+ 330:Generated_Source\PSoC5/REFRESH_ISR.c **** *   CY_ISR(MyISR)
+ 331:Generated_Source\PSoC5/REFRESH_ISR.c **** *   {
+ 332:Generated_Source\PSoC5/REFRESH_ISR.c **** *   }
+ 333:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 334:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Function prototype example:
+ 335:Generated_Source\PSoC5/REFRESH_ISR.c **** *     CY_ISR_PROTO(MyISR);
+ 336:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 337:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 338:Generated_Source\PSoC5/REFRESH_ISR.c **** *   address: Address of the ISR to set in the interrupt vector table.
+ 339:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 340:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 341:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 342:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 343:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 344:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_SetVector(cyisraddress address)
+ 345:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 426              		.loc 1 345 0
+ 427              		.cfi_startproc
+ 428              		@ args = 0, pretend = 0, frame = 0
+ 429              		@ frame_needed = 0, uses_anonymous_args = 0
+ 430              		@ link register save eliminated.
+ 431              	.LVL36:
+ 346:Generated_Source\PSoC5/REFRESH_ISR.c ****     cyisraddress * ramVectorTable;
+ 347:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 348:Generated_Source\PSoC5/REFRESH_ISR.c ****     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
+ 432              		.loc 1 348 0
+ 433 0000 024B     		ldr	r3, .L27
+ 434 0002 1B68     		ldr	r3, [r3]
+ 435              	.LVL37:
+ 349:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 350:Generated_Source\PSoC5/REFRESH_ISR.c ****     ramVectorTable[CYINT_IRQ_BASE + (uint32)REFRESH_ISR__INTC_NUMBER] = address;
+ 436              		.loc 1 350 0
+ 437 0004 C3F88800 		str	r0, [r3, #136]
+ 438 0008 7047     		bx	lr
+ 439              	.L28:
+ 440 000a 00BF     		.align	2
+ 441              	.L27:
+ 442 000c 08ED00E0 		.word	-536810232
+ 443              		.cfi_endproc
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 15
+
+
+ 444              	.LFE4:
+ 445              		.size	REFRESH_ISR_SetVector, .-REFRESH_ISR_SetVector
+ 446              		.section	.text.REFRESH_ISR_GetVector,"ax",%progbits
+ 447              		.align	2
+ 448              		.global	REFRESH_ISR_GetVector
+ 449              		.thumb
+ 450              		.thumb_func
+ 451              		.type	REFRESH_ISR_GetVector, %function
+ 452              	REFRESH_ISR_GetVector:
+ 453              	.LFB5:
+ 351:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 352:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 353:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 354:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 355:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_GetVector
+ 356:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 357:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 358:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 359:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Gets the "address" of the current ISR vector for the Interrupt.
+ 360:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 361:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 362:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 363:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 364:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 365:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Address of the ISR in the interrupt vector table.
+ 366:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 367:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 368:Generated_Source\PSoC5/REFRESH_ISR.c **** cyisraddress REFRESH_ISR_GetVector(void)
+ 369:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 454              		.loc 1 369 0
+ 455              		.cfi_startproc
+ 456              		@ args = 0, pretend = 0, frame = 0
+ 457              		@ frame_needed = 0, uses_anonymous_args = 0
+ 458              		@ link register save eliminated.
+ 370:Generated_Source\PSoC5/REFRESH_ISR.c ****     cyisraddress * ramVectorTable;
+ 371:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 372:Generated_Source\PSoC5/REFRESH_ISR.c ****     ramVectorTable = (cyisraddress *) *CYINT_VECT_TABLE;
+ 459              		.loc 1 372 0
+ 460 0000 024B     		ldr	r3, .L30
+ 461 0002 1B68     		ldr	r3, [r3]
+ 462              	.LVL38:
+ 373:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 374:Generated_Source\PSoC5/REFRESH_ISR.c ****     return ramVectorTable[CYINT_IRQ_BASE + (uint32)REFRESH_ISR__INTC_NUMBER];
+ 375:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 463              		.loc 1 375 0
+ 464 0004 D3F88800 		ldr	r0, [r3, #136]
+ 465 0008 7047     		bx	lr
+ 466              	.L31:
+ 467 000a 00BF     		.align	2
+ 468              	.L30:
+ 469 000c 08ED00E0 		.word	-536810232
+ 470              		.cfi_endproc
+ 471              	.LFE5:
+ 472              		.size	REFRESH_ISR_GetVector, .-REFRESH_ISR_GetVector
+ 473              		.section	.text.REFRESH_ISR_SetPriority,"ax",%progbits
+ 474              		.align	2
+ 475              		.global	REFRESH_ISR_SetPriority
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 16
+
+
+ 476              		.thumb
+ 477              		.thumb_func
+ 478              		.type	REFRESH_ISR_SetPriority, %function
+ 479              	REFRESH_ISR_SetPriority:
+ 480              	.LFB6:
+ 376:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 377:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 378:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 379:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_SetPriority
+ 380:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 381:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 382:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 383:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Sets the Priority of the Interrupt. 
+ 384:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 385:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Note calling REFRESH_ISR_Start or REFRESH_ISR_StartEx will 
+ 386:Generated_Source\PSoC5/REFRESH_ISR.c **** *   override any effect this API would have had. This API should only be called
+ 387:Generated_Source\PSoC5/REFRESH_ISR.c **** *   after REFRESH_ISR_Start or REFRESH_ISR_StartEx has been called. 
+ 388:Generated_Source\PSoC5/REFRESH_ISR.c **** *   To set the initial priority for the component, use the Design-Wide Resources
+ 389:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Interrupt Editor.
+ 390:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 391:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Note This API has no effect on Non-maskable interrupt NMI).
+ 392:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 393:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 394:Generated_Source\PSoC5/REFRESH_ISR.c **** *   priority: Priority of the interrupt, 0 being the highest priority
+ 395:Generated_Source\PSoC5/REFRESH_ISR.c **** *             PSoC 3 and PSoC 5LP: Priority is from 0 to 7.
+ 396:Generated_Source\PSoC5/REFRESH_ISR.c **** *             PSoC 4: Priority is from 0 to 3.
+ 397:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 398:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 399:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 400:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 401:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 402:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_SetPriority(uint8 priority)
+ 403:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 481              		.loc 1 403 0
+ 482              		.cfi_startproc
+ 483              		@ args = 0, pretend = 0, frame = 0
+ 484              		@ frame_needed = 0, uses_anonymous_args = 0
+ 485              		@ link register save eliminated.
+ 486              	.LVL39:
+ 404:Generated_Source\PSoC5/REFRESH_ISR.c ****     *REFRESH_ISR_INTC_PRIOR = priority << 5;
+ 487              		.loc 1 404 0
+ 488 0000 4001     		lsls	r0, r0, #5
+ 489              	.LVL40:
+ 490 0002 C0B2     		uxtb	r0, r0
+ 491 0004 014B     		ldr	r3, .L33
+ 492 0006 1870     		strb	r0, [r3]
+ 493 0008 7047     		bx	lr
+ 494              	.L34:
+ 495 000a 00BF     		.align	2
+ 496              	.L33:
+ 497 000c 12E400E0 		.word	-536812526
+ 498              		.cfi_endproc
+ 499              	.LFE6:
+ 500              		.size	REFRESH_ISR_SetPriority, .-REFRESH_ISR_SetPriority
+ 501              		.section	.text.REFRESH_ISR_GetPriority,"ax",%progbits
+ 502              		.align	2
+ 503              		.global	REFRESH_ISR_GetPriority
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 17
+
+
+ 504              		.thumb
+ 505              		.thumb_func
+ 506              		.type	REFRESH_ISR_GetPriority, %function
+ 507              	REFRESH_ISR_GetPriority:
+ 508              	.LFB7:
+ 405:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 406:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 407:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 408:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 409:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_GetPriority
+ 410:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 411:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 412:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 413:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Gets the Priority of the Interrupt.
+ 414:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 415:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 416:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 417:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 418:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 419:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Priority of the interrupt, 0 being the highest priority
+ 420:Generated_Source\PSoC5/REFRESH_ISR.c **** *    PSoC 3 and PSoC 5LP: Priority is from 0 to 7.
+ 421:Generated_Source\PSoC5/REFRESH_ISR.c **** *    PSoC 4: Priority is from 0 to 3.
+ 422:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 423:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 424:Generated_Source\PSoC5/REFRESH_ISR.c **** uint8 REFRESH_ISR_GetPriority(void)
+ 425:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 509              		.loc 1 425 0
+ 510              		.cfi_startproc
+ 511              		@ args = 0, pretend = 0, frame = 0
+ 512              		@ frame_needed = 0, uses_anonymous_args = 0
+ 513              		@ link register save eliminated.
+ 426:Generated_Source\PSoC5/REFRESH_ISR.c ****     uint8 priority;
+ 427:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 428:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 429:Generated_Source\PSoC5/REFRESH_ISR.c ****     priority = *REFRESH_ISR_INTC_PRIOR >> 5;
+ 514              		.loc 1 429 0
+ 515 0000 014B     		ldr	r3, .L36
+ 516 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 517              	.LVL41:
+ 430:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 431:Generated_Source\PSoC5/REFRESH_ISR.c ****     return priority;
+ 432:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 518              		.loc 1 432 0
+ 519 0004 4009     		lsrs	r0, r0, #5
+ 520              	.LVL42:
+ 521 0006 7047     		bx	lr
+ 522              	.L37:
+ 523              		.align	2
+ 524              	.L36:
+ 525 0008 12E400E0 		.word	-536812526
+ 526              		.cfi_endproc
+ 527              	.LFE7:
+ 528              		.size	REFRESH_ISR_GetPriority, .-REFRESH_ISR_GetPriority
+ 529              		.section	.text.REFRESH_ISR_Enable,"ax",%progbits
+ 530              		.align	2
+ 531              		.global	REFRESH_ISR_Enable
+ 532              		.thumb
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 18
+
+
+ 533              		.thumb_func
+ 534              		.type	REFRESH_ISR_Enable, %function
+ 535              	REFRESH_ISR_Enable:
+ 536              	.LFB8:
+ 433:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 434:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 435:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 436:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_Enable
+ 437:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 438:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 439:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 440:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Enables the interrupt to the interrupt controller. Do not call this function
+ 441:Generated_Source\PSoC5/REFRESH_ISR.c **** *   unless ISR_Start() has been called or the functionality of the ISR_Start() 
+ 442:Generated_Source\PSoC5/REFRESH_ISR.c **** *   function, which sets the vector and the priority, has been called.
+ 443:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 444:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 445:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 446:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 447:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 448:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 449:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 450:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 451:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_Enable(void)
+ 452:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 537              		.loc 1 452 0
+ 538              		.cfi_startproc
+ 539              		@ args = 0, pretend = 0, frame = 0
+ 540              		@ frame_needed = 0, uses_anonymous_args = 0
+ 541              		@ link register save eliminated.
+ 453:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Enable the general interrupt. */
+ 454:Generated_Source\PSoC5/REFRESH_ISR.c ****     *REFRESH_ISR_INTC_SET_EN = REFRESH_ISR__INTC_MASK;
+ 542              		.loc 1 454 0
+ 543 0000 4FF48022 		mov	r2, #262144
+ 544 0004 014B     		ldr	r3, .L39
+ 545 0006 1A60     		str	r2, [r3]
+ 546 0008 7047     		bx	lr
+ 547              	.L40:
+ 548 000a 00BF     		.align	2
+ 549              	.L39:
+ 550 000c 00E100E0 		.word	-536813312
+ 551              		.cfi_endproc
+ 552              	.LFE8:
+ 553              		.size	REFRESH_ISR_Enable, .-REFRESH_ISR_Enable
+ 554              		.section	.text.REFRESH_ISR_GetState,"ax",%progbits
+ 555              		.align	2
+ 556              		.global	REFRESH_ISR_GetState
+ 557              		.thumb
+ 558              		.thumb_func
+ 559              		.type	REFRESH_ISR_GetState, %function
+ 560              	REFRESH_ISR_GetState:
+ 561              	.LFB9:
+ 455:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 456:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 457:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 458:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 459:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_GetState
+ 460:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 19
+
+
+ 461:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 462:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 463:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Gets the state (enabled, disabled) of the Interrupt.
+ 464:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 465:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 466:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 467:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 468:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 469:Generated_Source\PSoC5/REFRESH_ISR.c **** *   1 if enabled, 0 if disabled.
+ 470:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 471:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 472:Generated_Source\PSoC5/REFRESH_ISR.c **** uint8 REFRESH_ISR_GetState(void)
+ 473:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 562              		.loc 1 473 0
+ 563              		.cfi_startproc
+ 564              		@ args = 0, pretend = 0, frame = 0
+ 565              		@ frame_needed = 0, uses_anonymous_args = 0
+ 566              		@ link register save eliminated.
+ 474:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Get the state of the general interrupt. */
+ 475:Generated_Source\PSoC5/REFRESH_ISR.c ****     return ((*REFRESH_ISR_INTC_SET_EN & (uint32)REFRESH_ISR__INTC_MASK) != 0u) ? 1u:0u;
+ 567              		.loc 1 475 0
+ 568 0000 044B     		ldr	r3, .L44
+ 569 0002 1B68     		ldr	r3, [r3]
+ 570 0004 13F4802F 		tst	r3, #262144
+ 571 0008 01D0     		beq	.L43
+ 572 000a 0120     		movs	r0, #1
+ 573 000c 7047     		bx	lr
+ 574              	.L43:
+ 575 000e 0020     		movs	r0, #0
+ 476:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 576              		.loc 1 476 0
+ 577 0010 7047     		bx	lr
+ 578              	.L45:
+ 579 0012 00BF     		.align	2
+ 580              	.L44:
+ 581 0014 00E100E0 		.word	-536813312
+ 582              		.cfi_endproc
+ 583              	.LFE9:
+ 584              		.size	REFRESH_ISR_GetState, .-REFRESH_ISR_GetState
+ 585              		.section	.text.REFRESH_ISR_Disable,"ax",%progbits
+ 586              		.align	2
+ 587              		.global	REFRESH_ISR_Disable
+ 588              		.thumb
+ 589              		.thumb_func
+ 590              		.type	REFRESH_ISR_Disable, %function
+ 591              	REFRESH_ISR_Disable:
+ 592              	.LFB10:
+ 477:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 478:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 479:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 480:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_Disable
+ 481:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 482:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 483:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 484:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Disables the Interrupt in the interrupt controller.
+ 485:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 486:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 20
+
+
+ 487:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 488:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 489:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 490:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 491:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 492:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 493:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_Disable(void)
+ 494:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 593              		.loc 1 494 0
+ 594              		.cfi_startproc
+ 595              		@ args = 0, pretend = 0, frame = 0
+ 596              		@ frame_needed = 0, uses_anonymous_args = 0
+ 597              		@ link register save eliminated.
+ 495:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Disable the general interrupt. */
+ 496:Generated_Source\PSoC5/REFRESH_ISR.c ****     *REFRESH_ISR_INTC_CLR_EN = REFRESH_ISR__INTC_MASK;
+ 598              		.loc 1 496 0
+ 599 0000 4FF48022 		mov	r2, #262144
+ 600 0004 014B     		ldr	r3, .L47
+ 601 0006 1A60     		str	r2, [r3]
+ 602 0008 7047     		bx	lr
+ 603              	.L48:
+ 604 000a 00BF     		.align	2
+ 605              	.L47:
+ 606 000c 80E100E0 		.word	-536813184
+ 607              		.cfi_endproc
+ 608              	.LFE10:
+ 609              		.size	REFRESH_ISR_Disable, .-REFRESH_ISR_Disable
+ 610              		.section	.text.REFRESH_ISR_Start,"ax",%progbits
+ 611              		.align	2
+ 612              		.global	REFRESH_ISR_Start
+ 613              		.thumb
+ 614              		.thumb_func
+ 615              		.type	REFRESH_ISR_Start, %function
+ 616              	REFRESH_ISR_Start:
+ 617              	.LFB0:
+  90:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* For all we know the interrupt is active. */
+ 618              		.loc 1 90 0
+ 619              		.cfi_startproc
+ 620              		@ args = 0, pretend = 0, frame = 0
+ 621              		@ frame_needed = 0, uses_anonymous_args = 0
+ 622 0000 08B5     		push	{r3, lr}
+ 623              		.cfi_def_cfa_offset 8
+ 624              		.cfi_offset 3, -8
+ 625              		.cfi_offset 14, -4
+  92:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 626              		.loc 1 92 0
+ 627 0002 FFF7FEFF 		bl	REFRESH_ISR_Disable
+ 628              	.LVL43:
+  95:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 629              		.loc 1 95 0
+ 630 0006 0448     		ldr	r0, .L51
+ 631 0008 FFF7FEFF 		bl	REFRESH_ISR_SetVector
+ 632              	.LVL44:
+  98:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 633              		.loc 1 98 0
+ 634 000c 0720     		movs	r0, #7
+ 635 000e FFF7FEFF 		bl	REFRESH_ISR_SetPriority
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 21
+
+
+ 636              	.LVL45:
+ 101:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 637              		.loc 1 101 0
+ 638 0012 FFF7FEFF 		bl	REFRESH_ISR_Enable
+ 639              	.LVL46:
+ 640 0016 08BD     		pop	{r3, pc}
+ 641              	.L52:
+ 642              		.align	2
+ 643              	.L51:
+ 644 0018 00000000 		.word	REFRESH_ISR_Interrupt
+ 645              		.cfi_endproc
+ 646              	.LFE0:
+ 647              		.size	REFRESH_ISR_Start, .-REFRESH_ISR_Start
+ 648              		.section	.text.REFRESH_ISR_StartEx,"ax",%progbits
+ 649              		.align	2
+ 650              		.global	REFRESH_ISR_StartEx
+ 651              		.thumb
+ 652              		.thumb_func
+ 653              		.type	REFRESH_ISR_StartEx, %function
+ 654              	REFRESH_ISR_StartEx:
+ 655              	.LFB1:
+ 133:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* For all we know the interrupt is active. */
+ 656              		.loc 1 133 0
+ 657              		.cfi_startproc
+ 658              		@ args = 0, pretend = 0, frame = 0
+ 659              		@ frame_needed = 0, uses_anonymous_args = 0
+ 660              	.LVL47:
+ 661 0000 10B5     		push	{r4, lr}
+ 662              		.cfi_def_cfa_offset 8
+ 663              		.cfi_offset 4, -8
+ 664              		.cfi_offset 14, -4
+ 665 0002 0446     		mov	r4, r0
+ 135:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 666              		.loc 1 135 0
+ 667 0004 FFF7FEFF 		bl	REFRESH_ISR_Disable
+ 668              	.LVL48:
+ 138:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 669              		.loc 1 138 0
+ 670 0008 2046     		mov	r0, r4
+ 671 000a FFF7FEFF 		bl	REFRESH_ISR_SetVector
+ 672              	.LVL49:
+ 141:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 673              		.loc 1 141 0
+ 674 000e 0720     		movs	r0, #7
+ 675 0010 FFF7FEFF 		bl	REFRESH_ISR_SetPriority
+ 676              	.LVL50:
+ 144:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 677              		.loc 1 144 0
+ 678 0014 FFF7FEFF 		bl	REFRESH_ISR_Enable
+ 679              	.LVL51:
+ 680 0018 10BD     		pop	{r4, pc}
+ 681              		.cfi_endproc
+ 682              	.LFE1:
+ 683              		.size	REFRESH_ISR_StartEx, .-REFRESH_ISR_StartEx
+ 684 001a 00BF     		.section	.text.REFRESH_ISR_Stop,"ax",%progbits
+ 685              		.align	2
+ 686              		.global	REFRESH_ISR_Stop
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 22
+
+
+ 687              		.thumb
+ 688              		.thumb_func
+ 689              		.type	REFRESH_ISR_Stop, %function
+ 690              	REFRESH_ISR_Stop:
+ 691              	.LFB2:
+ 163:Generated_Source\PSoC5/REFRESH_ISR.c ****     /* Disable this interrupt. */
+ 692              		.loc 1 163 0
+ 693              		.cfi_startproc
+ 694              		@ args = 0, pretend = 0, frame = 0
+ 695              		@ frame_needed = 0, uses_anonymous_args = 0
+ 696 0000 08B5     		push	{r3, lr}
+ 697              		.cfi_def_cfa_offset 8
+ 698              		.cfi_offset 3, -8
+ 699              		.cfi_offset 14, -4
+ 165:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 700              		.loc 1 165 0
+ 701 0002 FFF7FEFF 		bl	REFRESH_ISR_Disable
+ 702              	.LVL52:
+ 168:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 703              		.loc 1 168 0
+ 704 0006 0248     		ldr	r0, .L57
+ 705 0008 FFF7FEFF 		bl	REFRESH_ISR_SetVector
+ 706              	.LVL53:
+ 707 000c 08BD     		pop	{r3, pc}
+ 708              	.L58:
+ 709 000e 00BF     		.align	2
+ 710              	.L57:
+ 711 0010 00000000 		.word	IntDefaultHandler
+ 712              		.cfi_endproc
+ 713              	.LFE2:
+ 714              		.size	REFRESH_ISR_Stop, .-REFRESH_ISR_Stop
+ 715              		.section	.text.REFRESH_ISR_SetPending,"ax",%progbits
+ 716              		.align	2
+ 717              		.global	REFRESH_ISR_SetPending
+ 718              		.thumb
+ 719              		.thumb_func
+ 720              		.type	REFRESH_ISR_SetPending, %function
+ 721              	REFRESH_ISR_SetPending:
+ 722              	.LFB11:
+ 497:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 498:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 499:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 500:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 501:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_SetPending
+ 502:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 503:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 504:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 505:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Causes the Interrupt to enter the pending state, a software method of
+ 506:Generated_Source\PSoC5/REFRESH_ISR.c **** *   generating the interrupt.
+ 507:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 508:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 509:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 510:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 511:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 512:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 513:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 514:Generated_Source\PSoC5/REFRESH_ISR.c **** * Side Effects:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 23
+
+
+ 515:Generated_Source\PSoC5/REFRESH_ISR.c **** *   If interrupts are enabled and the interrupt is set up properly, the ISR is
+ 516:Generated_Source\PSoC5/REFRESH_ISR.c **** *   entered (depending on the priority of this interrupt and other pending 
+ 517:Generated_Source\PSoC5/REFRESH_ISR.c **** *   interrupts).
+ 518:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 519:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 520:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_SetPending(void)
+ 521:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ 723              		.loc 1 521 0
+ 724              		.cfi_startproc
+ 725              		@ args = 0, pretend = 0, frame = 0
+ 726              		@ frame_needed = 0, uses_anonymous_args = 0
+ 727              		@ link register save eliminated.
+ 522:Generated_Source\PSoC5/REFRESH_ISR.c ****     *REFRESH_ISR_INTC_SET_PD = REFRESH_ISR__INTC_MASK;
+ 728              		.loc 1 522 0
+ 729 0000 4FF48022 		mov	r2, #262144
+ 730 0004 014B     		ldr	r3, .L60
+ 731 0006 1A60     		str	r2, [r3]
+ 732 0008 7047     		bx	lr
+ 733              	.L61:
+ 734 000a 00BF     		.align	2
+ 735              	.L60:
+ 736 000c 00E200E0 		.word	-536813056
+ 737              		.cfi_endproc
+ 738              	.LFE11:
+ 739              		.size	REFRESH_ISR_SetPending, .-REFRESH_ISR_SetPending
+ 740              		.section	.text.REFRESH_ISR_ClearPending,"ax",%progbits
+ 741              		.align	2
+ 742              		.global	REFRESH_ISR_ClearPending
+ 743              		.thumb
+ 744              		.thumb_func
+ 745              		.type	REFRESH_ISR_ClearPending, %function
+ 746              	REFRESH_ISR_ClearPending:
+ 747              	.LFB12:
+ 523:Generated_Source\PSoC5/REFRESH_ISR.c **** }
+ 524:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 525:Generated_Source\PSoC5/REFRESH_ISR.c **** 
+ 526:Generated_Source\PSoC5/REFRESH_ISR.c **** /*******************************************************************************
+ 527:Generated_Source\PSoC5/REFRESH_ISR.c **** * Function Name: REFRESH_ISR_ClearPending
+ 528:Generated_Source\PSoC5/REFRESH_ISR.c **** ********************************************************************************
+ 529:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 530:Generated_Source\PSoC5/REFRESH_ISR.c **** * Summary:
+ 531:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Clears a pending interrupt in the interrupt controller.
+ 532:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 533:Generated_Source\PSoC5/REFRESH_ISR.c **** *   Note Some interrupt sources are clear-on-read and require the block 
+ 534:Generated_Source\PSoC5/REFRESH_ISR.c **** *   interrupt/status register to be read/cleared with the appropriate block API 
+ 535:Generated_Source\PSoC5/REFRESH_ISR.c **** *   (GPIO, UART, and so on). Otherwise the ISR will continue to remain in 
+ 536:Generated_Source\PSoC5/REFRESH_ISR.c **** *   pending state even though the interrupt itself is cleared using this API.
+ 537:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 538:Generated_Source\PSoC5/REFRESH_ISR.c **** * Parameters:
+ 539:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 540:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 541:Generated_Source\PSoC5/REFRESH_ISR.c **** * Return:
+ 542:Generated_Source\PSoC5/REFRESH_ISR.c **** *   None
+ 543:Generated_Source\PSoC5/REFRESH_ISR.c **** *
+ 544:Generated_Source\PSoC5/REFRESH_ISR.c **** *******************************************************************************/
+ 545:Generated_Source\PSoC5/REFRESH_ISR.c **** void REFRESH_ISR_ClearPending(void)
+ 546:Generated_Source\PSoC5/REFRESH_ISR.c **** {
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 24
+
+
+ 748              		.loc 1 546 0
+ 749              		.cfi_startproc
+ 750              		@ args = 0, pretend = 0, frame = 0
+ 751              		@ frame_needed = 0, uses_anonymous_args = 0
+ 752              		@ link register save eliminated.
+ 547:Generated_Source\PSoC5/REFRESH_ISR.c ****     *REFRESH_ISR_INTC_CLR_PD = REFRESH_ISR__INTC_MASK;
+ 753              		.loc 1 547 0
+ 754 0000 4FF48022 		mov	r2, #262144
+ 755 0004 014B     		ldr	r3, .L63
+ 756 0006 1A60     		str	r2, [r3]
+ 757 0008 7047     		bx	lr
+ 758              	.L64:
+ 759 000a 00BF     		.align	2
+ 760              	.L63:
+ 761 000c 80E200E0 		.word	-536812928
+ 762              		.cfi_endproc
+ 763              	.LFE12:
+ 764              		.size	REFRESH_ISR_ClearPending, .-REFRESH_ISR_ClearPending
+ 765              		.global	Obstacle6Row
+ 766              		.global	Obstacle6Col
+ 767              		.global	Obstacle5Row
+ 768              		.global	Obstacle5Col
+ 769              		.global	Obstacle4Row
+ 770              		.global	Obstacle4Col
+ 771              		.global	Obstacle3Row
+ 772              		.global	Obstacle3Col
+ 773              		.global	Obstacle2Row
+ 774              		.global	Obstacle2Col
+ 775              		.global	Obstacle1Row
+ 776              		.global	Obstacle1Col
+ 777              		.global	CharacterPos
+ 778              		.global	Obstacle2
+ 779              		.global	Obstacle
+ 780              		.global	Player
+ 781              		.comm	period,4,4
+ 782              		.global	lives
+ 783              		.comm	random,4,4
+ 784              		.data
+ 785              		.align	2
+ 786              		.set	.LANCHOR0,. + 0
+ 787              		.type	Obstacle1Col, %object
+ 788              		.size	Obstacle1Col, 4
+ 789              	Obstacle1Col:
+ 790 0000 07000000 		.word	7
+ 791              		.type	Obstacle2Col, %object
+ 792              		.size	Obstacle2Col, 4
+ 793              	Obstacle2Col:
+ 794 0004 0A000000 		.word	10
+ 795              		.type	Obstacle2Row, %object
+ 796              		.size	Obstacle2Row, 4
+ 797              	Obstacle2Row:
+ 798 0008 01000000 		.word	1
+ 799              		.type	Obstacle3Col, %object
+ 800              		.size	Obstacle3Col, 4
+ 801              	Obstacle3Col:
+ 802 000c 0D000000 		.word	13
+ 803              		.type	Obstacle4Col, %object
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 25
+
+
+ 804              		.size	Obstacle4Col, 4
+ 805              	Obstacle4Col:
+ 806 0010 10000000 		.word	16
+ 807              		.type	Obstacle4Row, %object
+ 808              		.size	Obstacle4Row, 4
+ 809              	Obstacle4Row:
+ 810 0014 01000000 		.word	1
+ 811              		.type	Obstacle5Col, %object
+ 812              		.size	Obstacle5Col, 4
+ 813              	Obstacle5Col:
+ 814 0018 13000000 		.word	19
+ 815              		.type	Obstacle6Col, %object
+ 816              		.size	Obstacle6Col, 4
+ 817              	Obstacle6Col:
+ 818 001c 15000000 		.word	21
+ 819              		.type	Obstacle6Row, %object
+ 820              		.size	Obstacle6Row, 4
+ 821              	Obstacle6Row:
+ 822 0020 01000000 		.word	1
+ 823              		.type	lives, %object
+ 824              		.size	lives, 4
+ 825              	lives:
+ 826 0024 03000000 		.word	3
+ 827              		.type	Obstacle, %object
+ 828              		.size	Obstacle, 1
+ 829              	Obstacle:
+ 830 0028 01       		.byte	1
+ 831              		.type	Obstacle2, %object
+ 832              		.size	Obstacle2, 1
+ 833              	Obstacle2:
+ 834 0029 02       		.byte	2
+ 835              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 836              		.align	2
+ 837              	.LC0:
+ 838 0000 4F4F4621 		.ascii	"OOF!\000"
+ 838      00
+ 839 0005 000000   		.space	3
+ 840              	.LC1:
+ 841 0008 4C697665 		.ascii	"Lives: \000"
+ 841      733A2000 
+ 842              	.LC2:
+ 843 0010 47414D45 		.ascii	"GAMEOVER!!\000"
+ 843      4F564552 
+ 843      212100
+ 844 001b 00       		.space	1
+ 845              	.LC3:
+ 846 001c 52657365 		.ascii	"Reset to restart\000"
+ 846      7420746F 
+ 846      20726573 
+ 846      74617274 
+ 846      00
+ 847              		.bss
+ 848              		.align	2
+ 849              		.set	.LANCHOR1,. + 0
+ 850              		.type	Obstacle1Row, %object
+ 851              		.size	Obstacle1Row, 4
+ 852              	Obstacle1Row:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 26
+
+
+ 853 0000 00000000 		.space	4
+ 854              		.type	Obstacle3Row, %object
+ 855              		.size	Obstacle3Row, 4
+ 856              	Obstacle3Row:
+ 857 0004 00000000 		.space	4
+ 858              		.type	Obstacle5Row, %object
+ 859              		.size	Obstacle5Row, 4
+ 860              	Obstacle5Row:
+ 861 0008 00000000 		.space	4
+ 862              		.type	CharacterPos, %object
+ 863              		.size	CharacterPos, 4
+ 864              	CharacterPos:
+ 865 000c 00000000 		.space	4
+ 866              		.type	Player, %object
+ 867              		.size	Player, 1
+ 868              	Player:
+ 869 0010 00       		.space	1
+ 870              		.text
+ 871              	.Letext0:
+ 872              		.file 2 "Generated_Source\\PSoC5/cytypes.h"
+ 873              		.file 3 "Generated_Source\\PSoC5\\PRS.h"
+ 874              		.file 4 "Generated_Source\\PSoC5\\Refresh_Timer.h"
+ 875              		.file 5 "Generated_Source\\PSoC5\\PWM.h"
+ 876              		.file 6 "Generated_Source\\PSoC5\\LCD.h"
+ 877              		.section	.debug_info,"",%progbits
+ 878              	.Ldebug_info0:
+ 879 0000 6A060000 		.4byte	0x66a
+ 880 0004 0400     		.2byte	0x4
+ 881 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 882 000a 04       		.byte	0x4
+ 883 000b 01       		.uleb128 0x1
+ 884 000c C3020000 		.4byte	.LASF65
+ 885 0010 0C       		.byte	0xc
+ 886 0011 16000000 		.4byte	.LASF66
+ 887 0015 DA000000 		.4byte	.LASF67
+ 888 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 889 001d 00000000 		.4byte	0
+ 890 0021 00000000 		.4byte	.Ldebug_line0
+ 891 0025 02       		.uleb128 0x2
+ 892 0026 04       		.byte	0x4
+ 893 0027 05       		.byte	0x5
+ 894 0028 696E7400 		.ascii	"int\000"
+ 895 002c 03       		.uleb128 0x3
+ 896 002d 04       		.byte	0x4
+ 897 002e 07       		.byte	0x7
+ 898 002f 42010000 		.4byte	.LASF0
+ 899 0033 03       		.uleb128 0x3
+ 900 0034 08       		.byte	0x8
+ 901 0035 05       		.byte	0x5
+ 902 0036 86000000 		.4byte	.LASF1
+ 903 003a 03       		.uleb128 0x3
+ 904 003b 08       		.byte	0x8
+ 905 003c 04       		.byte	0x4
+ 906 003d C5010000 		.4byte	.LASF2
+ 907 0041 03       		.uleb128 0x3
+ 908 0042 01       		.byte	0x1
+ 909 0043 06       		.byte	0x6
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 27
+
+
+ 910 0044 94000000 		.4byte	.LASF3
+ 911 0048 03       		.uleb128 0x3
+ 912 0049 01       		.byte	0x1
+ 913 004a 08       		.byte	0x8
+ 914 004b 5E020000 		.4byte	.LASF4
+ 915 004f 03       		.uleb128 0x3
+ 916 0050 02       		.byte	0x2
+ 917 0051 05       		.byte	0x5
+ 918 0052 8B020000 		.4byte	.LASF5
+ 919 0056 03       		.uleb128 0x3
+ 920 0057 02       		.byte	0x2
+ 921 0058 07       		.byte	0x7
+ 922 0059 61010000 		.4byte	.LASF6
+ 923 005d 03       		.uleb128 0x3
+ 924 005e 04       		.byte	0x4
+ 925 005f 05       		.byte	0x5
+ 926 0060 AD000000 		.4byte	.LASF7
+ 927 0064 03       		.uleb128 0x3
+ 928 0065 04       		.byte	0x4
+ 929 0066 07       		.byte	0x7
+ 930 0067 4F010000 		.4byte	.LASF8
+ 931 006b 03       		.uleb128 0x3
+ 932 006c 08       		.byte	0x8
+ 933 006d 07       		.byte	0x7
+ 934 006e 62000000 		.4byte	.LASF9
+ 935 0072 03       		.uleb128 0x3
+ 936 0073 04       		.byte	0x4
+ 937 0074 07       		.byte	0x7
+ 938 0075 BC010000 		.4byte	.LASF10
+ 939 0079 03       		.uleb128 0x3
+ 940 007a 01       		.byte	0x1
+ 941 007b 08       		.byte	0x8
+ 942 007c 7E030000 		.4byte	.LASF11
+ 943 0080 04       		.uleb128 0x4
+ 944 0081 04       		.byte	0x4
+ 945 0082 86000000 		.4byte	0x86
+ 946 0086 05       		.uleb128 0x5
+ 947 0087 06       		.uleb128 0x6
+ 948 0088 B6000000 		.4byte	.LASF12
+ 949 008c 02       		.byte	0x2
+ 950 008d E401     		.2byte	0x1e4
+ 951 008f 48000000 		.4byte	0x48
+ 952 0093 06       		.uleb128 0x6
+ 953 0094 0F000000 		.4byte	.LASF13
+ 954 0098 02       		.byte	0x2
+ 955 0099 E501     		.2byte	0x1e5
+ 956 009b 56000000 		.4byte	0x56
+ 957 009f 06       		.uleb128 0x6
+ 958 00a0 D3000000 		.4byte	.LASF14
+ 959 00a4 02       		.byte	0x2
+ 960 00a5 E601     		.2byte	0x1e6
+ 961 00a7 64000000 		.4byte	0x64
+ 962 00ab 03       		.uleb128 0x3
+ 963 00ac 04       		.byte	0x4
+ 964 00ad 04       		.byte	0x4
+ 965 00ae 29020000 		.4byte	.LASF15
+ 966 00b2 03       		.uleb128 0x3
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 28
+
+
+ 967 00b3 08       		.byte	0x8
+ 968 00b4 04       		.byte	0x4
+ 969 00b5 BC000000 		.4byte	.LASF16
+ 970 00b9 06       		.uleb128 0x6
+ 971 00ba 4C020000 		.4byte	.LASF17
+ 972 00be 02       		.byte	0x2
+ 973 00bf 8E02     		.2byte	0x28e
+ 974 00c1 C5000000 		.4byte	0xc5
+ 975 00c5 07       		.uleb128 0x7
+ 976 00c6 87000000 		.4byte	0x87
+ 977 00ca 06       		.uleb128 0x6
+ 978 00cb B6010000 		.4byte	.LASF18
+ 979 00cf 02       		.byte	0x2
+ 980 00d0 9002     		.2byte	0x290
+ 981 00d2 D6000000 		.4byte	0xd6
+ 982 00d6 07       		.uleb128 0x7
+ 983 00d7 9F000000 		.4byte	0x9f
+ 984 00db 06       		.uleb128 0x6
+ 985 00dc 83030000 		.4byte	.LASF19
+ 986 00e0 02       		.byte	0x2
+ 987 00e1 A002     		.2byte	0x2a0
+ 988 00e3 80000000 		.4byte	0x80
+ 989 00e7 08       		.uleb128 0x8
+ 990 00e8 E6010000 		.4byte	.LASF20
+ 991 00ec 01       		.byte	0x1
+ 992 00ed BC       		.byte	0xbc
+ 993 00ee 00000000 		.4byte	.LFB3
+ 994 00f2 50020000 		.4byte	.LFE3-.LFB3
+ 995 00f6 01       		.uleb128 0x1
+ 996 00f7 9C       		.byte	0x9c
+ 997 00f8 C2020000 		.4byte	0x2c2
+ 998 00fc 09       		.uleb128 0x9
+ 999 00fd 06000000 		.4byte	.LVL0
+ 1000 0101 F4050000 		.4byte	0x5f4
+ 1001 0105 09       		.uleb128 0x9
+ 1002 0106 C0000000 		.4byte	.LVL4
+ 1003 010a FF050000 		.4byte	0x5ff
+ 1004 010e 09       		.uleb128 0x9
+ 1005 010f 3E010000 		.4byte	.LVL5
+ 1006 0113 0A060000 		.4byte	0x60a
+ 1007 0117 0A       		.uleb128 0xa
+ 1008 0118 4C010000 		.4byte	.LVL6
+ 1009 011c 15060000 		.4byte	0x615
+ 1010 0120 2A010000 		.4byte	0x12a
+ 1011 0124 0B       		.uleb128 0xb
+ 1012 0125 01       		.uleb128 0x1
+ 1013 0126 50       		.byte	0x50
+ 1014 0127 01       		.uleb128 0x1
+ 1015 0128 31       		.byte	0x31
+ 1016 0129 00       		.byte	0
+ 1017 012a 0A       		.uleb128 0xa
+ 1018 012b 54010000 		.4byte	.LVL7
+ 1019 012f 20060000 		.4byte	0x620
+ 1020 0133 42010000 		.4byte	0x142
+ 1021 0137 0B       		.uleb128 0xb
+ 1022 0138 01       		.uleb128 0x1
+ 1023 0139 50       		.byte	0x50
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 29
+
+
+ 1024 013a 01       		.uleb128 0x1
+ 1025 013b 30       		.byte	0x30
+ 1026 013c 0B       		.uleb128 0xb
+ 1027 013d 01       		.uleb128 0x1
+ 1028 013e 51       		.byte	0x51
+ 1029 013f 01       		.uleb128 0x1
+ 1030 0140 30       		.byte	0x30
+ 1031 0141 00       		.byte	0
+ 1032 0142 0A       		.uleb128 0xa
+ 1033 0143 5A010000 		.4byte	.LVL8
+ 1034 0147 2B060000 		.4byte	0x62b
+ 1035 014b 59010000 		.4byte	0x159
+ 1036 014f 0B       		.uleb128 0xb
+ 1037 0150 01       		.uleb128 0x1
+ 1038 0151 50       		.byte	0x50
+ 1039 0152 05       		.uleb128 0x5
+ 1040 0153 03       		.byte	0x3
+ 1041 0154 00000000 		.4byte	.LC0
+ 1042 0158 00       		.byte	0
+ 1043 0159 0A       		.uleb128 0xa
+ 1044 015a 62010000 		.4byte	.LVL9
+ 1045 015e 20060000 		.4byte	0x620
+ 1046 0162 71010000 		.4byte	0x171
+ 1047 0166 0B       		.uleb128 0xb
+ 1048 0167 01       		.uleb128 0x1
+ 1049 0168 50       		.byte	0x50
+ 1050 0169 01       		.uleb128 0x1
+ 1051 016a 31       		.byte	0x31
+ 1052 016b 0B       		.uleb128 0xb
+ 1053 016c 01       		.uleb128 0x1
+ 1054 016d 51       		.byte	0x51
+ 1055 016e 01       		.uleb128 0x1
+ 1056 016f 30       		.byte	0x30
+ 1057 0170 00       		.byte	0
+ 1058 0171 0A       		.uleb128 0xa
+ 1059 0172 68010000 		.4byte	.LVL10
+ 1060 0176 2B060000 		.4byte	0x62b
+ 1061 017a 88010000 		.4byte	0x188
+ 1062 017e 0B       		.uleb128 0xb
+ 1063 017f 01       		.uleb128 0x1
+ 1064 0180 50       		.byte	0x50
+ 1065 0181 05       		.uleb128 0x5
+ 1066 0182 03       		.byte	0x3
+ 1067 0183 08000000 		.4byte	.LC1
+ 1068 0187 00       		.byte	0
+ 1069 0188 09       		.uleb128 0x9
+ 1070 0189 6E010000 		.4byte	.LVL11
+ 1071 018d 36060000 		.4byte	0x636
+ 1072 0191 09       		.uleb128 0x9
+ 1073 0192 74010000 		.4byte	.LVL12
+ 1074 0196 41060000 		.4byte	0x641
+ 1075 019a 0A       		.uleb128 0xa
+ 1076 019b 7A010000 		.4byte	.LVL13
+ 1077 019f 15060000 		.4byte	0x615
+ 1078 01a3 AD010000 		.4byte	0x1ad
+ 1079 01a7 0B       		.uleb128 0xb
+ 1080 01a8 01       		.uleb128 0x1
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 30
+
+
+ 1081 01a9 50       		.byte	0x50
+ 1082 01aa 01       		.uleb128 0x1
+ 1083 01ab 31       		.byte	0x31
+ 1084 01ac 00       		.byte	0
+ 1085 01ad 0A       		.uleb128 0xa
+ 1086 01ae 86010000 		.4byte	.LVL14
+ 1087 01b2 20060000 		.4byte	0x620
+ 1088 01b6 C0010000 		.4byte	0x1c0
+ 1089 01ba 0B       		.uleb128 0xb
+ 1090 01bb 01       		.uleb128 0x1
+ 1091 01bc 51       		.byte	0x51
+ 1092 01bd 01       		.uleb128 0x1
+ 1093 01be 30       		.byte	0x30
+ 1094 01bf 00       		.byte	0
+ 1095 01c0 09       		.uleb128 0x9
+ 1096 01c1 8C010000 		.4byte	.LVL15
+ 1097 01c5 4C060000 		.4byte	0x64c
+ 1098 01c9 09       		.uleb128 0x9
+ 1099 01ca 96010000 		.4byte	.LVL16
+ 1100 01ce 20060000 		.4byte	0x620
+ 1101 01d2 09       		.uleb128 0x9
+ 1102 01d3 9E010000 		.4byte	.LVL17
+ 1103 01d7 4C060000 		.4byte	0x64c
+ 1104 01db 09       		.uleb128 0x9
+ 1105 01dc A6010000 		.4byte	.LVL18
+ 1106 01e0 20060000 		.4byte	0x620
+ 1107 01e4 09       		.uleb128 0x9
+ 1108 01e5 AE010000 		.4byte	.LVL19
+ 1109 01e9 4C060000 		.4byte	0x64c
+ 1110 01ed 09       		.uleb128 0x9
+ 1111 01ee B6010000 		.4byte	.LVL20
+ 1112 01f2 20060000 		.4byte	0x620
+ 1113 01f6 09       		.uleb128 0x9
+ 1114 01f7 BE010000 		.4byte	.LVL21
+ 1115 01fb 4C060000 		.4byte	0x64c
+ 1116 01ff 09       		.uleb128 0x9
+ 1117 0200 C6010000 		.4byte	.LVL22
+ 1118 0204 20060000 		.4byte	0x620
+ 1119 0208 09       		.uleb128 0x9
+ 1120 0209 CE010000 		.4byte	.LVL23
+ 1121 020d 4C060000 		.4byte	0x64c
+ 1122 0211 09       		.uleb128 0x9
+ 1123 0212 D6010000 		.4byte	.LVL24
+ 1124 0216 20060000 		.4byte	0x620
+ 1125 021a 09       		.uleb128 0x9
+ 1126 021b DE010000 		.4byte	.LVL25
+ 1127 021f 4C060000 		.4byte	0x64c
+ 1128 0223 09       		.uleb128 0x9
+ 1129 0224 E8010000 		.4byte	.LVL26
+ 1130 0228 20060000 		.4byte	0x620
+ 1131 022c 09       		.uleb128 0x9
+ 1132 022d F0010000 		.4byte	.LVL27
+ 1133 0231 4C060000 		.4byte	0x64c
+ 1134 0235 09       		.uleb128 0x9
+ 1135 0236 F6010000 		.4byte	.LVL28
+ 1136 023a 41060000 		.4byte	0x641
+ 1137 023e 0A       		.uleb128 0xa
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 31
+
+
+ 1138 023f FC010000 		.4byte	.LVL29
+ 1139 0243 15060000 		.4byte	0x615
+ 1140 0247 51020000 		.4byte	0x251
+ 1141 024b 0B       		.uleb128 0xb
+ 1142 024c 01       		.uleb128 0x1
+ 1143 024d 50       		.byte	0x50
+ 1144 024e 01       		.uleb128 0x1
+ 1145 024f 31       		.byte	0x31
+ 1146 0250 00       		.byte	0
+ 1147 0251 0A       		.uleb128 0xa
+ 1148 0252 04020000 		.4byte	.LVL30
+ 1149 0256 20060000 		.4byte	0x620
+ 1150 025a 69020000 		.4byte	0x269
+ 1151 025e 0B       		.uleb128 0xb
+ 1152 025f 01       		.uleb128 0x1
+ 1153 0260 50       		.byte	0x50
+ 1154 0261 01       		.uleb128 0x1
+ 1155 0262 30       		.byte	0x30
+ 1156 0263 0B       		.uleb128 0xb
+ 1157 0264 01       		.uleb128 0x1
+ 1158 0265 51       		.byte	0x51
+ 1159 0266 01       		.uleb128 0x1
+ 1160 0267 33       		.byte	0x33
+ 1161 0268 00       		.byte	0
+ 1162 0269 0A       		.uleb128 0xa
+ 1163 026a 0A020000 		.4byte	.LVL31
+ 1164 026e 2B060000 		.4byte	0x62b
+ 1165 0272 80020000 		.4byte	0x280
+ 1166 0276 0B       		.uleb128 0xb
+ 1167 0277 01       		.uleb128 0x1
+ 1168 0278 50       		.byte	0x50
+ 1169 0279 05       		.uleb128 0x5
+ 1170 027a 03       		.byte	0x3
+ 1171 027b 10000000 		.4byte	.LC2
+ 1172 027f 00       		.byte	0
+ 1173 0280 0A       		.uleb128 0xa
+ 1174 0281 12020000 		.4byte	.LVL32
+ 1175 0285 20060000 		.4byte	0x620
+ 1176 0289 98020000 		.4byte	0x298
+ 1177 028d 0B       		.uleb128 0xb
+ 1178 028e 01       		.uleb128 0x1
+ 1179 028f 50       		.byte	0x50
+ 1180 0290 01       		.uleb128 0x1
+ 1181 0291 31       		.byte	0x31
+ 1182 0292 0B       		.uleb128 0xb
+ 1183 0293 01       		.uleb128 0x1
+ 1184 0294 51       		.byte	0x51
+ 1185 0295 01       		.uleb128 0x1
+ 1186 0296 30       		.byte	0x30
+ 1187 0297 00       		.byte	0
+ 1188 0298 0A       		.uleb128 0xa
+ 1189 0299 18020000 		.4byte	.LVL33
+ 1190 029d 2B060000 		.4byte	0x62b
+ 1191 02a1 AF020000 		.4byte	0x2af
+ 1192 02a5 0B       		.uleb128 0xb
+ 1193 02a6 01       		.uleb128 0x1
+ 1194 02a7 50       		.byte	0x50
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 32
+
+
+ 1195 02a8 05       		.uleb128 0x5
+ 1196 02a9 03       		.byte	0x3
+ 1197 02aa 1C000000 		.4byte	.LC3
+ 1198 02ae 00       		.byte	0
+ 1199 02af 09       		.uleb128 0x9
+ 1200 02b0 1C020000 		.4byte	.LVL34
+ 1201 02b4 57060000 		.4byte	0x657
+ 1202 02b8 09       		.uleb128 0x9
+ 1203 02b9 24020000 		.4byte	.LVL35
+ 1204 02bd 62060000 		.4byte	0x662
+ 1205 02c1 00       		.byte	0
+ 1206 02c2 0C       		.uleb128 0xc
+ 1207 02c3 6C020000 		.4byte	.LASF21
+ 1208 02c7 01       		.byte	0x1
+ 1209 02c8 5801     		.2byte	0x158
+ 1210 02ca 00000000 		.4byte	.LFB4
+ 1211 02ce 10000000 		.4byte	.LFE4-.LFB4
+ 1212 02d2 01       		.uleb128 0x1
+ 1213 02d3 9C       		.byte	0x9c
+ 1214 02d4 F5020000 		.4byte	0x2f5
+ 1215 02d8 0D       		.uleb128 0xd
+ 1216 02d9 D1010000 		.4byte	.LASF24
+ 1217 02dd 01       		.byte	0x1
+ 1218 02de 5801     		.2byte	0x158
+ 1219 02e0 DB000000 		.4byte	0xdb
+ 1220 02e4 01       		.uleb128 0x1
+ 1221 02e5 50       		.byte	0x50
+ 1222 02e6 0E       		.uleb128 0xe
+ 1223 02e7 00000000 		.4byte	.LASF22
+ 1224 02eb 01       		.byte	0x1
+ 1225 02ec 5A01     		.2byte	0x15a
+ 1226 02ee F5020000 		.4byte	0x2f5
+ 1227 02f2 01       		.uleb128 0x1
+ 1228 02f3 53       		.byte	0x53
+ 1229 02f4 00       		.byte	0
+ 1230 02f5 04       		.uleb128 0x4
+ 1231 02f6 04       		.byte	0x4
+ 1232 02f7 DB000000 		.4byte	0xdb
+ 1233 02fb 0F       		.uleb128 0xf
+ 1234 02fc 2E040000 		.4byte	.LASF26
+ 1235 0300 01       		.byte	0x1
+ 1236 0301 7001     		.2byte	0x170
+ 1237 0303 DB000000 		.4byte	0xdb
+ 1238 0307 00000000 		.4byte	.LFB5
+ 1239 030b 10000000 		.4byte	.LFE5-.LFB5
+ 1240 030f 01       		.uleb128 0x1
+ 1241 0310 9C       		.byte	0x9c
+ 1242 0311 24030000 		.4byte	0x324
+ 1243 0315 0E       		.uleb128 0xe
+ 1244 0316 00000000 		.4byte	.LASF22
+ 1245 031a 01       		.byte	0x1
+ 1246 031b 7201     		.2byte	0x172
+ 1247 031d F5020000 		.4byte	0x2f5
+ 1248 0321 01       		.uleb128 0x1
+ 1249 0322 53       		.byte	0x53
+ 1250 0323 00       		.byte	0
+ 1251 0324 0C       		.uleb128 0xc
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 33
+
+
+ 1252 0325 74010000 		.4byte	.LASF23
+ 1253 0329 01       		.byte	0x1
+ 1254 032a 9201     		.2byte	0x192
+ 1255 032c 00000000 		.4byte	.LFB6
+ 1256 0330 10000000 		.4byte	.LFE6-.LFB6
+ 1257 0334 01       		.uleb128 0x1
+ 1258 0335 9C       		.byte	0x9c
+ 1259 0336 4B030000 		.4byte	0x34b
+ 1260 033a 10       		.uleb128 0x10
+ 1261 033b 99010000 		.4byte	.LASF25
+ 1262 033f 01       		.byte	0x1
+ 1263 0340 9201     		.2byte	0x192
+ 1264 0342 87000000 		.4byte	0x87
+ 1265 0346 00000000 		.4byte	.LLST0
+ 1266 034a 00       		.byte	0
+ 1267 034b 0F       		.uleb128 0xf
+ 1268 034c C2030000 		.4byte	.LASF27
+ 1269 0350 01       		.byte	0x1
+ 1270 0351 A801     		.2byte	0x1a8
+ 1271 0353 87000000 		.4byte	0x87
+ 1272 0357 00000000 		.4byte	.LFB7
+ 1273 035b 0C000000 		.4byte	.LFE7-.LFB7
+ 1274 035f 01       		.uleb128 0x1
+ 1275 0360 9C       		.byte	0x9c
+ 1276 0361 76030000 		.4byte	0x376
+ 1277 0365 11       		.uleb128 0x11
+ 1278 0366 99010000 		.4byte	.LASF25
+ 1279 036a 01       		.byte	0x1
+ 1280 036b AA01     		.2byte	0x1aa
+ 1281 036d 87000000 		.4byte	0x87
+ 1282 0371 21000000 		.4byte	.LLST1
+ 1283 0375 00       		.byte	0
+ 1284 0376 12       		.uleb128 0x12
+ 1285 0377 3B000000 		.4byte	.LASF28
+ 1286 037b 01       		.byte	0x1
+ 1287 037c C301     		.2byte	0x1c3
+ 1288 037e 00000000 		.4byte	.LFB8
+ 1289 0382 10000000 		.4byte	.LFE8-.LFB8
+ 1290 0386 01       		.uleb128 0x1
+ 1291 0387 9C       		.byte	0x9c
+ 1292 0388 13       		.uleb128 0x13
+ 1293 0389 19040000 		.4byte	.LASF68
+ 1294 038d 01       		.byte	0x1
+ 1295 038e D801     		.2byte	0x1d8
+ 1296 0390 87000000 		.4byte	0x87
+ 1297 0394 00000000 		.4byte	.LFB9
+ 1298 0398 18000000 		.4byte	.LFE9-.LFB9
+ 1299 039c 01       		.uleb128 0x1
+ 1300 039d 9C       		.byte	0x9c
+ 1301 039e 12       		.uleb128 0x12
+ 1302 039f AF020000 		.4byte	.LASF29
+ 1303 03a3 01       		.byte	0x1
+ 1304 03a4 ED01     		.2byte	0x1ed
+ 1305 03a6 00000000 		.4byte	.LFB10
+ 1306 03aa 10000000 		.4byte	.LFE10-.LFB10
+ 1307 03ae 01       		.uleb128 0x1
+ 1308 03af 9C       		.byte	0x9c
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 34
+
+
+ 1309 03b0 14       		.uleb128 0x14
+ 1310 03b1 30010000 		.4byte	.LASF30
+ 1311 03b5 01       		.byte	0x1
+ 1312 03b6 59       		.byte	0x59
+ 1313 03b7 00000000 		.4byte	.LFB0
+ 1314 03bb 1C000000 		.4byte	.LFE0-.LFB0
+ 1315 03bf 01       		.uleb128 0x1
+ 1316 03c0 9C       		.byte	0x9c
+ 1317 03c1 02040000 		.4byte	0x402
+ 1318 03c5 09       		.uleb128 0x9
+ 1319 03c6 06000000 		.4byte	.LVL43
+ 1320 03ca 9E030000 		.4byte	0x39e
+ 1321 03ce 0A       		.uleb128 0xa
+ 1322 03cf 0C000000 		.4byte	.LVL44
+ 1323 03d3 C2020000 		.4byte	0x2c2
+ 1324 03d7 E5030000 		.4byte	0x3e5
+ 1325 03db 0B       		.uleb128 0xb
+ 1326 03dc 01       		.uleb128 0x1
+ 1327 03dd 50       		.byte	0x50
+ 1328 03de 05       		.uleb128 0x5
+ 1329 03df 03       		.byte	0x3
+ 1330 03e0 00000000 		.4byte	REFRESH_ISR_Interrupt
+ 1331 03e4 00       		.byte	0
+ 1332 03e5 0A       		.uleb128 0xa
+ 1333 03e6 12000000 		.4byte	.LVL45
+ 1334 03ea 24030000 		.4byte	0x324
+ 1335 03ee F8030000 		.4byte	0x3f8
+ 1336 03f2 0B       		.uleb128 0xb
+ 1337 03f3 01       		.uleb128 0x1
+ 1338 03f4 50       		.byte	0x50
+ 1339 03f5 01       		.uleb128 0x1
+ 1340 03f6 37       		.byte	0x37
+ 1341 03f7 00       		.byte	0
+ 1342 03f8 09       		.uleb128 0x9
+ 1343 03f9 16000000 		.4byte	.LVL46
+ 1344 03fd 76030000 		.4byte	0x376
+ 1345 0401 00       		.byte	0
+ 1346 0402 14       		.uleb128 0x14
+ 1347 0403 A2010000 		.4byte	.LASF31
+ 1348 0407 01       		.byte	0x1
+ 1349 0408 84       		.byte	0x84
+ 1350 0409 00000000 		.4byte	.LFB1
+ 1351 040d 1A000000 		.4byte	.LFE1-.LFB1
+ 1352 0411 01       		.uleb128 0x1
+ 1353 0412 9C       		.byte	0x9c
+ 1354 0413 60040000 		.4byte	0x460
+ 1355 0417 15       		.uleb128 0x15
+ 1356 0418 D1010000 		.4byte	.LASF24
+ 1357 041c 01       		.byte	0x1
+ 1358 041d 84       		.byte	0x84
+ 1359 041e DB000000 		.4byte	0xdb
+ 1360 0422 38000000 		.4byte	.LLST2
+ 1361 0426 09       		.uleb128 0x9
+ 1362 0427 08000000 		.4byte	.LVL48
+ 1363 042b 9E030000 		.4byte	0x39e
+ 1364 042f 0A       		.uleb128 0xa
+ 1365 0430 0E000000 		.4byte	.LVL49
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 35
+
+
+ 1366 0434 C2020000 		.4byte	0x2c2
+ 1367 0438 43040000 		.4byte	0x443
+ 1368 043c 0B       		.uleb128 0xb
+ 1369 043d 01       		.uleb128 0x1
+ 1370 043e 50       		.byte	0x50
+ 1371 043f 02       		.uleb128 0x2
+ 1372 0440 74       		.byte	0x74
+ 1373 0441 00       		.sleb128 0
+ 1374 0442 00       		.byte	0
+ 1375 0443 0A       		.uleb128 0xa
+ 1376 0444 14000000 		.4byte	.LVL50
+ 1377 0448 24030000 		.4byte	0x324
+ 1378 044c 56040000 		.4byte	0x456
+ 1379 0450 0B       		.uleb128 0xb
+ 1380 0451 01       		.uleb128 0x1
+ 1381 0452 50       		.byte	0x50
+ 1382 0453 01       		.uleb128 0x1
+ 1383 0454 37       		.byte	0x37
+ 1384 0455 00       		.byte	0
+ 1385 0456 09       		.uleb128 0x9
+ 1386 0457 18000000 		.4byte	.LVL51
+ 1387 045b 76030000 		.4byte	0x376
+ 1388 045f 00       		.byte	0
+ 1389 0460 14       		.uleb128 0x14
+ 1390 0461 2F020000 		.4byte	.LASF32
+ 1391 0465 01       		.byte	0x1
+ 1392 0466 A2       		.byte	0xa2
+ 1393 0467 00000000 		.4byte	.LFB2
+ 1394 046b 14000000 		.4byte	.LFE2-.LFB2
+ 1395 046f 01       		.uleb128 0x1
+ 1396 0470 9C       		.byte	0x9c
+ 1397 0471 88040000 		.4byte	0x488
+ 1398 0475 09       		.uleb128 0x9
+ 1399 0476 06000000 		.4byte	.LVL52
+ 1400 047a 9E030000 		.4byte	0x39e
+ 1401 047e 09       		.uleb128 0x9
+ 1402 047f 0C000000 		.4byte	.LVL53
+ 1403 0483 C2020000 		.4byte	0x2c2
+ 1404 0487 00       		.byte	0
+ 1405 0488 12       		.uleb128 0x12
+ 1406 0489 19010000 		.4byte	.LASF33
+ 1407 048d 01       		.byte	0x1
+ 1408 048e 0802     		.2byte	0x208
+ 1409 0490 00000000 		.4byte	.LFB11
+ 1410 0494 10000000 		.4byte	.LFE11-.LFB11
+ 1411 0498 01       		.uleb128 0x1
+ 1412 0499 9C       		.byte	0x9c
+ 1413 049a 12       		.uleb128 0x12
+ 1414 049b 06020000 		.4byte	.LASF34
+ 1415 049f 01       		.byte	0x1
+ 1416 04a0 2102     		.2byte	0x221
+ 1417 04a2 00000000 		.4byte	.LFB12
+ 1418 04a6 10000000 		.4byte	.LFE12-.LFB12
+ 1419 04aa 01       		.uleb128 0x1
+ 1420 04ab 9C       		.byte	0x9c
+ 1421 04ac 16       		.uleb128 0x16
+ 1422 04ad 05010000 		.4byte	.LASF35
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 36
+
+
+ 1423 04b1 01       		.byte	0x1
+ 1424 04b2 25       		.byte	0x25
+ 1425 04b3 25000000 		.4byte	0x25
+ 1426 04b7 05       		.uleb128 0x5
+ 1427 04b8 03       		.byte	0x3
+ 1428 04b9 00000000 		.4byte	random
+ 1429 04bd 16       		.uleb128 0x16
+ 1430 04be 6B040000 		.4byte	.LASF36
+ 1431 04c2 01       		.byte	0x1
+ 1432 04c3 26       		.byte	0x26
+ 1433 04c4 25000000 		.4byte	0x25
+ 1434 04c8 05       		.uleb128 0x5
+ 1435 04c9 03       		.byte	0x3
+ 1436 04ca 00000000 		.4byte	lives
+ 1437 04ce 16       		.uleb128 0x16
+ 1438 04cf 5B000000 		.4byte	.LASF37
+ 1439 04d3 01       		.byte	0x1
+ 1440 04d4 27       		.byte	0x27
+ 1441 04d5 25000000 		.4byte	0x25
+ 1442 04d9 05       		.uleb128 0x5
+ 1443 04da 03       		.byte	0x3
+ 1444 04db 00000000 		.4byte	period
+ 1445 04df 16       		.uleb128 0x16
+ 1446 04e0 C3000000 		.4byte	.LASF38
+ 1447 04e4 01       		.byte	0x1
+ 1448 04e5 28       		.byte	0x28
+ 1449 04e6 79000000 		.4byte	0x79
+ 1450 04ea 05       		.uleb128 0x5
+ 1451 04eb 03       		.byte	0x3
+ 1452 04ec 00000000 		.4byte	Player
+ 1453 04f0 16       		.uleb128 0x16
+ 1454 04f1 A0030000 		.4byte	.LASF39
+ 1455 04f5 01       		.byte	0x1
+ 1456 04f6 29       		.byte	0x29
+ 1457 04f7 79000000 		.4byte	0x79
+ 1458 04fb 05       		.uleb128 0x5
+ 1459 04fc 03       		.byte	0x3
+ 1460 04fd 00000000 		.4byte	Obstacle
+ 1461 0501 16       		.uleb128 0x16
+ 1462 0502 1F020000 		.4byte	.LASF40
+ 1463 0506 01       		.byte	0x1
+ 1464 0507 2A       		.byte	0x2a
+ 1465 0508 79000000 		.4byte	0x79
+ 1466 050c 05       		.uleb128 0x5
+ 1467 050d 03       		.byte	0x3
+ 1468 050e 00000000 		.4byte	Obstacle2
+ 1469 0512 16       		.uleb128 0x16
+ 1470 0513 79000000 		.4byte	.LASF41
+ 1471 0517 01       		.byte	0x1
+ 1472 0518 2C       		.byte	0x2c
+ 1473 0519 23050000 		.4byte	0x523
+ 1474 051d 05       		.uleb128 0x5
+ 1475 051e 03       		.byte	0x3
+ 1476 051f 00000000 		.4byte	CharacterPos
+ 1477 0523 07       		.uleb128 0x7
+ 1478 0524 25000000 		.4byte	0x25
+ 1479 0528 16       		.uleb128 0x16
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 37
+
+
+ 1480 0529 71040000 		.4byte	.LASF42
+ 1481 052d 01       		.byte	0x1
+ 1482 052e 2E       		.byte	0x2e
+ 1483 052f 25000000 		.4byte	0x25
+ 1484 0533 05       		.uleb128 0x5
+ 1485 0534 03       		.byte	0x3
+ 1486 0535 00000000 		.4byte	Obstacle1Col
+ 1487 0539 16       		.uleb128 0x16
+ 1488 053a 0C010000 		.4byte	.LASF43
+ 1489 053e 01       		.byte	0x1
+ 1490 053f 2F       		.byte	0x2f
+ 1491 0540 25000000 		.4byte	0x25
+ 1492 0544 05       		.uleb128 0x5
+ 1493 0545 03       		.byte	0x3
+ 1494 0546 00000000 		.4byte	Obstacle1Row
+ 1495 054a 16       		.uleb128 0x16
+ 1496 054b 44040000 		.4byte	.LASF44
+ 1497 054f 01       		.byte	0x1
+ 1498 0550 30       		.byte	0x30
+ 1499 0551 25000000 		.4byte	0x25
+ 1500 0555 05       		.uleb128 0x5
+ 1501 0556 03       		.byte	0x3
+ 1502 0557 00000000 		.4byte	Obstacle2Col
+ 1503 055b 16       		.uleb128 0x16
+ 1504 055c A0000000 		.4byte	.LASF45
+ 1505 0560 01       		.byte	0x1
+ 1506 0561 31       		.byte	0x31
+ 1507 0562 25000000 		.4byte	0x25
+ 1508 0566 05       		.uleb128 0x5
+ 1509 0567 03       		.byte	0x3
+ 1510 0568 00000000 		.4byte	Obstacle2Row
+ 1511 056c 16       		.uleb128 0x16
+ 1512 056d 71030000 		.4byte	.LASF46
+ 1513 0571 01       		.byte	0x1
+ 1514 0572 32       		.byte	0x32
+ 1515 0573 25000000 		.4byte	0x25
+ 1516 0577 05       		.uleb128 0x5
+ 1517 0578 03       		.byte	0x3
+ 1518 0579 00000000 		.4byte	Obstacle3Col
+ 1519 057d 16       		.uleb128 0x16
+ 1520 057e 4E000000 		.4byte	.LASF47
+ 1521 0582 01       		.byte	0x1
+ 1522 0583 33       		.byte	0x33
+ 1523 0584 25000000 		.4byte	0x25
+ 1524 0588 05       		.uleb128 0x5
+ 1525 0589 03       		.byte	0x3
+ 1526 058a 00000000 		.4byte	Obstacle3Row
+ 1527 058e 16       		.uleb128 0x16
+ 1528 058f 51020000 		.4byte	.LASF48
+ 1529 0593 01       		.byte	0x1
+ 1530 0594 34       		.byte	0x34
+ 1531 0595 25000000 		.4byte	0x25
+ 1532 0599 05       		.uleb128 0x5
+ 1533 059a 03       		.byte	0x3
+ 1534 059b 00000000 		.4byte	Obstacle4Col
+ 1535 059f 16       		.uleb128 0x16
+ 1536 05a0 5E040000 		.4byte	.LASF49
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 38
+
+
+ 1537 05a4 01       		.byte	0x1
+ 1538 05a5 35       		.byte	0x35
+ 1539 05a6 25000000 		.4byte	0x25
+ 1540 05aa 05       		.uleb128 0x5
+ 1541 05ab 03       		.byte	0x3
+ 1542 05ac 00000000 		.4byte	Obstacle4Row
+ 1543 05b0 16       		.uleb128 0x16
+ 1544 05b1 D9010000 		.4byte	.LASF50
+ 1545 05b5 01       		.byte	0x1
+ 1546 05b6 36       		.byte	0x36
+ 1547 05b7 25000000 		.4byte	0x25
+ 1548 05bb 05       		.uleb128 0x5
+ 1549 05bc 03       		.byte	0x3
+ 1550 05bd 00000000 		.4byte	Obstacle5Col
+ 1551 05c1 16       		.uleb128 0x16
+ 1552 05c2 DA030000 		.4byte	.LASF51
+ 1553 05c6 01       		.byte	0x1
+ 1554 05c7 37       		.byte	0x37
+ 1555 05c8 25000000 		.4byte	0x25
+ 1556 05cc 05       		.uleb128 0x5
+ 1557 05cd 03       		.byte	0x3
+ 1558 05ce 00000000 		.4byte	Obstacle5Row
+ 1559 05d2 16       		.uleb128 0x16
+ 1560 05d3 8C010000 		.4byte	.LASF52
+ 1561 05d7 01       		.byte	0x1
+ 1562 05d8 38       		.byte	0x38
+ 1563 05d9 25000000 		.4byte	0x25
+ 1564 05dd 05       		.uleb128 0x5
+ 1565 05de 03       		.byte	0x3
+ 1566 05df 00000000 		.4byte	Obstacle6Col
+ 1567 05e3 16       		.uleb128 0x16
+ 1568 05e4 64030000 		.4byte	.LASF53
+ 1569 05e8 01       		.byte	0x1
+ 1570 05e9 39       		.byte	0x39
+ 1571 05ea 25000000 		.4byte	0x25
+ 1572 05ee 05       		.uleb128 0x5
+ 1573 05ef 03       		.byte	0x3
+ 1574 05f0 00000000 		.4byte	Obstacle6Row
+ 1575 05f4 17       		.uleb128 0x17
+ 1576 05f5 82020000 		.4byte	.LASF54
+ 1577 05f9 82020000 		.4byte	.LASF54
+ 1578 05fd 03       		.byte	0x3
+ 1579 05fe 6D       		.byte	0x6d
+ 1580 05ff 17       		.uleb128 0x17
+ 1581 0600 95020000 		.4byte	.LASF55
+ 1582 0604 95020000 		.4byte	.LASF55
+ 1583 0608 04       		.byte	0x4
+ 1584 0609 68       		.byte	0x68
+ 1585 060a 17       		.uleb128 0x17
+ 1586 060b FC010000 		.4byte	.LASF56
+ 1587 060f FC010000 		.4byte	.LASF56
+ 1588 0613 05       		.byte	0x5
+ 1589 0614 92       		.byte	0x92
+ 1590 0615 17       		.uleb128 0x17
+ 1591 0616 08040000 		.4byte	.LASF57
+ 1592 061a 08040000 		.4byte	.LASF57
+ 1593 061e 06       		.byte	0x6
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 39
+
+
+ 1594 061f 3A       		.byte	0x3a
+ 1595 0620 17       		.uleb128 0x17
+ 1596 0621 51040000 		.4byte	.LASF58
+ 1597 0625 51040000 		.4byte	.LASF58
+ 1598 0629 06       		.byte	0x6
+ 1599 062a 3D       		.byte	0x3d
+ 1600 062b 17       		.uleb128 0x17
+ 1601 062c 90030000 		.4byte	.LASF59
+ 1602 0630 90030000 		.4byte	.LASF59
+ 1603 0634 06       		.byte	0x6
+ 1604 0635 3C       		.byte	0x3c
+ 1605 0636 17       		.uleb128 0x17
+ 1606 0637 51030000 		.4byte	.LASF60
+ 1607 063b 51030000 		.4byte	.LASF60
+ 1608 063f 06       		.byte	0x6
+ 1609 0640 61       		.byte	0x61
+ 1610 0641 17       		.uleb128 0x17
+ 1611 0642 CA000000 		.4byte	.LASF61
+ 1612 0646 CA000000 		.4byte	.LASF61
+ 1613 064a 05       		.byte	0x5
+ 1614 064b 93       		.byte	0x93
+ 1615 064c 17       		.uleb128 0x17
+ 1616 064d 40020000 		.4byte	.LASF62
+ 1617 0651 40020000 		.4byte	.LASF62
+ 1618 0655 06       		.byte	0x6
+ 1619 0656 3E       		.byte	0x3e
+ 1620 0657 17       		.uleb128 0x17
+ 1621 0658 A9030000 		.4byte	.LASF63
+ 1622 065c A9030000 		.4byte	.LASF63
+ 1623 0660 04       		.byte	0x4
+ 1624 0661 67       		.byte	0x67
+ 1625 0662 17       		.uleb128 0x17
+ 1626 0663 E7030000 		.4byte	.LASF64
+ 1627 0667 E7030000 		.4byte	.LASF64
+ 1628 066b 04       		.byte	0x4
+ 1629 066c 5E       		.byte	0x5e
+ 1630 066d 00       		.byte	0
+ 1631              		.section	.debug_abbrev,"",%progbits
+ 1632              	.Ldebug_abbrev0:
+ 1633 0000 01       		.uleb128 0x1
+ 1634 0001 11       		.uleb128 0x11
+ 1635 0002 01       		.byte	0x1
+ 1636 0003 25       		.uleb128 0x25
+ 1637 0004 0E       		.uleb128 0xe
+ 1638 0005 13       		.uleb128 0x13
+ 1639 0006 0B       		.uleb128 0xb
+ 1640 0007 03       		.uleb128 0x3
+ 1641 0008 0E       		.uleb128 0xe
+ 1642 0009 1B       		.uleb128 0x1b
+ 1643 000a 0E       		.uleb128 0xe
+ 1644 000b 55       		.uleb128 0x55
+ 1645 000c 17       		.uleb128 0x17
+ 1646 000d 11       		.uleb128 0x11
+ 1647 000e 01       		.uleb128 0x1
+ 1648 000f 10       		.uleb128 0x10
+ 1649 0010 17       		.uleb128 0x17
+ 1650 0011 00       		.byte	0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 40
+
+
+ 1651 0012 00       		.byte	0
+ 1652 0013 02       		.uleb128 0x2
+ 1653 0014 24       		.uleb128 0x24
+ 1654 0015 00       		.byte	0
+ 1655 0016 0B       		.uleb128 0xb
+ 1656 0017 0B       		.uleb128 0xb
+ 1657 0018 3E       		.uleb128 0x3e
+ 1658 0019 0B       		.uleb128 0xb
+ 1659 001a 03       		.uleb128 0x3
+ 1660 001b 08       		.uleb128 0x8
+ 1661 001c 00       		.byte	0
+ 1662 001d 00       		.byte	0
+ 1663 001e 03       		.uleb128 0x3
+ 1664 001f 24       		.uleb128 0x24
+ 1665 0020 00       		.byte	0
+ 1666 0021 0B       		.uleb128 0xb
+ 1667 0022 0B       		.uleb128 0xb
+ 1668 0023 3E       		.uleb128 0x3e
+ 1669 0024 0B       		.uleb128 0xb
+ 1670 0025 03       		.uleb128 0x3
+ 1671 0026 0E       		.uleb128 0xe
+ 1672 0027 00       		.byte	0
+ 1673 0028 00       		.byte	0
+ 1674 0029 04       		.uleb128 0x4
+ 1675 002a 0F       		.uleb128 0xf
+ 1676 002b 00       		.byte	0
+ 1677 002c 0B       		.uleb128 0xb
+ 1678 002d 0B       		.uleb128 0xb
+ 1679 002e 49       		.uleb128 0x49
+ 1680 002f 13       		.uleb128 0x13
+ 1681 0030 00       		.byte	0
+ 1682 0031 00       		.byte	0
+ 1683 0032 05       		.uleb128 0x5
+ 1684 0033 15       		.uleb128 0x15
+ 1685 0034 00       		.byte	0
+ 1686 0035 27       		.uleb128 0x27
+ 1687 0036 19       		.uleb128 0x19
+ 1688 0037 00       		.byte	0
+ 1689 0038 00       		.byte	0
+ 1690 0039 06       		.uleb128 0x6
+ 1691 003a 16       		.uleb128 0x16
+ 1692 003b 00       		.byte	0
+ 1693 003c 03       		.uleb128 0x3
+ 1694 003d 0E       		.uleb128 0xe
+ 1695 003e 3A       		.uleb128 0x3a
+ 1696 003f 0B       		.uleb128 0xb
+ 1697 0040 3B       		.uleb128 0x3b
+ 1698 0041 05       		.uleb128 0x5
+ 1699 0042 49       		.uleb128 0x49
+ 1700 0043 13       		.uleb128 0x13
+ 1701 0044 00       		.byte	0
+ 1702 0045 00       		.byte	0
+ 1703 0046 07       		.uleb128 0x7
+ 1704 0047 35       		.uleb128 0x35
+ 1705 0048 00       		.byte	0
+ 1706 0049 49       		.uleb128 0x49
+ 1707 004a 13       		.uleb128 0x13
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 41
+
+
+ 1708 004b 00       		.byte	0
+ 1709 004c 00       		.byte	0
+ 1710 004d 08       		.uleb128 0x8
+ 1711 004e 2E       		.uleb128 0x2e
+ 1712 004f 01       		.byte	0x1
+ 1713 0050 3F       		.uleb128 0x3f
+ 1714 0051 19       		.uleb128 0x19
+ 1715 0052 03       		.uleb128 0x3
+ 1716 0053 0E       		.uleb128 0xe
+ 1717 0054 3A       		.uleb128 0x3a
+ 1718 0055 0B       		.uleb128 0xb
+ 1719 0056 3B       		.uleb128 0x3b
+ 1720 0057 0B       		.uleb128 0xb
+ 1721 0058 27       		.uleb128 0x27
+ 1722 0059 19       		.uleb128 0x19
+ 1723 005a 11       		.uleb128 0x11
+ 1724 005b 01       		.uleb128 0x1
+ 1725 005c 12       		.uleb128 0x12
+ 1726 005d 06       		.uleb128 0x6
+ 1727 005e 40       		.uleb128 0x40
+ 1728 005f 18       		.uleb128 0x18
+ 1729 0060 9642     		.uleb128 0x2116
+ 1730 0062 19       		.uleb128 0x19
+ 1731 0063 01       		.uleb128 0x1
+ 1732 0064 13       		.uleb128 0x13
+ 1733 0065 00       		.byte	0
+ 1734 0066 00       		.byte	0
+ 1735 0067 09       		.uleb128 0x9
+ 1736 0068 898201   		.uleb128 0x4109
+ 1737 006b 00       		.byte	0
+ 1738 006c 11       		.uleb128 0x11
+ 1739 006d 01       		.uleb128 0x1
+ 1740 006e 31       		.uleb128 0x31
+ 1741 006f 13       		.uleb128 0x13
+ 1742 0070 00       		.byte	0
+ 1743 0071 00       		.byte	0
+ 1744 0072 0A       		.uleb128 0xa
+ 1745 0073 898201   		.uleb128 0x4109
+ 1746 0076 01       		.byte	0x1
+ 1747 0077 11       		.uleb128 0x11
+ 1748 0078 01       		.uleb128 0x1
+ 1749 0079 31       		.uleb128 0x31
+ 1750 007a 13       		.uleb128 0x13
+ 1751 007b 01       		.uleb128 0x1
+ 1752 007c 13       		.uleb128 0x13
+ 1753 007d 00       		.byte	0
+ 1754 007e 00       		.byte	0
+ 1755 007f 0B       		.uleb128 0xb
+ 1756 0080 8A8201   		.uleb128 0x410a
+ 1757 0083 00       		.byte	0
+ 1758 0084 02       		.uleb128 0x2
+ 1759 0085 18       		.uleb128 0x18
+ 1760 0086 9142     		.uleb128 0x2111
+ 1761 0088 18       		.uleb128 0x18
+ 1762 0089 00       		.byte	0
+ 1763 008a 00       		.byte	0
+ 1764 008b 0C       		.uleb128 0xc
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 42
+
+
+ 1765 008c 2E       		.uleb128 0x2e
+ 1766 008d 01       		.byte	0x1
+ 1767 008e 3F       		.uleb128 0x3f
+ 1768 008f 19       		.uleb128 0x19
+ 1769 0090 03       		.uleb128 0x3
+ 1770 0091 0E       		.uleb128 0xe
+ 1771 0092 3A       		.uleb128 0x3a
+ 1772 0093 0B       		.uleb128 0xb
+ 1773 0094 3B       		.uleb128 0x3b
+ 1774 0095 05       		.uleb128 0x5
+ 1775 0096 27       		.uleb128 0x27
+ 1776 0097 19       		.uleb128 0x19
+ 1777 0098 11       		.uleb128 0x11
+ 1778 0099 01       		.uleb128 0x1
+ 1779 009a 12       		.uleb128 0x12
+ 1780 009b 06       		.uleb128 0x6
+ 1781 009c 40       		.uleb128 0x40
+ 1782 009d 18       		.uleb128 0x18
+ 1783 009e 9742     		.uleb128 0x2117
+ 1784 00a0 19       		.uleb128 0x19
+ 1785 00a1 01       		.uleb128 0x1
+ 1786 00a2 13       		.uleb128 0x13
+ 1787 00a3 00       		.byte	0
+ 1788 00a4 00       		.byte	0
+ 1789 00a5 0D       		.uleb128 0xd
+ 1790 00a6 05       		.uleb128 0x5
+ 1791 00a7 00       		.byte	0
+ 1792 00a8 03       		.uleb128 0x3
+ 1793 00a9 0E       		.uleb128 0xe
+ 1794 00aa 3A       		.uleb128 0x3a
+ 1795 00ab 0B       		.uleb128 0xb
+ 1796 00ac 3B       		.uleb128 0x3b
+ 1797 00ad 05       		.uleb128 0x5
+ 1798 00ae 49       		.uleb128 0x49
+ 1799 00af 13       		.uleb128 0x13
+ 1800 00b0 02       		.uleb128 0x2
+ 1801 00b1 18       		.uleb128 0x18
+ 1802 00b2 00       		.byte	0
+ 1803 00b3 00       		.byte	0
+ 1804 00b4 0E       		.uleb128 0xe
+ 1805 00b5 34       		.uleb128 0x34
+ 1806 00b6 00       		.byte	0
+ 1807 00b7 03       		.uleb128 0x3
+ 1808 00b8 0E       		.uleb128 0xe
+ 1809 00b9 3A       		.uleb128 0x3a
+ 1810 00ba 0B       		.uleb128 0xb
+ 1811 00bb 3B       		.uleb128 0x3b
+ 1812 00bc 05       		.uleb128 0x5
+ 1813 00bd 49       		.uleb128 0x49
+ 1814 00be 13       		.uleb128 0x13
+ 1815 00bf 02       		.uleb128 0x2
+ 1816 00c0 18       		.uleb128 0x18
+ 1817 00c1 00       		.byte	0
+ 1818 00c2 00       		.byte	0
+ 1819 00c3 0F       		.uleb128 0xf
+ 1820 00c4 2E       		.uleb128 0x2e
+ 1821 00c5 01       		.byte	0x1
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 43
+
+
+ 1822 00c6 3F       		.uleb128 0x3f
+ 1823 00c7 19       		.uleb128 0x19
+ 1824 00c8 03       		.uleb128 0x3
+ 1825 00c9 0E       		.uleb128 0xe
+ 1826 00ca 3A       		.uleb128 0x3a
+ 1827 00cb 0B       		.uleb128 0xb
+ 1828 00cc 3B       		.uleb128 0x3b
+ 1829 00cd 05       		.uleb128 0x5
+ 1830 00ce 27       		.uleb128 0x27
+ 1831 00cf 19       		.uleb128 0x19
+ 1832 00d0 49       		.uleb128 0x49
+ 1833 00d1 13       		.uleb128 0x13
+ 1834 00d2 11       		.uleb128 0x11
+ 1835 00d3 01       		.uleb128 0x1
+ 1836 00d4 12       		.uleb128 0x12
+ 1837 00d5 06       		.uleb128 0x6
+ 1838 00d6 40       		.uleb128 0x40
+ 1839 00d7 18       		.uleb128 0x18
+ 1840 00d8 9742     		.uleb128 0x2117
+ 1841 00da 19       		.uleb128 0x19
+ 1842 00db 01       		.uleb128 0x1
+ 1843 00dc 13       		.uleb128 0x13
+ 1844 00dd 00       		.byte	0
+ 1845 00de 00       		.byte	0
+ 1846 00df 10       		.uleb128 0x10
+ 1847 00e0 05       		.uleb128 0x5
+ 1848 00e1 00       		.byte	0
+ 1849 00e2 03       		.uleb128 0x3
+ 1850 00e3 0E       		.uleb128 0xe
+ 1851 00e4 3A       		.uleb128 0x3a
+ 1852 00e5 0B       		.uleb128 0xb
+ 1853 00e6 3B       		.uleb128 0x3b
+ 1854 00e7 05       		.uleb128 0x5
+ 1855 00e8 49       		.uleb128 0x49
+ 1856 00e9 13       		.uleb128 0x13
+ 1857 00ea 02       		.uleb128 0x2
+ 1858 00eb 17       		.uleb128 0x17
+ 1859 00ec 00       		.byte	0
+ 1860 00ed 00       		.byte	0
+ 1861 00ee 11       		.uleb128 0x11
+ 1862 00ef 34       		.uleb128 0x34
+ 1863 00f0 00       		.byte	0
+ 1864 00f1 03       		.uleb128 0x3
+ 1865 00f2 0E       		.uleb128 0xe
+ 1866 00f3 3A       		.uleb128 0x3a
+ 1867 00f4 0B       		.uleb128 0xb
+ 1868 00f5 3B       		.uleb128 0x3b
+ 1869 00f6 05       		.uleb128 0x5
+ 1870 00f7 49       		.uleb128 0x49
+ 1871 00f8 13       		.uleb128 0x13
+ 1872 00f9 02       		.uleb128 0x2
+ 1873 00fa 17       		.uleb128 0x17
+ 1874 00fb 00       		.byte	0
+ 1875 00fc 00       		.byte	0
+ 1876 00fd 12       		.uleb128 0x12
+ 1877 00fe 2E       		.uleb128 0x2e
+ 1878 00ff 00       		.byte	0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 44
+
+
+ 1879 0100 3F       		.uleb128 0x3f
+ 1880 0101 19       		.uleb128 0x19
+ 1881 0102 03       		.uleb128 0x3
+ 1882 0103 0E       		.uleb128 0xe
+ 1883 0104 3A       		.uleb128 0x3a
+ 1884 0105 0B       		.uleb128 0xb
+ 1885 0106 3B       		.uleb128 0x3b
+ 1886 0107 05       		.uleb128 0x5
+ 1887 0108 27       		.uleb128 0x27
+ 1888 0109 19       		.uleb128 0x19
+ 1889 010a 11       		.uleb128 0x11
+ 1890 010b 01       		.uleb128 0x1
+ 1891 010c 12       		.uleb128 0x12
+ 1892 010d 06       		.uleb128 0x6
+ 1893 010e 40       		.uleb128 0x40
+ 1894 010f 18       		.uleb128 0x18
+ 1895 0110 9742     		.uleb128 0x2117
+ 1896 0112 19       		.uleb128 0x19
+ 1897 0113 00       		.byte	0
+ 1898 0114 00       		.byte	0
+ 1899 0115 13       		.uleb128 0x13
+ 1900 0116 2E       		.uleb128 0x2e
+ 1901 0117 00       		.byte	0
+ 1902 0118 3F       		.uleb128 0x3f
+ 1903 0119 19       		.uleb128 0x19
+ 1904 011a 03       		.uleb128 0x3
+ 1905 011b 0E       		.uleb128 0xe
+ 1906 011c 3A       		.uleb128 0x3a
+ 1907 011d 0B       		.uleb128 0xb
+ 1908 011e 3B       		.uleb128 0x3b
+ 1909 011f 05       		.uleb128 0x5
+ 1910 0120 27       		.uleb128 0x27
+ 1911 0121 19       		.uleb128 0x19
+ 1912 0122 49       		.uleb128 0x49
+ 1913 0123 13       		.uleb128 0x13
+ 1914 0124 11       		.uleb128 0x11
+ 1915 0125 01       		.uleb128 0x1
+ 1916 0126 12       		.uleb128 0x12
+ 1917 0127 06       		.uleb128 0x6
+ 1918 0128 40       		.uleb128 0x40
+ 1919 0129 18       		.uleb128 0x18
+ 1920 012a 9742     		.uleb128 0x2117
+ 1921 012c 19       		.uleb128 0x19
+ 1922 012d 00       		.byte	0
+ 1923 012e 00       		.byte	0
+ 1924 012f 14       		.uleb128 0x14
+ 1925 0130 2E       		.uleb128 0x2e
+ 1926 0131 01       		.byte	0x1
+ 1927 0132 3F       		.uleb128 0x3f
+ 1928 0133 19       		.uleb128 0x19
+ 1929 0134 03       		.uleb128 0x3
+ 1930 0135 0E       		.uleb128 0xe
+ 1931 0136 3A       		.uleb128 0x3a
+ 1932 0137 0B       		.uleb128 0xb
+ 1933 0138 3B       		.uleb128 0x3b
+ 1934 0139 0B       		.uleb128 0xb
+ 1935 013a 27       		.uleb128 0x27
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 45
+
+
+ 1936 013b 19       		.uleb128 0x19
+ 1937 013c 11       		.uleb128 0x11
+ 1938 013d 01       		.uleb128 0x1
+ 1939 013e 12       		.uleb128 0x12
+ 1940 013f 06       		.uleb128 0x6
+ 1941 0140 40       		.uleb128 0x40
+ 1942 0141 18       		.uleb128 0x18
+ 1943 0142 9742     		.uleb128 0x2117
+ 1944 0144 19       		.uleb128 0x19
+ 1945 0145 01       		.uleb128 0x1
+ 1946 0146 13       		.uleb128 0x13
+ 1947 0147 00       		.byte	0
+ 1948 0148 00       		.byte	0
+ 1949 0149 15       		.uleb128 0x15
+ 1950 014a 05       		.uleb128 0x5
+ 1951 014b 00       		.byte	0
+ 1952 014c 03       		.uleb128 0x3
+ 1953 014d 0E       		.uleb128 0xe
+ 1954 014e 3A       		.uleb128 0x3a
+ 1955 014f 0B       		.uleb128 0xb
+ 1956 0150 3B       		.uleb128 0x3b
+ 1957 0151 0B       		.uleb128 0xb
+ 1958 0152 49       		.uleb128 0x49
+ 1959 0153 13       		.uleb128 0x13
+ 1960 0154 02       		.uleb128 0x2
+ 1961 0155 17       		.uleb128 0x17
+ 1962 0156 00       		.byte	0
+ 1963 0157 00       		.byte	0
+ 1964 0158 16       		.uleb128 0x16
+ 1965 0159 34       		.uleb128 0x34
+ 1966 015a 00       		.byte	0
+ 1967 015b 03       		.uleb128 0x3
+ 1968 015c 0E       		.uleb128 0xe
+ 1969 015d 3A       		.uleb128 0x3a
+ 1970 015e 0B       		.uleb128 0xb
+ 1971 015f 3B       		.uleb128 0x3b
+ 1972 0160 0B       		.uleb128 0xb
+ 1973 0161 49       		.uleb128 0x49
+ 1974 0162 13       		.uleb128 0x13
+ 1975 0163 3F       		.uleb128 0x3f
+ 1976 0164 19       		.uleb128 0x19
+ 1977 0165 02       		.uleb128 0x2
+ 1978 0166 18       		.uleb128 0x18
+ 1979 0167 00       		.byte	0
+ 1980 0168 00       		.byte	0
+ 1981 0169 17       		.uleb128 0x17
+ 1982 016a 2E       		.uleb128 0x2e
+ 1983 016b 00       		.byte	0
+ 1984 016c 3F       		.uleb128 0x3f
+ 1985 016d 19       		.uleb128 0x19
+ 1986 016e 3C       		.uleb128 0x3c
+ 1987 016f 19       		.uleb128 0x19
+ 1988 0170 6E       		.uleb128 0x6e
+ 1989 0171 0E       		.uleb128 0xe
+ 1990 0172 03       		.uleb128 0x3
+ 1991 0173 0E       		.uleb128 0xe
+ 1992 0174 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 46
+
+
+ 1993 0175 0B       		.uleb128 0xb
+ 1994 0176 3B       		.uleb128 0x3b
+ 1995 0177 0B       		.uleb128 0xb
+ 1996 0178 00       		.byte	0
+ 1997 0179 00       		.byte	0
+ 1998 017a 00       		.byte	0
+ 1999              		.section	.debug_loc,"",%progbits
+ 2000              	.Ldebug_loc0:
+ 2001              	.LLST0:
+ 2002 0000 00000000 		.4byte	.LVL39
+ 2003 0004 02000000 		.4byte	.LVL40
+ 2004 0008 0100     		.2byte	0x1
+ 2005 000a 50       		.byte	0x50
+ 2006 000b 02000000 		.4byte	.LVL40
+ 2007 000f 10000000 		.4byte	.LFE6
+ 2008 0013 0400     		.2byte	0x4
+ 2009 0015 F3       		.byte	0xf3
+ 2010 0016 01       		.uleb128 0x1
+ 2011 0017 50       		.byte	0x50
+ 2012 0018 9F       		.byte	0x9f
+ 2013 0019 00000000 		.4byte	0
+ 2014 001d 00000000 		.4byte	0
+ 2015              	.LLST1:
+ 2016 0021 04000000 		.4byte	.LVL41
+ 2017 0025 06000000 		.4byte	.LVL42
+ 2018 0029 0500     		.2byte	0x5
+ 2019 002b 70       		.byte	0x70
+ 2020 002c 00       		.sleb128 0
+ 2021 002d 35       		.byte	0x35
+ 2022 002e 25       		.byte	0x25
+ 2023 002f 9F       		.byte	0x9f
+ 2024 0030 00000000 		.4byte	0
+ 2025 0034 00000000 		.4byte	0
+ 2026              	.LLST2:
+ 2027 0038 00000000 		.4byte	.LVL47
+ 2028 003c 07000000 		.4byte	.LVL48-1
+ 2029 0040 0100     		.2byte	0x1
+ 2030 0042 50       		.byte	0x50
+ 2031 0043 07000000 		.4byte	.LVL48-1
+ 2032 0047 1A000000 		.4byte	.LFE1
+ 2033 004b 0100     		.2byte	0x1
+ 2034 004d 54       		.byte	0x54
+ 2035 004e 00000000 		.4byte	0
+ 2036 0052 00000000 		.4byte	0
+ 2037              		.section	.debug_aranges,"",%progbits
+ 2038 0000 7C000000 		.4byte	0x7c
+ 2039 0004 0200     		.2byte	0x2
+ 2040 0006 00000000 		.4byte	.Ldebug_info0
+ 2041 000a 04       		.byte	0x4
+ 2042 000b 00       		.byte	0
+ 2043 000c 0000     		.2byte	0
+ 2044 000e 0000     		.2byte	0
+ 2045 0010 00000000 		.4byte	.LFB3
+ 2046 0014 50020000 		.4byte	.LFE3-.LFB3
+ 2047 0018 00000000 		.4byte	.LFB4
+ 2048 001c 10000000 		.4byte	.LFE4-.LFB4
+ 2049 0020 00000000 		.4byte	.LFB5
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 47
+
+
+ 2050 0024 10000000 		.4byte	.LFE5-.LFB5
+ 2051 0028 00000000 		.4byte	.LFB6
+ 2052 002c 10000000 		.4byte	.LFE6-.LFB6
+ 2053 0030 00000000 		.4byte	.LFB7
+ 2054 0034 0C000000 		.4byte	.LFE7-.LFB7
+ 2055 0038 00000000 		.4byte	.LFB8
+ 2056 003c 10000000 		.4byte	.LFE8-.LFB8
+ 2057 0040 00000000 		.4byte	.LFB9
+ 2058 0044 18000000 		.4byte	.LFE9-.LFB9
+ 2059 0048 00000000 		.4byte	.LFB10
+ 2060 004c 10000000 		.4byte	.LFE10-.LFB10
+ 2061 0050 00000000 		.4byte	.LFB0
+ 2062 0054 1C000000 		.4byte	.LFE0-.LFB0
+ 2063 0058 00000000 		.4byte	.LFB1
+ 2064 005c 1A000000 		.4byte	.LFE1-.LFB1
+ 2065 0060 00000000 		.4byte	.LFB2
+ 2066 0064 14000000 		.4byte	.LFE2-.LFB2
+ 2067 0068 00000000 		.4byte	.LFB11
+ 2068 006c 10000000 		.4byte	.LFE11-.LFB11
+ 2069 0070 00000000 		.4byte	.LFB12
+ 2070 0074 10000000 		.4byte	.LFE12-.LFB12
+ 2071 0078 00000000 		.4byte	0
+ 2072 007c 00000000 		.4byte	0
+ 2073              		.section	.debug_ranges,"",%progbits
+ 2074              	.Ldebug_ranges0:
+ 2075 0000 00000000 		.4byte	.LFB3
+ 2076 0004 50020000 		.4byte	.LFE3
+ 2077 0008 00000000 		.4byte	.LFB4
+ 2078 000c 10000000 		.4byte	.LFE4
+ 2079 0010 00000000 		.4byte	.LFB5
+ 2080 0014 10000000 		.4byte	.LFE5
+ 2081 0018 00000000 		.4byte	.LFB6
+ 2082 001c 10000000 		.4byte	.LFE6
+ 2083 0020 00000000 		.4byte	.LFB7
+ 2084 0024 0C000000 		.4byte	.LFE7
+ 2085 0028 00000000 		.4byte	.LFB8
+ 2086 002c 10000000 		.4byte	.LFE8
+ 2087 0030 00000000 		.4byte	.LFB9
+ 2088 0034 18000000 		.4byte	.LFE9
+ 2089 0038 00000000 		.4byte	.LFB10
+ 2090 003c 10000000 		.4byte	.LFE10
+ 2091 0040 00000000 		.4byte	.LFB0
+ 2092 0044 1C000000 		.4byte	.LFE0
+ 2093 0048 00000000 		.4byte	.LFB1
+ 2094 004c 1A000000 		.4byte	.LFE1
+ 2095 0050 00000000 		.4byte	.LFB2
+ 2096 0054 14000000 		.4byte	.LFE2
+ 2097 0058 00000000 		.4byte	.LFB11
+ 2098 005c 10000000 		.4byte	.LFE11
+ 2099 0060 00000000 		.4byte	.LFB12
+ 2100 0064 10000000 		.4byte	.LFE12
+ 2101 0068 00000000 		.4byte	0
+ 2102 006c 00000000 		.4byte	0
+ 2103              		.section	.debug_line,"",%progbits
+ 2104              	.Ldebug_line0:
+ 2105 0000 DD010000 		.section	.debug_str,"MS",%progbits,1
+ 2105      02007600 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 48
+
+
+ 2105      00000201 
+ 2105      FB0E0D00 
+ 2105      01010101 
+ 2106              	.LASF22:
+ 2107 0000 72616D56 		.ascii	"ramVectorTable\000"
+ 2107      6563746F 
+ 2107      72546162 
+ 2107      6C6500
+ 2108              	.LASF13:
+ 2109 000f 75696E74 		.ascii	"uint16\000"
+ 2109      313600
+ 2110              	.LASF66:
+ 2111 0016 47656E65 		.ascii	"Generated_Source\\PSoC5\\REFRESH_ISR.c\000"
+ 2111      72617465 
+ 2111      645F536F 
+ 2111      75726365 
+ 2111      5C50536F 
+ 2112              	.LASF28:
+ 2113 003b 52454652 		.ascii	"REFRESH_ISR_Enable\000"
+ 2113      4553485F 
+ 2113      4953525F 
+ 2113      456E6162 
+ 2113      6C6500
+ 2114              	.LASF47:
+ 2115 004e 4F627374 		.ascii	"Obstacle3Row\000"
+ 2115      61636C65 
+ 2115      33526F77 
+ 2115      00
+ 2116              	.LASF37:
+ 2117 005b 70657269 		.ascii	"period\000"
+ 2117      6F6400
+ 2118              	.LASF9:
+ 2119 0062 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 2119      206C6F6E 
+ 2119      6720756E 
+ 2119      7369676E 
+ 2119      65642069 
+ 2120              	.LASF41:
+ 2121 0079 43686172 		.ascii	"CharacterPos\000"
+ 2121      61637465 
+ 2121      72506F73 
+ 2121      00
+ 2122              	.LASF1:
+ 2123 0086 6C6F6E67 		.ascii	"long long int\000"
+ 2123      206C6F6E 
+ 2123      6720696E 
+ 2123      7400
+ 2124              	.LASF3:
+ 2125 0094 7369676E 		.ascii	"signed char\000"
+ 2125      65642063 
+ 2125      68617200 
+ 2126              	.LASF45:
+ 2127 00a0 4F627374 		.ascii	"Obstacle2Row\000"
+ 2127      61636C65 
+ 2127      32526F77 
+ 2127      00
+ 2128              	.LASF7:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 49
+
+
+ 2129 00ad 6C6F6E67 		.ascii	"long int\000"
+ 2129      20696E74 
+ 2129      00
+ 2130              	.LASF12:
+ 2131 00b6 75696E74 		.ascii	"uint8\000"
+ 2131      3800
+ 2132              	.LASF16:
+ 2133 00bc 646F7562 		.ascii	"double\000"
+ 2133      6C6500
+ 2134              	.LASF38:
+ 2135 00c3 506C6179 		.ascii	"Player\000"
+ 2135      657200
+ 2136              	.LASF61:
+ 2137 00ca 50574D5F 		.ascii	"PWM_Stop\000"
+ 2137      53746F70 
+ 2137      00
+ 2138              	.LASF14:
+ 2139 00d3 75696E74 		.ascii	"uint32\000"
+ 2139      333200
+ 2140              	.LASF67:
+ 2141 00da 433A5C45 		.ascii	"C:\\ECE381_Labs\\Lab04_Game\\Lab04_Game.cydsn\000"
+ 2141      43453338 
+ 2141      315F4C61 
+ 2141      62735C4C 
+ 2141      61623034 
+ 2142              	.LASF35:
+ 2143 0105 72616E64 		.ascii	"random\000"
+ 2143      6F6D00
+ 2144              	.LASF43:
+ 2145 010c 4F627374 		.ascii	"Obstacle1Row\000"
+ 2145      61636C65 
+ 2145      31526F77 
+ 2145      00
+ 2146              	.LASF33:
+ 2147 0119 52454652 		.ascii	"REFRESH_ISR_SetPending\000"
+ 2147      4553485F 
+ 2147      4953525F 
+ 2147      53657450 
+ 2147      656E6469 
+ 2148              	.LASF30:
+ 2149 0130 52454652 		.ascii	"REFRESH_ISR_Start\000"
+ 2149      4553485F 
+ 2149      4953525F 
+ 2149      53746172 
+ 2149      7400
+ 2150              	.LASF0:
+ 2151 0142 756E7369 		.ascii	"unsigned int\000"
+ 2151      676E6564 
+ 2151      20696E74 
+ 2151      00
+ 2152              	.LASF8:
+ 2153 014f 6C6F6E67 		.ascii	"long unsigned int\000"
+ 2153      20756E73 
+ 2153      69676E65 
+ 2153      6420696E 
+ 2153      7400
+ 2154              	.LASF6:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 50
+
+
+ 2155 0161 73686F72 		.ascii	"short unsigned int\000"
+ 2155      7420756E 
+ 2155      7369676E 
+ 2155      65642069 
+ 2155      6E7400
+ 2156              	.LASF23:
+ 2157 0174 52454652 		.ascii	"REFRESH_ISR_SetPriority\000"
+ 2157      4553485F 
+ 2157      4953525F 
+ 2157      53657450 
+ 2157      72696F72 
+ 2158              	.LASF52:
+ 2159 018c 4F627374 		.ascii	"Obstacle6Col\000"
+ 2159      61636C65 
+ 2159      36436F6C 
+ 2159      00
+ 2160              	.LASF25:
+ 2161 0199 7072696F 		.ascii	"priority\000"
+ 2161      72697479 
+ 2161      00
+ 2162              	.LASF31:
+ 2163 01a2 52454652 		.ascii	"REFRESH_ISR_StartEx\000"
+ 2163      4553485F 
+ 2163      4953525F 
+ 2163      53746172 
+ 2163      74457800 
+ 2164              	.LASF18:
+ 2165 01b6 72656733 		.ascii	"reg32\000"
+ 2165      3200
+ 2166              	.LASF10:
+ 2167 01bc 73697A65 		.ascii	"sizetype\000"
+ 2167      74797065 
+ 2167      00
+ 2168              	.LASF2:
+ 2169 01c5 6C6F6E67 		.ascii	"long double\000"
+ 2169      20646F75 
+ 2169      626C6500 
+ 2170              	.LASF24:
+ 2171 01d1 61646472 		.ascii	"address\000"
+ 2171      65737300 
+ 2172              	.LASF50:
+ 2173 01d9 4F627374 		.ascii	"Obstacle5Col\000"
+ 2173      61636C65 
+ 2173      35436F6C 
+ 2173      00
+ 2174              	.LASF20:
+ 2175 01e6 52454652 		.ascii	"REFRESH_ISR_Interrupt\000"
+ 2175      4553485F 
+ 2175      4953525F 
+ 2175      496E7465 
+ 2175      72727570 
+ 2176              	.LASF56:
+ 2177 01fc 50574D5F 		.ascii	"PWM_Start\000"
+ 2177      53746172 
+ 2177      7400
+ 2178              	.LASF34:
+ 2179 0206 52454652 		.ascii	"REFRESH_ISR_ClearPending\000"
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 51
+
+
+ 2179      4553485F 
+ 2179      4953525F 
+ 2179      436C6561 
+ 2179      7250656E 
+ 2180              	.LASF40:
+ 2181 021f 4F627374 		.ascii	"Obstacle2\000"
+ 2181      61636C65 
+ 2181      3200
+ 2182              	.LASF15:
+ 2183 0229 666C6F61 		.ascii	"float\000"
+ 2183      7400
+ 2184              	.LASF32:
+ 2185 022f 52454652 		.ascii	"REFRESH_ISR_Stop\000"
+ 2185      4553485F 
+ 2185      4953525F 
+ 2185      53746F70 
+ 2185      00
+ 2186              	.LASF62:
+ 2187 0240 4C43445F 		.ascii	"LCD_PutChar\000"
+ 2187      50757443 
+ 2187      68617200 
+ 2188              	.LASF17:
+ 2189 024c 72656738 		.ascii	"reg8\000"
+ 2189      00
+ 2190              	.LASF48:
+ 2191 0251 4F627374 		.ascii	"Obstacle4Col\000"
+ 2191      61636C65 
+ 2191      34436F6C 
+ 2191      00
+ 2192              	.LASF4:
+ 2193 025e 756E7369 		.ascii	"unsigned char\000"
+ 2193      676E6564 
+ 2193      20636861 
+ 2193      7200
+ 2194              	.LASF21:
+ 2195 026c 52454652 		.ascii	"REFRESH_ISR_SetVector\000"
+ 2195      4553485F 
+ 2195      4953525F 
+ 2195      53657456 
+ 2195      6563746F 
+ 2196              	.LASF54:
+ 2197 0282 5052535F 		.ascii	"PRS_Read\000"
+ 2197      52656164 
+ 2197      00
+ 2198              	.LASF5:
+ 2199 028b 73686F72 		.ascii	"short int\000"
+ 2199      7420696E 
+ 2199      7400
+ 2200              	.LASF55:
+ 2201 0295 52656672 		.ascii	"Refresh_Timer_WritePeriod\000"
+ 2201      6573685F 
+ 2201      54696D65 
+ 2201      725F5772 
+ 2201      69746550 
+ 2202              	.LASF29:
+ 2203 02af 52454652 		.ascii	"REFRESH_ISR_Disable\000"
+ 2203      4553485F 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 52
+
+
+ 2203      4953525F 
+ 2203      44697361 
+ 2203      626C6500 
+ 2204              	.LASF65:
+ 2205 02c3 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 2205      43313120 
+ 2205      352E342E 
+ 2205      31203230 
+ 2205      31363036 
+ 2206 02f6 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 2206      20726576 
+ 2206      6973696F 
+ 2206      6E203233 
+ 2206      37373135 
+ 2207 0329 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 2207      66756E63 
+ 2207      74696F6E 
+ 2207      2D736563 
+ 2207      74696F6E 
+ 2208              	.LASF60:
+ 2209 0351 4C43445F 		.ascii	"LCD_PrintU32Number\000"
+ 2209      5072696E 
+ 2209      74553332 
+ 2209      4E756D62 
+ 2209      657200
+ 2210              	.LASF53:
+ 2211 0364 4F627374 		.ascii	"Obstacle6Row\000"
+ 2211      61636C65 
+ 2211      36526F77 
+ 2211      00
+ 2212              	.LASF46:
+ 2213 0371 4F627374 		.ascii	"Obstacle3Col\000"
+ 2213      61636C65 
+ 2213      33436F6C 
+ 2213      00
+ 2214              	.LASF11:
+ 2215 037e 63686172 		.ascii	"char\000"
+ 2215      00
+ 2216              	.LASF19:
+ 2217 0383 63796973 		.ascii	"cyisraddress\000"
+ 2217      72616464 
+ 2217      72657373 
+ 2217      00
+ 2218              	.LASF59:
+ 2219 0390 4C43445F 		.ascii	"LCD_PrintString\000"
+ 2219      5072696E 
+ 2219      74537472 
+ 2219      696E6700 
+ 2220              	.LASF39:
+ 2221 03a0 4F627374 		.ascii	"Obstacle\000"
+ 2221      61636C65 
+ 2221      00
+ 2222              	.LASF63:
+ 2223 03a9 52656672 		.ascii	"Refresh_Timer_ReadPeriod\000"
+ 2223      6573685F 
+ 2223      54696D65 
+ 2223      725F5265 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 53
+
+
+ 2223      61645065 
+ 2224              	.LASF27:
+ 2225 03c2 52454652 		.ascii	"REFRESH_ISR_GetPriority\000"
+ 2225      4553485F 
+ 2225      4953525F 
+ 2225      47657450 
+ 2225      72696F72 
+ 2226              	.LASF51:
+ 2227 03da 4F627374 		.ascii	"Obstacle5Row\000"
+ 2227      61636C65 
+ 2227      35526F77 
+ 2227      00
+ 2228              	.LASF64:
+ 2229 03e7 52656672 		.ascii	"Refresh_Timer_ReadStatusRegister\000"
+ 2229      6573685F 
+ 2229      54696D65 
+ 2229      725F5265 
+ 2229      61645374 
+ 2230              	.LASF57:
+ 2231 0408 4C43445F 		.ascii	"LCD_WriteControl\000"
+ 2231      57726974 
+ 2231      65436F6E 
+ 2231      74726F6C 
+ 2231      00
+ 2232              	.LASF68:
+ 2233 0419 52454652 		.ascii	"REFRESH_ISR_GetState\000"
+ 2233      4553485F 
+ 2233      4953525F 
+ 2233      47657453 
+ 2233      74617465 
+ 2234              	.LASF26:
+ 2235 042e 52454652 		.ascii	"REFRESH_ISR_GetVector\000"
+ 2235      4553485F 
+ 2235      4953525F 
+ 2235      47657456 
+ 2235      6563746F 
+ 2236              	.LASF44:
+ 2237 0444 4F627374 		.ascii	"Obstacle2Col\000"
+ 2237      61636C65 
+ 2237      32436F6C 
+ 2237      00
+ 2238              	.LASF58:
+ 2239 0451 4C43445F 		.ascii	"LCD_Position\000"
+ 2239      506F7369 
+ 2239      74696F6E 
+ 2239      00
+ 2240              	.LASF49:
+ 2241 045e 4F627374 		.ascii	"Obstacle4Row\000"
+ 2241      61636C65 
+ 2241      34526F77 
+ 2241      00
+ 2242              	.LASF36:
+ 2243 046b 6C697665 		.ascii	"lives\000"
+ 2243      7300
+ 2244              	.LASF42:
+ 2245 0471 4F627374 		.ascii	"Obstacle1Col\000"
+ 2245      61636C65 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc8AM8kX.s 			page 54
+
+
+ 2245      31436F6C 
+ 2245      00
+ 2246              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

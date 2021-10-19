@@ -1,0 +1,677 @@
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.main,"ax",%progbits
+  20              		.align	2
+  21              		.global	main
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	main, %function
+  25              	main:
+  26              	.LFB63:
+  27              		.file 1 "main.c"
+   1:main.c        **** /* 
+   2:main.c        **** * ========================================
+   3:main.c        **** *  File Name: main.c                                      
+   4:main.c        **** *  Dan Higginbotham                     
+   5:main.c        **** *  ECE381 Microcontrollers              
+   6:main.c        **** *  03/09/21                               
+   7:main.c        **** *  Lab 4 – Game using timers and PRS
+   8:main.c        **** *                                       
+   9:main.c        **** * ========================================
+  10:main.c        **** */
+  11:main.c        **** #include <stdlib.h>
+  12:main.c        **** #include "project.h"
+  13:main.c        **** #include "Refresh_Timer.h"
+  14:main.c        **** #include "LCD.h"
+  15:main.c        **** #include "Control.h"
+  16:main.c        **** #include "CONTROL_ISR.h"
+  17:main.c        **** #include "PRS.h"
+  18:main.c        ****    
+  19:main.c        **** int main(void)
+  20:main.c        **** {
+  28              		.loc 1 20 0
+  29              		.cfi_startproc
+  30              		@ Volatile: function does not return.
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33 0000 08B5     		push	{r3, lr}
+  34              		.cfi_def_cfa_offset 8
+  35              		.cfi_offset 3, -8
+  36              		.cfi_offset 14, -4
+  21:main.c        ****     CyGlobalIntEnable; /* Enable global interrupts. */
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 2
+
+
+  37              		.loc 1 21 0
+  38              		.syntax unified
+  39              	@ 21 "main.c" 1
+  40 0002 62B6     		CPSIE   i
+  41              	@ 0 "" 2
+  22:main.c        **** 
+  23:main.c        ****     Refresh_Timer_Start();
+  42              		.loc 1 23 0
+  43              		.thumb
+  44              		.syntax unified
+  45 0004 FFF7FEFF 		bl	Refresh_Timer_Start
+  46              	.LVL0:
+  24:main.c        ****     REFRESH_ISR_Start();
+  47              		.loc 1 24 0
+  48 0008 FFF7FEFF 		bl	REFRESH_ISR_Start
+  49              	.LVL1:
+  25:main.c        ****     LCD_Start();
+  50              		.loc 1 25 0
+  51 000c FFF7FEFF 		bl	LCD_Start
+  52              	.LVL2:
+  26:main.c        ****     CONTROL_ISR_Start();
+  53              		.loc 1 26 0
+  54 0010 FFF7FEFF 		bl	CONTROL_ISR_Start
+  55              	.LVL3:
+  27:main.c        ****     LCD_LoadCustomFonts(LCD_customFonts);
+  56              		.loc 1 27 0
+  57 0014 0248     		ldr	r0, .L4
+  58 0016 FFF7FEFF 		bl	LCD_LoadCustomFonts
+  59              	.LVL4:
+  28:main.c        ****     PRS_Start();
+  60              		.loc 1 28 0
+  61 001a FFF7FEFF 		bl	PRS_Start
+  62              	.LVL5:
+  63              	.L2:
+  64 001e FEE7     		b	.L2
+  65              	.L5:
+  66              		.align	2
+  67              	.L4:
+  68 0020 00000000 		.word	LCD_customFonts
+  69              		.cfi_endproc
+  70              	.LFE63:
+  71              		.size	main, .-main
+  72              		.text
+  73              	.Letext0:
+  74              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.3\\psoc creator\\import\\gnu\\arm\\5.4.
+  75              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.3\\psoc creator\\import\\gnu\\arm\\5.4.
+  76              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+  77              		.file 5 "Generated_Source\\PSoC5/LCD.h"
+  78              		.file 6 "Generated_Source\\PSoC5/core_cm3.h"
+  79              		.file 7 "Generated_Source\\PSoC5/Refresh_Timer.h"
+  80              		.file 8 "Generated_Source\\PSoC5/REFRESH_ISR.h"
+  81              		.file 9 "Generated_Source\\PSoC5/CONTROL_ISR.h"
+  82              		.file 10 "Generated_Source\\PSoC5/PRS.h"
+  83              		.section	.debug_info,"",%progbits
+  84              	.Ldebug_info0:
+  85 0000 75010000 		.4byte	0x175
+  86 0004 0400     		.2byte	0x4
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 3
+
+
+  87 0006 00000000 		.4byte	.Ldebug_abbrev0
+  88 000a 04       		.byte	0x4
+  89 000b 01       		.uleb128 0x1
+  90 000c 5C000000 		.4byte	.LASF25
+  91 0010 0C       		.byte	0xc
+  92 0011 44000000 		.4byte	.LASF26
+  93 0015 35010000 		.4byte	.LASF27
+  94 0019 00000000 		.4byte	.Ldebug_ranges0+0
+  95 001d 00000000 		.4byte	0
+  96 0021 00000000 		.4byte	.Ldebug_line0
+  97 0025 02       		.uleb128 0x2
+  98 0026 04       		.byte	0x4
+  99 0027 07       		.byte	0x7
+ 100 0028 27000000 		.4byte	.LASF0
+ 101 002c 03       		.uleb128 0x3
+ 102 002d 04       		.byte	0x4
+ 103 002e 05       		.byte	0x5
+ 104 002f 696E7400 		.ascii	"int\000"
+ 105 0033 02       		.uleb128 0x2
+ 106 0034 08       		.byte	0x8
+ 107 0035 05       		.byte	0x5
+ 108 0036 9F010000 		.4byte	.LASF1
+ 109 003a 02       		.uleb128 0x2
+ 110 003b 08       		.byte	0x8
+ 111 003c 04       		.byte	0x4
+ 112 003d C4010000 		.4byte	.LASF2
+ 113 0041 02       		.uleb128 0x2
+ 114 0042 01       		.byte	0x1
+ 115 0043 06       		.byte	0x6
+ 116 0044 50000000 		.4byte	.LASF3
+ 117 0048 02       		.uleb128 0x2
+ 118 0049 01       		.byte	0x1
+ 119 004a 08       		.byte	0x8
+ 120 004b 60010000 		.4byte	.LASF4
+ 121 004f 02       		.uleb128 0x2
+ 122 0050 02       		.byte	0x2
+ 123 0051 05       		.byte	0x5
+ 124 0052 8E010000 		.4byte	.LASF5
+ 125 0056 02       		.uleb128 0x2
+ 126 0057 02       		.byte	0x2
+ 127 0058 07       		.byte	0x7
+ 128 0059 14000000 		.4byte	.LASF6
+ 129 005d 04       		.uleb128 0x4
+ 130 005e D0010000 		.4byte	.LASF12
+ 131 0062 02       		.byte	0x2
+ 132 0063 3F       		.byte	0x3f
+ 133 0064 68000000 		.4byte	0x68
+ 134 0068 02       		.uleb128 0x2
+ 135 0069 04       		.byte	0x4
+ 136 006a 05       		.byte	0x5
+ 137 006b 85010000 		.4byte	.LASF7
+ 138 006f 02       		.uleb128 0x2
+ 139 0070 04       		.byte	0x4
+ 140 0071 07       		.byte	0x7
+ 141 0072 F0000000 		.4byte	.LASF8
+ 142 0076 02       		.uleb128 0x2
+ 143 0077 08       		.byte	0x8
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 4
+
+
+ 144 0078 07       		.byte	0x7
+ 145 0079 02010000 		.4byte	.LASF9
+ 146 007d 02       		.uleb128 0x2
+ 147 007e 04       		.byte	0x4
+ 148 007f 07       		.byte	0x7
+ 149 0080 FC010000 		.4byte	.LASF10
+ 150 0084 02       		.uleb128 0x2
+ 151 0085 01       		.byte	0x1
+ 152 0086 08       		.byte	0x8
+ 153 0087 6E010000 		.4byte	.LASF11
+ 154 008b 04       		.uleb128 0x4
+ 155 008c F4010000 		.4byte	.LASF13
+ 156 0090 03       		.byte	0x3
+ 157 0091 2C       		.byte	0x2c
+ 158 0092 5D000000 		.4byte	0x5d
+ 159 0096 05       		.uleb128 0x5
+ 160 0097 EA000000 		.4byte	.LASF14
+ 161 009b 04       		.byte	0x4
+ 162 009c E401     		.2byte	0x1e4
+ 163 009e 48000000 		.4byte	0x48
+ 164 00a2 02       		.uleb128 0x2
+ 165 00a3 04       		.byte	0x4
+ 166 00a4 04       		.byte	0x4
+ 167 00a5 DA010000 		.4byte	.LASF15
+ 168 00a9 02       		.uleb128 0x2
+ 169 00aa 08       		.byte	0x8
+ 170 00ab 04       		.byte	0x4
+ 171 00ac 98010000 		.4byte	.LASF16
+ 172 00b0 06       		.uleb128 0x6
+ 173 00b1 4B000000 		.4byte	.LASF28
+ 174 00b5 01       		.byte	0x1
+ 175 00b6 13       		.byte	0x13
+ 176 00b7 2C000000 		.4byte	0x2c
+ 177 00bb 00000000 		.4byte	.LFB63
+ 178 00bf 24000000 		.4byte	.LFE63-.LFB63
+ 179 00c3 01       		.uleb128 0x1
+ 180 00c4 9C       		.byte	0x9c
+ 181 00c5 00010000 		.4byte	0x100
+ 182 00c9 07       		.uleb128 0x7
+ 183 00ca 08000000 		.4byte	.LVL0
+ 184 00ce 36010000 		.4byte	0x136
+ 185 00d2 07       		.uleb128 0x7
+ 186 00d3 0C000000 		.4byte	.LVL1
+ 187 00d7 41010000 		.4byte	0x141
+ 188 00db 07       		.uleb128 0x7
+ 189 00dc 10000000 		.4byte	.LVL2
+ 190 00e0 4C010000 		.4byte	0x14c
+ 191 00e4 07       		.uleb128 0x7
+ 192 00e5 14000000 		.4byte	.LVL3
+ 193 00e9 57010000 		.4byte	0x157
+ 194 00ed 07       		.uleb128 0x7
+ 195 00ee 1A000000 		.4byte	.LVL4
+ 196 00f2 62010000 		.4byte	0x162
+ 197 00f6 07       		.uleb128 0x7
+ 198 00f7 1E000000 		.4byte	.LVL5
+ 199 00fb 6D010000 		.4byte	0x16d
+ 200 00ff 00       		.byte	0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 5
+
+
+ 201 0100 08       		.uleb128 0x8
+ 202 0101 10010000 		.4byte	0x110
+ 203 0105 10010000 		.4byte	0x110
+ 204 0109 09       		.uleb128 0x9
+ 205 010a 7D000000 		.4byte	0x7d
+ 206 010e 3F       		.byte	0x3f
+ 207 010f 00       		.byte	0
+ 208 0110 0A       		.uleb128 0xa
+ 209 0111 96000000 		.4byte	0x96
+ 210 0115 0B       		.uleb128 0xb
+ 211 0116 34000000 		.4byte	.LASF17
+ 212 011a 05       		.byte	0x5
+ 213 011b 77       		.byte	0x77
+ 214 011c 20010000 		.4byte	0x120
+ 215 0120 0A       		.uleb128 0xa
+ 216 0121 00010000 		.4byte	0x100
+ 217 0125 0C       		.uleb128 0xc
+ 218 0126 AD010000 		.4byte	.LASF18
+ 219 012a 06       		.byte	0x6
+ 220 012b 1207     		.2byte	0x712
+ 221 012d 31010000 		.4byte	0x131
+ 222 0131 0D       		.uleb128 0xd
+ 223 0132 8B000000 		.4byte	0x8b
+ 224 0136 0E       		.uleb128 0xe
+ 225 0137 00000000 		.4byte	.LASF19
+ 226 013b 00000000 		.4byte	.LASF19
+ 227 013f 07       		.byte	0x7
+ 228 0140 5A       		.byte	0x5a
+ 229 0141 0E       		.uleb128 0xe
+ 230 0142 23010000 		.4byte	.LASF20
+ 231 0146 23010000 		.4byte	.LASF20
+ 232 014a 08       		.byte	0x8
+ 233 014b 17       		.byte	0x17
+ 234 014c 0E       		.uleb128 0xe
+ 235 014d 19010000 		.4byte	.LASF21
+ 236 0151 19010000 		.4byte	.LASF21
+ 237 0155 05       		.byte	0x5
+ 238 0156 38       		.byte	0x38
+ 239 0157 0E       		.uleb128 0xe
+ 240 0158 73010000 		.4byte	.LASF22
+ 241 015c 73010000 		.4byte	.LASF22
+ 242 0160 09       		.byte	0x9
+ 243 0161 17       		.byte	0x17
+ 244 0162 0E       		.uleb128 0xe
+ 245 0163 E0010000 		.4byte	.LASF23
+ 246 0167 E0010000 		.4byte	.LASF23
+ 247 016b 05       		.byte	0x5
+ 248 016c 55       		.byte	0x55
+ 249 016d 0E       		.uleb128 0xe
+ 250 016e BA010000 		.4byte	.LASF24
+ 251 0172 BA010000 		.4byte	.LASF24
+ 252 0176 0A       		.byte	0xa
+ 253 0177 59       		.byte	0x59
+ 254 0178 00       		.byte	0
+ 255              		.section	.debug_abbrev,"",%progbits
+ 256              	.Ldebug_abbrev0:
+ 257 0000 01       		.uleb128 0x1
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 6
+
+
+ 258 0001 11       		.uleb128 0x11
+ 259 0002 01       		.byte	0x1
+ 260 0003 25       		.uleb128 0x25
+ 261 0004 0E       		.uleb128 0xe
+ 262 0005 13       		.uleb128 0x13
+ 263 0006 0B       		.uleb128 0xb
+ 264 0007 03       		.uleb128 0x3
+ 265 0008 0E       		.uleb128 0xe
+ 266 0009 1B       		.uleb128 0x1b
+ 267 000a 0E       		.uleb128 0xe
+ 268 000b 55       		.uleb128 0x55
+ 269 000c 17       		.uleb128 0x17
+ 270 000d 11       		.uleb128 0x11
+ 271 000e 01       		.uleb128 0x1
+ 272 000f 10       		.uleb128 0x10
+ 273 0010 17       		.uleb128 0x17
+ 274 0011 00       		.byte	0
+ 275 0012 00       		.byte	0
+ 276 0013 02       		.uleb128 0x2
+ 277 0014 24       		.uleb128 0x24
+ 278 0015 00       		.byte	0
+ 279 0016 0B       		.uleb128 0xb
+ 280 0017 0B       		.uleb128 0xb
+ 281 0018 3E       		.uleb128 0x3e
+ 282 0019 0B       		.uleb128 0xb
+ 283 001a 03       		.uleb128 0x3
+ 284 001b 0E       		.uleb128 0xe
+ 285 001c 00       		.byte	0
+ 286 001d 00       		.byte	0
+ 287 001e 03       		.uleb128 0x3
+ 288 001f 24       		.uleb128 0x24
+ 289 0020 00       		.byte	0
+ 290 0021 0B       		.uleb128 0xb
+ 291 0022 0B       		.uleb128 0xb
+ 292 0023 3E       		.uleb128 0x3e
+ 293 0024 0B       		.uleb128 0xb
+ 294 0025 03       		.uleb128 0x3
+ 295 0026 08       		.uleb128 0x8
+ 296 0027 00       		.byte	0
+ 297 0028 00       		.byte	0
+ 298 0029 04       		.uleb128 0x4
+ 299 002a 16       		.uleb128 0x16
+ 300 002b 00       		.byte	0
+ 301 002c 03       		.uleb128 0x3
+ 302 002d 0E       		.uleb128 0xe
+ 303 002e 3A       		.uleb128 0x3a
+ 304 002f 0B       		.uleb128 0xb
+ 305 0030 3B       		.uleb128 0x3b
+ 306 0031 0B       		.uleb128 0xb
+ 307 0032 49       		.uleb128 0x49
+ 308 0033 13       		.uleb128 0x13
+ 309 0034 00       		.byte	0
+ 310 0035 00       		.byte	0
+ 311 0036 05       		.uleb128 0x5
+ 312 0037 16       		.uleb128 0x16
+ 313 0038 00       		.byte	0
+ 314 0039 03       		.uleb128 0x3
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 7
+
+
+ 315 003a 0E       		.uleb128 0xe
+ 316 003b 3A       		.uleb128 0x3a
+ 317 003c 0B       		.uleb128 0xb
+ 318 003d 3B       		.uleb128 0x3b
+ 319 003e 05       		.uleb128 0x5
+ 320 003f 49       		.uleb128 0x49
+ 321 0040 13       		.uleb128 0x13
+ 322 0041 00       		.byte	0
+ 323 0042 00       		.byte	0
+ 324 0043 06       		.uleb128 0x6
+ 325 0044 2E       		.uleb128 0x2e
+ 326 0045 01       		.byte	0x1
+ 327 0046 3F       		.uleb128 0x3f
+ 328 0047 19       		.uleb128 0x19
+ 329 0048 03       		.uleb128 0x3
+ 330 0049 0E       		.uleb128 0xe
+ 331 004a 3A       		.uleb128 0x3a
+ 332 004b 0B       		.uleb128 0xb
+ 333 004c 3B       		.uleb128 0x3b
+ 334 004d 0B       		.uleb128 0xb
+ 335 004e 27       		.uleb128 0x27
+ 336 004f 19       		.uleb128 0x19
+ 337 0050 49       		.uleb128 0x49
+ 338 0051 13       		.uleb128 0x13
+ 339 0052 8701     		.uleb128 0x87
+ 340 0054 19       		.uleb128 0x19
+ 341 0055 11       		.uleb128 0x11
+ 342 0056 01       		.uleb128 0x1
+ 343 0057 12       		.uleb128 0x12
+ 344 0058 06       		.uleb128 0x6
+ 345 0059 40       		.uleb128 0x40
+ 346 005a 18       		.uleb128 0x18
+ 347 005b 9742     		.uleb128 0x2117
+ 348 005d 19       		.uleb128 0x19
+ 349 005e 01       		.uleb128 0x1
+ 350 005f 13       		.uleb128 0x13
+ 351 0060 00       		.byte	0
+ 352 0061 00       		.byte	0
+ 353 0062 07       		.uleb128 0x7
+ 354 0063 898201   		.uleb128 0x4109
+ 355 0066 00       		.byte	0
+ 356 0067 11       		.uleb128 0x11
+ 357 0068 01       		.uleb128 0x1
+ 358 0069 31       		.uleb128 0x31
+ 359 006a 13       		.uleb128 0x13
+ 360 006b 00       		.byte	0
+ 361 006c 00       		.byte	0
+ 362 006d 08       		.uleb128 0x8
+ 363 006e 01       		.uleb128 0x1
+ 364 006f 01       		.byte	0x1
+ 365 0070 49       		.uleb128 0x49
+ 366 0071 13       		.uleb128 0x13
+ 367 0072 01       		.uleb128 0x1
+ 368 0073 13       		.uleb128 0x13
+ 369 0074 00       		.byte	0
+ 370 0075 00       		.byte	0
+ 371 0076 09       		.uleb128 0x9
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 8
+
+
+ 372 0077 21       		.uleb128 0x21
+ 373 0078 00       		.byte	0
+ 374 0079 49       		.uleb128 0x49
+ 375 007a 13       		.uleb128 0x13
+ 376 007b 2F       		.uleb128 0x2f
+ 377 007c 0B       		.uleb128 0xb
+ 378 007d 00       		.byte	0
+ 379 007e 00       		.byte	0
+ 380 007f 0A       		.uleb128 0xa
+ 381 0080 26       		.uleb128 0x26
+ 382 0081 00       		.byte	0
+ 383 0082 49       		.uleb128 0x49
+ 384 0083 13       		.uleb128 0x13
+ 385 0084 00       		.byte	0
+ 386 0085 00       		.byte	0
+ 387 0086 0B       		.uleb128 0xb
+ 388 0087 34       		.uleb128 0x34
+ 389 0088 00       		.byte	0
+ 390 0089 03       		.uleb128 0x3
+ 391 008a 0E       		.uleb128 0xe
+ 392 008b 3A       		.uleb128 0x3a
+ 393 008c 0B       		.uleb128 0xb
+ 394 008d 3B       		.uleb128 0x3b
+ 395 008e 0B       		.uleb128 0xb
+ 396 008f 49       		.uleb128 0x49
+ 397 0090 13       		.uleb128 0x13
+ 398 0091 3F       		.uleb128 0x3f
+ 399 0092 19       		.uleb128 0x19
+ 400 0093 3C       		.uleb128 0x3c
+ 401 0094 19       		.uleb128 0x19
+ 402 0095 00       		.byte	0
+ 403 0096 00       		.byte	0
+ 404 0097 0C       		.uleb128 0xc
+ 405 0098 34       		.uleb128 0x34
+ 406 0099 00       		.byte	0
+ 407 009a 03       		.uleb128 0x3
+ 408 009b 0E       		.uleb128 0xe
+ 409 009c 3A       		.uleb128 0x3a
+ 410 009d 0B       		.uleb128 0xb
+ 411 009e 3B       		.uleb128 0x3b
+ 412 009f 05       		.uleb128 0x5
+ 413 00a0 49       		.uleb128 0x49
+ 414 00a1 13       		.uleb128 0x13
+ 415 00a2 3F       		.uleb128 0x3f
+ 416 00a3 19       		.uleb128 0x19
+ 417 00a4 3C       		.uleb128 0x3c
+ 418 00a5 19       		.uleb128 0x19
+ 419 00a6 00       		.byte	0
+ 420 00a7 00       		.byte	0
+ 421 00a8 0D       		.uleb128 0xd
+ 422 00a9 35       		.uleb128 0x35
+ 423 00aa 00       		.byte	0
+ 424 00ab 49       		.uleb128 0x49
+ 425 00ac 13       		.uleb128 0x13
+ 426 00ad 00       		.byte	0
+ 427 00ae 00       		.byte	0
+ 428 00af 0E       		.uleb128 0xe
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 9
+
+
+ 429 00b0 2E       		.uleb128 0x2e
+ 430 00b1 00       		.byte	0
+ 431 00b2 3F       		.uleb128 0x3f
+ 432 00b3 19       		.uleb128 0x19
+ 433 00b4 3C       		.uleb128 0x3c
+ 434 00b5 19       		.uleb128 0x19
+ 435 00b6 6E       		.uleb128 0x6e
+ 436 00b7 0E       		.uleb128 0xe
+ 437 00b8 03       		.uleb128 0x3
+ 438 00b9 0E       		.uleb128 0xe
+ 439 00ba 3A       		.uleb128 0x3a
+ 440 00bb 0B       		.uleb128 0xb
+ 441 00bc 3B       		.uleb128 0x3b
+ 442 00bd 0B       		.uleb128 0xb
+ 443 00be 00       		.byte	0
+ 444 00bf 00       		.byte	0
+ 445 00c0 00       		.byte	0
+ 446              		.section	.debug_aranges,"",%progbits
+ 447 0000 1C000000 		.4byte	0x1c
+ 448 0004 0200     		.2byte	0x2
+ 449 0006 00000000 		.4byte	.Ldebug_info0
+ 450 000a 04       		.byte	0x4
+ 451 000b 00       		.byte	0
+ 452 000c 0000     		.2byte	0
+ 453 000e 0000     		.2byte	0
+ 454 0010 00000000 		.4byte	.LFB63
+ 455 0014 24000000 		.4byte	.LFE63-.LFB63
+ 456 0018 00000000 		.4byte	0
+ 457 001c 00000000 		.4byte	0
+ 458              		.section	.debug_ranges,"",%progbits
+ 459              	.Ldebug_ranges0:
+ 460 0000 00000000 		.4byte	.LFB63
+ 461 0004 24000000 		.4byte	.LFE63
+ 462 0008 00000000 		.4byte	0
+ 463 000c 00000000 		.4byte	0
+ 464              		.section	.debug_line,"",%progbits
+ 465              	.Ldebug_line0:
+ 466 0000 AF010000 		.section	.debug_str,"MS",%progbits,1
+ 466      02009301 
+ 466      00000201 
+ 466      FB0E0D00 
+ 466      01010101 
+ 467              	.LASF19:
+ 468 0000 52656672 		.ascii	"Refresh_Timer_Start\000"
+ 468      6573685F 
+ 468      54696D65 
+ 468      725F5374 
+ 468      61727400 
+ 469              	.LASF6:
+ 470 0014 73686F72 		.ascii	"short unsigned int\000"
+ 470      7420756E 
+ 470      7369676E 
+ 470      65642069 
+ 470      6E7400
+ 471              	.LASF0:
+ 472 0027 756E7369 		.ascii	"unsigned int\000"
+ 472      676E6564 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 10
+
+
+ 472      20696E74 
+ 472      00
+ 473              	.LASF17:
+ 474 0034 4C43445F 		.ascii	"LCD_customFonts\000"
+ 474      63757374 
+ 474      6F6D466F 
+ 474      6E747300 
+ 475              	.LASF26:
+ 476 0044 6D61696E 		.ascii	"main.c\000"
+ 476      2E6300
+ 477              	.LASF28:
+ 478 004b 6D61696E 		.ascii	"main\000"
+ 478      00
+ 479              	.LASF3:
+ 480 0050 7369676E 		.ascii	"signed char\000"
+ 480      65642063 
+ 480      68617200 
+ 481              	.LASF25:
+ 482 005c 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 482      43313120 
+ 482      352E342E 
+ 482      31203230 
+ 482      31363036 
+ 483 008f 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 483      20726576 
+ 483      6973696F 
+ 483      6E203233 
+ 483      37373135 
+ 484 00c2 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 484      66756E63 
+ 484      74696F6E 
+ 484      2D736563 
+ 484      74696F6E 
+ 485              	.LASF14:
+ 486 00ea 75696E74 		.ascii	"uint8\000"
+ 486      3800
+ 487              	.LASF8:
+ 488 00f0 6C6F6E67 		.ascii	"long unsigned int\000"
+ 488      20756E73 
+ 488      69676E65 
+ 488      6420696E 
+ 488      7400
+ 489              	.LASF9:
+ 490 0102 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 490      206C6F6E 
+ 490      6720756E 
+ 490      7369676E 
+ 490      65642069 
+ 491              	.LASF21:
+ 492 0119 4C43445F 		.ascii	"LCD_Start\000"
+ 492      53746172 
+ 492      7400
+ 493              	.LASF20:
+ 494 0123 52454652 		.ascii	"REFRESH_ISR_Start\000"
+ 494      4553485F 
+ 494      4953525F 
+ 494      53746172 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 11
+
+
+ 494      7400
+ 495              	.LASF27:
+ 496 0135 433A5C45 		.ascii	"C:\\ECE381_Labs\\Lab04_Game\\Lab04_Game.cydsn\000"
+ 496      43453338 
+ 496      315F4C61 
+ 496      62735C4C 
+ 496      61623034 
+ 497              	.LASF4:
+ 498 0160 756E7369 		.ascii	"unsigned char\000"
+ 498      676E6564 
+ 498      20636861 
+ 498      7200
+ 499              	.LASF11:
+ 500 016e 63686172 		.ascii	"char\000"
+ 500      00
+ 501              	.LASF22:
+ 502 0173 434F4E54 		.ascii	"CONTROL_ISR_Start\000"
+ 502      524F4C5F 
+ 502      4953525F 
+ 502      53746172 
+ 502      7400
+ 503              	.LASF7:
+ 504 0185 6C6F6E67 		.ascii	"long int\000"
+ 504      20696E74 
+ 504      00
+ 505              	.LASF5:
+ 506 018e 73686F72 		.ascii	"short int\000"
+ 506      7420696E 
+ 506      7400
+ 507              	.LASF16:
+ 508 0198 646F7562 		.ascii	"double\000"
+ 508      6C6500
+ 509              	.LASF1:
+ 510 019f 6C6F6E67 		.ascii	"long long int\000"
+ 510      206C6F6E 
+ 510      6720696E 
+ 510      7400
+ 511              	.LASF18:
+ 512 01ad 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 512      52784275 
+ 512      66666572 
+ 512      00
+ 513              	.LASF24:
+ 514 01ba 5052535F 		.ascii	"PRS_Start\000"
+ 514      53746172 
+ 514      7400
+ 515              	.LASF2:
+ 516 01c4 6C6F6E67 		.ascii	"long double\000"
+ 516      20646F75 
+ 516      626C6500 
+ 517              	.LASF12:
+ 518 01d0 5F5F696E 		.ascii	"__int32_t\000"
+ 518      7433325F 
+ 518      7400
+ 519              	.LASF15:
+ 520 01da 666C6F61 		.ascii	"float\000"
+ 520      7400
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3O7weR.s 			page 12
+
+
+ 521              	.LASF23:
+ 522 01e0 4C43445F 		.ascii	"LCD_LoadCustomFonts\000"
+ 522      4C6F6164 
+ 522      43757374 
+ 522      6F6D466F 
+ 522      6E747300 
+ 523              	.LASF13:
+ 524 01f4 696E7433 		.ascii	"int32_t\000"
+ 524      325F7400 
+ 525              	.LASF10:
+ 526 01fc 73697A65 		.ascii	"sizetype\000"
+ 526      74797065 
+ 526      00
+ 527              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

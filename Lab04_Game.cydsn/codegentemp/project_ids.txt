@@ -1,0 +1,6 @@
+C:\ECE381_Labs\Lab04_Game\Lab04_Game.cydsn\Lab04_Game.cyprj|e6030e09-cbd1-4b43-8bf7-61c9878cff39
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|5356c6a7-fee6-41e0-9ba2-b3ba1fc2125d
+D:\Documents\PSoC Creator\4.3\Downloads ( 4.3).cylib\Downloads ( 4.3).cyprj|d31d9e65-564f-43c3-920d-4d6adcc5de8c
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|0b595709-d189-4702-bdb5-c7d80a4986e4
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|fc9823fc-e502-46a6-a366-5383cd4d02a7
+C:\Program Files (x86)\Cypress\PSoC Creator\4.3\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|9c242c91-4c04-4564-99f1-0c35109019d0

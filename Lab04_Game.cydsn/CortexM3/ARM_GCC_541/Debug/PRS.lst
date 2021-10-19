@@ -1,0 +1,1923 @@
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"PRS.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.PRS_Enable,"ax",%progbits
+  20              		.align	2
+  21              		.global	PRS_Enable
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	PRS_Enable, %function
+  25              	PRS_Enable:
+  26              	.LFB1:
+  27              		.file 1 "Generated_Source\\PSoC5\\PRS.c"
+   1:Generated_Source\PSoC5/PRS.c **** /*******************************************************************************
+   2:Generated_Source\PSoC5/PRS.c **** * File Name: PRS.c
+   3:Generated_Source\PSoC5/PRS.c **** * Version 2.40
+   4:Generated_Source\PSoC5/PRS.c **** *
+   5:Generated_Source\PSoC5/PRS.c **** * Description:
+   6:Generated_Source\PSoC5/PRS.c **** *  This file provides the source code to the API for the PRS component
+   7:Generated_Source\PSoC5/PRS.c **** *
+   8:Generated_Source\PSoC5/PRS.c **** * Note:
+   9:Generated_Source\PSoC5/PRS.c **** *  None
+  10:Generated_Source\PSoC5/PRS.c **** *
+  11:Generated_Source\PSoC5/PRS.c **** ********************************************************************************
+  12:Generated_Source\PSoC5/PRS.c **** * Copyright 2008-2013, Cypress Semiconductor Corporation.  All rights reserved.
+  13:Generated_Source\PSoC5/PRS.c **** * You may use this file only in accordance with the license, terms, conditions,
+  14:Generated_Source\PSoC5/PRS.c **** * disclaimers, and limitations in the end user license agreement accompanying
+  15:Generated_Source\PSoC5/PRS.c **** * the software package with which this file was provided.
+  16:Generated_Source\PSoC5/PRS.c **** *******************************************************************************/
+  17:Generated_Source\PSoC5/PRS.c **** 
+  18:Generated_Source\PSoC5/PRS.c **** #include "PRS.h"
+  19:Generated_Source\PSoC5/PRS.c **** 
+  20:Generated_Source\PSoC5/PRS.c **** uint8 PRS_initVar = 0u;
+  21:Generated_Source\PSoC5/PRS.c **** 
+  22:Generated_Source\PSoC5/PRS.c **** PRS_BACKUP_STRUCT PRS_backup =
+  23:Generated_Source\PSoC5/PRS.c **** {
+  24:Generated_Source\PSoC5/PRS.c ****     0x00u, /* enableState; */
+  25:Generated_Source\PSoC5/PRS.c **** 
+  26:Generated_Source\PSoC5/PRS.c ****     #if (PRS_WAKEUP_BEHAVIOUR == PRS__RESUMEWORK)
+  27:Generated_Source\PSoC5/PRS.c ****         /* Save dff register for time mult */
+  28:Generated_Source\PSoC5/PRS.c ****         #if (PRS_TIME_MULTIPLEXING_ENABLE)
+  29:Generated_Source\PSoC5/PRS.c ****             PRS_INIT_STATE, /* dffStatus; */
+  30:Generated_Source\PSoC5/PRS.c ****         #endif  /* End PRS_TIME_MULTIPLEXING_ENABLE */
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 2
+
+
+  31:Generated_Source\PSoC5/PRS.c **** 
+  32:Generated_Source\PSoC5/PRS.c ****         /* Save A0 and A1 registers are none-retention */
+  33:Generated_Source\PSoC5/PRS.c ****         #if(PRS_PRS_SIZE <= 32u)
+  34:Generated_Source\PSoC5/PRS.c ****             PRS_DEFAULT_SEED, /* seed */
+  35:Generated_Source\PSoC5/PRS.c **** 
+  36:Generated_Source\PSoC5/PRS.c ****         #else
+  37:Generated_Source\PSoC5/PRS.c ****             PRS_DEFAULT_SEED_UPPER, /* seedUpper; */
+  38:Generated_Source\PSoC5/PRS.c ****             PRS_DEFAULT_SEED_LOWER, /* seedLower; */
+  39:Generated_Source\PSoC5/PRS.c **** 
+  40:Generated_Source\PSoC5/PRS.c ****         #endif  /* End (PRS_PRS_SIZE <= 32u) */
+  41:Generated_Source\PSoC5/PRS.c **** 
+  42:Generated_Source\PSoC5/PRS.c ****     #endif  /* End (PRS_WAKEUP_BEHAVIOUR == PRS__RESUMEWORK) */
+  43:Generated_Source\PSoC5/PRS.c **** };
+  44:Generated_Source\PSoC5/PRS.c **** 
+  45:Generated_Source\PSoC5/PRS.c **** 
+  46:Generated_Source\PSoC5/PRS.c **** /*******************************************************************************
+  47:Generated_Source\PSoC5/PRS.c **** * Function Name: PRS_Init
+  48:Generated_Source\PSoC5/PRS.c **** ********************************************************************************
+  49:Generated_Source\PSoC5/PRS.c **** *
+  50:Generated_Source\PSoC5/PRS.c **** * Summary:
+  51:Generated_Source\PSoC5/PRS.c **** *  Initializes seed and polynomial registers with initial values.
+  52:Generated_Source\PSoC5/PRS.c **** *
+  53:Generated_Source\PSoC5/PRS.c **** * Parameters:
+  54:Generated_Source\PSoC5/PRS.c **** *  void
+  55:Generated_Source\PSoC5/PRS.c **** *
+  56:Generated_Source\PSoC5/PRS.c **** * Return:
+  57:Generated_Source\PSoC5/PRS.c **** *  void
+  58:Generated_Source\PSoC5/PRS.c **** *
+  59:Generated_Source\PSoC5/PRS.c **** *******************************************************************************/
+  60:Generated_Source\PSoC5/PRS.c **** void PRS_Init(void) 
+  61:Generated_Source\PSoC5/PRS.c **** {
+  62:Generated_Source\PSoC5/PRS.c ****     /* Writes seed value and ponynom value provided for customizer */
+  63:Generated_Source\PSoC5/PRS.c ****     #if (PRS_PRS_SIZE <= 32u)
+  64:Generated_Source\PSoC5/PRS.c ****         PRS_WritePolynomial(PRS_DEFAULT_POLYNOM);
+  65:Generated_Source\PSoC5/PRS.c ****         PRS_WriteSeed(PRS_DEFAULT_SEED);
+  66:Generated_Source\PSoC5/PRS.c ****         #if (PRS_RUN_MODE == PRS__CLOCKED)
+  67:Generated_Source\PSoC5/PRS.c ****             PRS_ResetSeedInit(PRS_DEFAULT_SEED);
+  68:Generated_Source\PSoC5/PRS.c ****         #endif  /* End (PRS_RUN_MODE == PRS__CLOCKED) */
+  69:Generated_Source\PSoC5/PRS.c ****             PRS_Enable();
+  70:Generated_Source\PSoC5/PRS.c ****     #else
+  71:Generated_Source\PSoC5/PRS.c ****         PRS_WritePolynomialUpper(PRS_DEFAULT_POLYNOM_UPPER);
+  72:Generated_Source\PSoC5/PRS.c ****         PRS_WritePolynomialLower(PRS_DEFAULT_POLYNOM_LOWER);
+  73:Generated_Source\PSoC5/PRS.c ****         PRS_WriteSeedUpper(PRS_DEFAULT_SEED_UPPER);
+  74:Generated_Source\PSoC5/PRS.c ****         PRS_WriteSeedLower(PRS_DEFAULT_SEED_LOWER);
+  75:Generated_Source\PSoC5/PRS.c ****         #if (PRS_RUN_MODE == PRS__CLOCKED)
+  76:Generated_Source\PSoC5/PRS.c ****             PRS_ResetSeedInitUpper(PRS_DEFAULT_SEED_UPPER);
+  77:Generated_Source\PSoC5/PRS.c ****             PRS_ResetSeedInitLower(PRS_DEFAULT_SEED_LOWER);
+  78:Generated_Source\PSoC5/PRS.c ****         #endif  /* End (PRS_RUN_MODE == PRS__CLOCKED) */
+  79:Generated_Source\PSoC5/PRS.c ****             PRS_Enable();
+  80:Generated_Source\PSoC5/PRS.c ****     #endif  /* End (PRS_PRS_SIZE <= 32u) */
+  81:Generated_Source\PSoC5/PRS.c **** }
+  82:Generated_Source\PSoC5/PRS.c **** 
+  83:Generated_Source\PSoC5/PRS.c **** 
+  84:Generated_Source\PSoC5/PRS.c **** /*******************************************************************************
+  85:Generated_Source\PSoC5/PRS.c **** * Function Name: PRS_Enable
+  86:Generated_Source\PSoC5/PRS.c **** ********************************************************************************
+  87:Generated_Source\PSoC5/PRS.c **** *
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 3
+
+
+  88:Generated_Source\PSoC5/PRS.c **** * Summary:
+  89:Generated_Source\PSoC5/PRS.c **** *  Starts PRS computation on rising edge of input clock.
+  90:Generated_Source\PSoC5/PRS.c **** *
+  91:Generated_Source\PSoC5/PRS.c **** * Parameters:
+  92:Generated_Source\PSoC5/PRS.c **** *  void
+  93:Generated_Source\PSoC5/PRS.c **** *
+  94:Generated_Source\PSoC5/PRS.c **** * Return:
+  95:Generated_Source\PSoC5/PRS.c **** *  void
+  96:Generated_Source\PSoC5/PRS.c **** *
+  97:Generated_Source\PSoC5/PRS.c **** *******************************************************************************/
+  98:Generated_Source\PSoC5/PRS.c **** void PRS_Enable(void) 
+  99:Generated_Source\PSoC5/PRS.c **** {
+  28              		.loc 1 99 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+ 100:Generated_Source\PSoC5/PRS.c ****         PRS_CONTROL_REG |= PRS_CTRL_ENABLE;
+  33              		.loc 1 100 0
+  34 0000 024A     		ldr	r2, .L2
+  35 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  36 0004 43F00103 		orr	r3, r3, #1
+  37 0008 1370     		strb	r3, [r2]
+  38 000a 7047     		bx	lr
+  39              	.L3:
+  40              		.align	2
+  41              	.L2:
+  42 000c 7A640040 		.word	1073767546
+  43              		.cfi_endproc
+  44              	.LFE1:
+  45              		.size	PRS_Enable, .-PRS_Enable
+  46              		.section	.text.PRS_Stop,"ax",%progbits
+  47              		.align	2
+  48              		.global	PRS_Stop
+  49              		.thumb
+  50              		.thumb_func
+  51              		.type	PRS_Stop, %function
+  52              	PRS_Stop:
+  53              	.LFB3:
+ 101:Generated_Source\PSoC5/PRS.c **** }
+ 102:Generated_Source\PSoC5/PRS.c **** 
+ 103:Generated_Source\PSoC5/PRS.c **** 
+ 104:Generated_Source\PSoC5/PRS.c **** /*******************************************************************************
+ 105:Generated_Source\PSoC5/PRS.c **** * Function Name: PRS_Start
+ 106:Generated_Source\PSoC5/PRS.c **** ********************************************************************************
+ 107:Generated_Source\PSoC5/PRS.c **** *
+ 108:Generated_Source\PSoC5/PRS.c **** * Summary:
+ 109:Generated_Source\PSoC5/PRS.c **** *  Initializes seed and polynomial registers with initial values. Computation
+ 110:Generated_Source\PSoC5/PRS.c **** *  of PRS starts on rising edge of input clock.
+ 111:Generated_Source\PSoC5/PRS.c **** *
+ 112:Generated_Source\PSoC5/PRS.c **** * Parameters:
+ 113:Generated_Source\PSoC5/PRS.c **** *  void
+ 114:Generated_Source\PSoC5/PRS.c **** *
+ 115:Generated_Source\PSoC5/PRS.c **** * Return:
+ 116:Generated_Source\PSoC5/PRS.c **** *  void
+ 117:Generated_Source\PSoC5/PRS.c **** *
+ 118:Generated_Source\PSoC5/PRS.c **** * Global variables:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 4
+
+
+ 119:Generated_Source\PSoC5/PRS.c **** *  PRS_initVar: global variable is used to indicate initial
+ 120:Generated_Source\PSoC5/PRS.c **** *  configuration of this component.  The variable is initialized to zero and set
+ 121:Generated_Source\PSoC5/PRS.c **** *  to 1 the first time PRS_Start() is called. This allows
+ 122:Generated_Source\PSoC5/PRS.c **** *  enable/disable component without re-initialization in all subsequent calls
+ 123:Generated_Source\PSoC5/PRS.c **** *  to the PRS_Start() routine.
+ 124:Generated_Source\PSoC5/PRS.c **** *
+ 125:Generated_Source\PSoC5/PRS.c **** *******************************************************************************/
+ 126:Generated_Source\PSoC5/PRS.c **** void PRS_Start(void) 
+ 127:Generated_Source\PSoC5/PRS.c **** {
+ 128:Generated_Source\PSoC5/PRS.c ****     /* Writes seed value and ponynom value provided from customizer */
+ 129:Generated_Source\PSoC5/PRS.c ****     if (PRS_initVar == 0u)
+ 130:Generated_Source\PSoC5/PRS.c ****     {
+ 131:Generated_Source\PSoC5/PRS.c ****         PRS_Init();
+ 132:Generated_Source\PSoC5/PRS.c ****         PRS_initVar = 1u;
+ 133:Generated_Source\PSoC5/PRS.c ****     }
+ 134:Generated_Source\PSoC5/PRS.c **** 
+ 135:Generated_Source\PSoC5/PRS.c ****     PRS_Enable();
+ 136:Generated_Source\PSoC5/PRS.c **** }
+ 137:Generated_Source\PSoC5/PRS.c **** 
+ 138:Generated_Source\PSoC5/PRS.c **** 
+ 139:Generated_Source\PSoC5/PRS.c **** /*******************************************************************************
+ 140:Generated_Source\PSoC5/PRS.c **** * Function Name: PRS_Stop
+ 141:Generated_Source\PSoC5/PRS.c **** ********************************************************************************
+ 142:Generated_Source\PSoC5/PRS.c **** *
+ 143:Generated_Source\PSoC5/PRS.c **** * Summary:
+ 144:Generated_Source\PSoC5/PRS.c **** *  Stops PRS computation.
+ 145:Generated_Source\PSoC5/PRS.c **** *
+ 146:Generated_Source\PSoC5/PRS.c **** * Parameters:
+ 147:Generated_Source\PSoC5/PRS.c **** *  void
+ 148:Generated_Source\PSoC5/PRS.c **** *
+ 149:Generated_Source\PSoC5/PRS.c **** * Return:
+ 150:Generated_Source\PSoC5/PRS.c **** *  void
+ 151:Generated_Source\PSoC5/PRS.c **** *
+ 152:Generated_Source\PSoC5/PRS.c **** *******************************************************************************/
+ 153:Generated_Source\PSoC5/PRS.c **** void PRS_Stop(void) 
+ 154:Generated_Source\PSoC5/PRS.c **** {
+  54              		.loc 1 154 0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58              		@ link register save eliminated.
+ 155:Generated_Source\PSoC5/PRS.c ****     PRS_CONTROL_REG &= ((uint8)~PRS_CTRL_ENABLE);
+  59              		.loc 1 155 0
+  60 0000 024A     		ldr	r2, .L5
+  61 0002 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  62 0004 03F0FE03 		and	r3, r3, #254
+  63 0008 1370     		strb	r3, [r2]
+  64 000a 7047     		bx	lr
+  65              	.L6:
+  66              		.align	2
+  67              	.L5:
+  68 000c 7A640040 		.word	1073767546
+  69              		.cfi_endproc
+  70              	.LFE3:
+  71              		.size	PRS_Stop, .-PRS_Stop
+  72              		.section	.text.PRS_ResetSeedInit,"ax",%progbits
+  73              		.align	2
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 5
+
+
+  74              		.global	PRS_ResetSeedInit
+  75              		.thumb
+  76              		.thumb_func
+  77              		.type	PRS_ResetSeedInit, %function
+  78              	PRS_ResetSeedInit:
+  79              	.LFB4:
+ 156:Generated_Source\PSoC5/PRS.c **** }
+ 157:Generated_Source\PSoC5/PRS.c **** 
+ 158:Generated_Source\PSoC5/PRS.c **** 
+ 159:Generated_Source\PSoC5/PRS.c **** #if (PRS_RUN_MODE == PRS__APISINGLESTEP)
+ 160:Generated_Source\PSoC5/PRS.c ****     /*******************************************************************************
+ 161:Generated_Source\PSoC5/PRS.c ****     * FUNCTION NAME: PRS_Step
+ 162:Generated_Source\PSoC5/PRS.c ****     ********************************************************************************
+ 163:Generated_Source\PSoC5/PRS.c ****     *
+ 164:Generated_Source\PSoC5/PRS.c ****     * Summary:
+ 165:Generated_Source\PSoC5/PRS.c ****     *  Increments the PRS by one when API single step mode is used.
+ 166:Generated_Source\PSoC5/PRS.c ****     *
+ 167:Generated_Source\PSoC5/PRS.c ****     * Parameters:
+ 168:Generated_Source\PSoC5/PRS.c ****     *  void
+ 169:Generated_Source\PSoC5/PRS.c ****     *
+ 170:Generated_Source\PSoC5/PRS.c ****     * Return:
+ 171:Generated_Source\PSoC5/PRS.c ****     *  void
+ 172:Generated_Source\PSoC5/PRS.c ****     *
+ 173:Generated_Source\PSoC5/PRS.c ****     *******************************************************************************/
+ 174:Generated_Source\PSoC5/PRS.c ****     void PRS_Step(void) 
+ 175:Generated_Source\PSoC5/PRS.c ****     {
+ 176:Generated_Source\PSoC5/PRS.c ****         #if (PRS_TIME_MULTIPLEXING_ENABLE)
+ 177:Generated_Source\PSoC5/PRS.c ****             /* Makes 4 pulse, 4x for Time Mult */
+ 178:Generated_Source\PSoC5/PRS.c ****             PRS_EXECUTE_STEP;
+ 179:Generated_Source\PSoC5/PRS.c ****             PRS_EXECUTE_STEP;
+ 180:Generated_Source\PSoC5/PRS.c ****             PRS_EXECUTE_STEP;
+ 181:Generated_Source\PSoC5/PRS.c ****             PRS_EXECUTE_STEP;
+ 182:Generated_Source\PSoC5/PRS.c **** 
+ 183:Generated_Source\PSoC5/PRS.c ****         #else
+ 184:Generated_Source\PSoC5/PRS.c ****             /* One pulse without Time mult required */
+ 185:Generated_Source\PSoC5/PRS.c ****             PRS_EXECUTE_STEP;
+ 186:Generated_Source\PSoC5/PRS.c **** 
+ 187:Generated_Source\PSoC5/PRS.c ****         #endif  /* End PRS_TIME_MULTIPLEXING_ENABLE */
+ 188:Generated_Source\PSoC5/PRS.c ****     }
+ 189:Generated_Source\PSoC5/PRS.c **** #endif  /* End (PRS_RUN_MODE == PRS__APISINGLESTEP) */
+ 190:Generated_Source\PSoC5/PRS.c **** 
+ 191:Generated_Source\PSoC5/PRS.c **** 
+ 192:Generated_Source\PSoC5/PRS.c **** #if (PRS_RUN_MODE == PRS__CLOCKED)
+ 193:Generated_Source\PSoC5/PRS.c ****     #if (PRS_PRS_SIZE <= 32u) /* 8-32 bits PRS */
+ 194:Generated_Source\PSoC5/PRS.c ****         /*******************************************************************************
+ 195:Generated_Source\PSoC5/PRS.c ****         * FUNCTION NAME: PRS_ResetSeedInit
+ 196:Generated_Source\PSoC5/PRS.c ****         ********************************************************************************
+ 197:Generated_Source\PSoC5/PRS.c ****         *
+ 198:Generated_Source\PSoC5/PRS.c ****         * Summary:
+ 199:Generated_Source\PSoC5/PRS.c ****         *  Increments the PRS by one when API single step mode is used.
+ 200:Generated_Source\PSoC5/PRS.c ****         *
+ 201:Generated_Source\PSoC5/PRS.c ****         * Parameters:
+ 202:Generated_Source\PSoC5/PRS.c ****         *  void
+ 203:Generated_Source\PSoC5/PRS.c ****         *
+ 204:Generated_Source\PSoC5/PRS.c ****         * Return:
+ 205:Generated_Source\PSoC5/PRS.c ****         *  void
+ 206:Generated_Source\PSoC5/PRS.c ****         *
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 6
+
+
+ 207:Generated_Source\PSoC5/PRS.c ****         *******************************************************************************/
+ 208:Generated_Source\PSoC5/PRS.c ****         void PRS_ResetSeedInit(uint16 seed)
+ 209:Generated_Source\PSoC5/PRS.c ****                                             
+ 210:Generated_Source\PSoC5/PRS.c ****         {
+  80              		.loc 1 210 0
+  81              		.cfi_startproc
+  82              		@ args = 0, pretend = 0, frame = 0
+  83              		@ frame_needed = 0, uses_anonymous_args = 0
+  84              	.LVL0:
+  85 0000 10B5     		push	{r4, lr}
+  86              		.cfi_def_cfa_offset 8
+  87              		.cfi_offset 4, -8
+  88              		.cfi_offset 14, -4
+  89 0002 0446     		mov	r4, r0
+  90              	.LVL1:
+ 211:Generated_Source\PSoC5/PRS.c ****             uint8 enableInterrupts;
+ 212:Generated_Source\PSoC5/PRS.c **** 
+ 213:Generated_Source\PSoC5/PRS.c ****             /* Mask the Seed to cut unused bits */
+ 214:Generated_Source\PSoC5/PRS.c ****             seed &= PRS_MASK;
+ 215:Generated_Source\PSoC5/PRS.c **** 
+ 216:Generated_Source\PSoC5/PRS.c ****             /* Change AuxControl reg, need to be safety */
+ 217:Generated_Source\PSoC5/PRS.c ****             enableInterrupts = CyEnterCriticalSection();
+  91              		.loc 1 217 0
+  92 0004 FFF7FEFF 		bl	CyEnterCriticalSection
+  93              	.LVL2:
+ 218:Generated_Source\PSoC5/PRS.c **** 
+ 219:Generated_Source\PSoC5/PRS.c ****             #if (PRS_TIME_MULTIPLEXING_ENABLE)
+ 220:Generated_Source\PSoC5/PRS.c ****                 /* Set FIFOs to single register */
+ 221:Generated_Source\PSoC5/PRS.c ****                 PRS_AUX_CONTROL_A_REG |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 222:Generated_Source\PSoC5/PRS.c **** 
+ 223:Generated_Source\PSoC5/PRS.c ****                 #if(PRS_PRS_SIZE > 16u)       /* 17-32 bits PRS */
+ 224:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_B_REG |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 225:Generated_Source\PSoC5/PRS.c ****                 #endif  /* End (PRS_PRS_SIZE <= 8u) */
+ 226:Generated_Source\PSoC5/PRS.c **** 
+ 227:Generated_Source\PSoC5/PRS.c ****                 /* AuxControl reg settings are done */
+ 228:Generated_Source\PSoC5/PRS.c ****                 CyExitCriticalSection(enableInterrupts);
+ 229:Generated_Source\PSoC5/PRS.c **** 
+ 230:Generated_Source\PSoC5/PRS.c ****                 /* Write Seed COPY */
+ 231:Generated_Source\PSoC5/PRS.c ****                 #if (PRS_PRS_SIZE <= 16u)          /* 16 bits PRS */
+ 232:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_A__A1_REG = HI8(seed);
+ 233:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_A__A0_REG = LO8(seed);
+ 234:Generated_Source\PSoC5/PRS.c **** 
+ 235:Generated_Source\PSoC5/PRS.c ****                 #elif (PRS_PRS_SIZE <= 24u)        /* 24 bits PRS */
+ 236:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_B__A1_REG = LO8(HI16(seed));
+ 237:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_B__A0_REG = HI8(seed);
+ 238:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_A__A0_REG = LO8(seed);
+ 239:Generated_Source\PSoC5/PRS.c **** 
+ 240:Generated_Source\PSoC5/PRS.c ****                 #else                                           /* 32 bits PRS */
+ 241:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_B__A1_REG = HI8(HI16(seed));
+ 242:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_A__A1_REG = LO8(HI16(seed));
+ 243:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_B__A0_REG = HI8(seed);
+ 244:Generated_Source\PSoC5/PRS.c ****                     PRS_SEED_COPY_A__A0_REG = LO8(seed);
+ 245:Generated_Source\PSoC5/PRS.c ****                 #endif  /* End (PRS_PRS_SIZE <= 32u) */
+ 246:Generated_Source\PSoC5/PRS.c **** 
+ 247:Generated_Source\PSoC5/PRS.c ****             #else
+ 248:Generated_Source\PSoC5/PRS.c ****                 /* Set FIFOs to single register */
+ 249:Generated_Source\PSoC5/PRS.c ****                 #if (PRS_PRS_SIZE <= 8u)      /* 8 bits PRS */
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 7
+
+
+ 250:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_A_REG |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 251:Generated_Source\PSoC5/PRS.c **** 
+ 252:Generated_Source\PSoC5/PRS.c ****                 #elif (PRS_PRS_SIZE <= 16u)      /* 16 bits PRS */
+ 253:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_A_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+  94              		.loc 1 253 0
+  95 0008 074A     		ldr	r2, .L9
+  96 000a 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+  97 000c 43F00303 		orr	r3, r3, #3
+  98 0010 1370     		strb	r3, [r2]
+ 254:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_B_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+  99              		.loc 1 254 0
+ 100 0012 0132     		adds	r2, r2, #1
+ 101 0014 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 102 0016 43F00303 		orr	r3, r3, #3
+ 103 001a 1370     		strb	r3, [r2]
+ 255:Generated_Source\PSoC5/PRS.c **** 
+ 256:Generated_Source\PSoC5/PRS.c ****                 #elif (PRS_PRS_SIZE <= 24u)      /* 24-39 bits PRS */
+ 257:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_A_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 258:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_B_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 259:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_C_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 260:Generated_Source\PSoC5/PRS.c **** 
+ 261:Generated_Source\PSoC5/PRS.c ****                 #elif (PRS_PRS_SIZE <= 32u)      /* 40-55 bits PRS */
+ 262:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_A_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 263:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_B_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 264:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_C_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 265:Generated_Source\PSoC5/PRS.c ****                     PRS_AUX_CONTROL_D_REG  |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 266:Generated_Source\PSoC5/PRS.c **** 
+ 267:Generated_Source\PSoC5/PRS.c ****                 #endif  /* End (PRS_PRS_SIZE <= 8u) */
+ 268:Generated_Source\PSoC5/PRS.c **** 
+ 269:Generated_Source\PSoC5/PRS.c ****                 /* AuxControl reg setting are done */
+ 270:Generated_Source\PSoC5/PRS.c ****                 CyExitCriticalSection(enableInterrupts);
+ 104              		.loc 1 270 0
+ 105 001c FFF7FEFF 		bl	CyExitCriticalSection
+ 106              	.LVL3:
+ 271:Generated_Source\PSoC5/PRS.c **** 
+ 272:Generated_Source\PSoC5/PRS.c ****                 /* Write Seed COPY */
+ 273:Generated_Source\PSoC5/PRS.c ****                 CY_SET_REG16(PRS_SEED_COPY_PTR, seed);
+ 107              		.loc 1 273 0
+ 108 0020 024B     		ldr	r3, .L9+4
+ 109 0022 1C80     		strh	r4, [r3]	@ movhi
+ 110 0024 10BD     		pop	{r4, pc}
+ 111              	.LVL4:
+ 112              	.L10:
+ 113 0026 00BF     		.align	2
+ 114              	.L9:
+ 115 0028 9A640040 		.word	1073767578
+ 116 002c 4A640040 		.word	1073767498
+ 117              		.cfi_endproc
+ 118              	.LFE4:
+ 119              		.size	PRS_ResetSeedInit, .-PRS_ResetSeedInit
+ 120              		.section	.text.PRS_Read,"ax",%progbits
+ 121              		.align	2
+ 122              		.global	PRS_Read
+ 123              		.thumb
+ 124              		.thumb_func
+ 125              		.type	PRS_Read, %function
+ 126              	PRS_Read:
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 8
+
+
+ 127              	.LFB5:
+ 274:Generated_Source\PSoC5/PRS.c **** 
+ 275:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_TIME_MULTIPLEXING_ENABLE) */
+ 276:Generated_Source\PSoC5/PRS.c ****         }
+ 277:Generated_Source\PSoC5/PRS.c **** 
+ 278:Generated_Source\PSoC5/PRS.c ****     #else
+ 279:Generated_Source\PSoC5/PRS.c **** 
+ 280:Generated_Source\PSoC5/PRS.c ****         /*******************************************************************************
+ 281:Generated_Source\PSoC5/PRS.c ****         * FUNCTION NAME: PRS_ResetSeedInitUpper
+ 282:Generated_Source\PSoC5/PRS.c ****         ********************************************************************************
+ 283:Generated_Source\PSoC5/PRS.c ****         *
+ 284:Generated_Source\PSoC5/PRS.c ****         * Summary:
+ 285:Generated_Source\PSoC5/PRS.c ****         *  Increments the PRS by one when API single step mode is used.
+ 286:Generated_Source\PSoC5/PRS.c ****         *
+ 287:Generated_Source\PSoC5/PRS.c ****         * Parameters:
+ 288:Generated_Source\PSoC5/PRS.c ****         *  void
+ 289:Generated_Source\PSoC5/PRS.c ****         *
+ 290:Generated_Source\PSoC5/PRS.c ****         * Return:
+ 291:Generated_Source\PSoC5/PRS.c ****         *  void
+ 292:Generated_Source\PSoC5/PRS.c ****         *
+ 293:Generated_Source\PSoC5/PRS.c ****         *******************************************************************************/
+ 294:Generated_Source\PSoC5/PRS.c ****         void PRS_ResetSeedInitUpper(uint32 seed) 
+ 295:Generated_Source\PSoC5/PRS.c ****         {
+ 296:Generated_Source\PSoC5/PRS.c **** 			uint8 enableInterrupts;
+ 297:Generated_Source\PSoC5/PRS.c **** 
+ 298:Generated_Source\PSoC5/PRS.c **** 			/* Mask the Seed Upper half to cut unused bits */
+ 299:Generated_Source\PSoC5/PRS.c ****             seed &= PRS_MASK;
+ 300:Generated_Source\PSoC5/PRS.c **** 
+ 301:Generated_Source\PSoC5/PRS.c **** 			/* Change AuxControl reg, need to be safety */
+ 302:Generated_Source\PSoC5/PRS.c ****             enableInterrupts = CyEnterCriticalSection();
+ 303:Generated_Source\PSoC5/PRS.c **** 
+ 304:Generated_Source\PSoC5/PRS.c ****             /* Set FIFOs to single register */
+ 305:Generated_Source\PSoC5/PRS.c ****             PRS_AUX_CONTROL_A_REG |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 306:Generated_Source\PSoC5/PRS.c ****             PRS_AUX_CONTROL_B_REG |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 307:Generated_Source\PSoC5/PRS.c ****             PRS_AUX_CONTROL_C_REG |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 308:Generated_Source\PSoC5/PRS.c **** 
+ 309:Generated_Source\PSoC5/PRS.c **** 			#if (PRS_PRS_SIZE > 48u)               /* 49-64 bits PRS */
+ 310:Generated_Source\PSoC5/PRS.c ****                 PRS_AUX_CONTROL_D_REG |= PRS_AUXCTRL_FIFO_SINGLE_REG;
+ 311:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_PRS_SIZE <= 8u) */
+ 312:Generated_Source\PSoC5/PRS.c **** 
+ 313:Generated_Source\PSoC5/PRS.c ****             /* AuxControl reg settings are done */
+ 314:Generated_Source\PSoC5/PRS.c ****             CyExitCriticalSection(enableInterrupts);
+ 315:Generated_Source\PSoC5/PRS.c **** 
+ 316:Generated_Source\PSoC5/PRS.c ****             /* Write Seed Upper COPY */
+ 317:Generated_Source\PSoC5/PRS.c ****             #if (PRS_PRS_SIZE <= 40u)          /* 40 bits PRS */
+ 318:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_C__A1_REG = LO8(seed);
+ 319:Generated_Source\PSoC5/PRS.c **** 
+ 320:Generated_Source\PSoC5/PRS.c ****             #elif (PRS_PRS_SIZE <= 48u)        /* 48 bits PRS */
+ 321:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_C__A1_REG = HI8(seed);
+ 322:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_B__A1_REG = LO8(seed);
+ 323:Generated_Source\PSoC5/PRS.c **** 
+ 324:Generated_Source\PSoC5/PRS.c ****             #elif (PRS_PRS_SIZE <= 56u)        /* 56 bits PRS */
+ 325:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_D__A1_REG = LO8(HI16(seed));
+ 326:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_C__A1_REG = HI8(seed);
+ 327:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_B__A1_REG = HI8(seed);
+ 328:Generated_Source\PSoC5/PRS.c **** 
+ 329:Generated_Source\PSoC5/PRS.c ****             #else                                           /* 64 bits PRS */
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 9
+
+
+ 330:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_D__A1_REG = HI8(HI16(seed));
+ 331:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_C__A1_REG = LO8(HI16(seed));
+ 332:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_B__A1_REG = HI8(seed);
+ 333:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_UPPER_COPY_A__A1_REG = LO8(seed);
+ 334:Generated_Source\PSoC5/PRS.c **** 
+ 335:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_PRS_SIZE <= 32u) */
+ 336:Generated_Source\PSoC5/PRS.c ****         }
+ 337:Generated_Source\PSoC5/PRS.c **** 
+ 338:Generated_Source\PSoC5/PRS.c **** 
+ 339:Generated_Source\PSoC5/PRS.c ****         /*******************************************************************************
+ 340:Generated_Source\PSoC5/PRS.c ****         * FUNCTION NAME: PRS_ResetSeedInitLower
+ 341:Generated_Source\PSoC5/PRS.c ****         ********************************************************************************
+ 342:Generated_Source\PSoC5/PRS.c ****         *
+ 343:Generated_Source\PSoC5/PRS.c ****         * Summary:
+ 344:Generated_Source\PSoC5/PRS.c ****         *  Increments the PRS by one when API single step mode is used.
+ 345:Generated_Source\PSoC5/PRS.c ****         *
+ 346:Generated_Source\PSoC5/PRS.c ****         * Parameters:
+ 347:Generated_Source\PSoC5/PRS.c ****         *  void
+ 348:Generated_Source\PSoC5/PRS.c ****         *
+ 349:Generated_Source\PSoC5/PRS.c ****         * Return:
+ 350:Generated_Source\PSoC5/PRS.c ****         *  void
+ 351:Generated_Source\PSoC5/PRS.c ****         *
+ 352:Generated_Source\PSoC5/PRS.c ****         *******************************************************************************/
+ 353:Generated_Source\PSoC5/PRS.c ****         void PRS_ResetSeedInitLower(uint32 seed) 
+ 354:Generated_Source\PSoC5/PRS.c ****         {
+ 355:Generated_Source\PSoC5/PRS.c ****             /* Write Seed Lower COPY */
+ 356:Generated_Source\PSoC5/PRS.c ****             #if (PRS_PRS_SIZE <= 40u)          /* 40 bits PRS */
+ 357:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_B__A1_REG = HI8(HI16(seed));
+ 358:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_C__A0_REG = LO8(HI16(seed));
+ 359:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_B__A0_REG = HI8(seed);
+ 360:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_A__A0_REG = LO8(seed);
+ 361:Generated_Source\PSoC5/PRS.c **** 
+ 362:Generated_Source\PSoC5/PRS.c ****             #elif (PRS_PRS_SIZE <= 48u)        /* 48 bits PRS */
+ 363:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_A__A1_REG = HI8(HI16(seed));
+ 364:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_C__A0_REG = LO8(HI16(seed));
+ 365:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_B__A0_REG = HI8(seed);
+ 366:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_A__A0_REG = LO8(seed);
+ 367:Generated_Source\PSoC5/PRS.c **** 
+ 368:Generated_Source\PSoC5/PRS.c ****             #else                                           /* 64 bits PRS */
+ 369:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_D__A0_REG = HI8(HI16(seed));
+ 370:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_C__A0_REG = LO8(HI16(seed));
+ 371:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_B__A0_REG = HI8(seed);
+ 372:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_LOWER_COPY_A__A0_REG = LO8(seed);
+ 373:Generated_Source\PSoC5/PRS.c **** 
+ 374:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_PRS_SIZE <= 32u) */
+ 375:Generated_Source\PSoC5/PRS.c ****         }
+ 376:Generated_Source\PSoC5/PRS.c **** 
+ 377:Generated_Source\PSoC5/PRS.c ****     #endif  /* End (PRS_PRS_SIZE <= 32u) */
+ 378:Generated_Source\PSoC5/PRS.c **** 
+ 379:Generated_Source\PSoC5/PRS.c **** #endif  /* End (PRS_RUN_MODE == PRS__CLOCKED) */
+ 380:Generated_Source\PSoC5/PRS.c **** 
+ 381:Generated_Source\PSoC5/PRS.c **** 
+ 382:Generated_Source\PSoC5/PRS.c **** #if(PRS_PRS_SIZE <= 32u) /* 8-32 bits PRS */
+ 383:Generated_Source\PSoC5/PRS.c ****     /*******************************************************************************
+ 384:Generated_Source\PSoC5/PRS.c ****     * Function Name: PRS_Read
+ 385:Generated_Source\PSoC5/PRS.c ****     ********************************************************************************
+ 386:Generated_Source\PSoC5/PRS.c ****     *
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 10
+
+
+ 387:Generated_Source\PSoC5/PRS.c ****     * Summary:
+ 388:Generated_Source\PSoC5/PRS.c ****     *  Reads PRS value.
+ 389:Generated_Source\PSoC5/PRS.c ****     *
+ 390:Generated_Source\PSoC5/PRS.c ****     * Parameters:
+ 391:Generated_Source\PSoC5/PRS.c ****     *  void
+ 392:Generated_Source\PSoC5/PRS.c ****     *
+ 393:Generated_Source\PSoC5/PRS.c ****     * Return:
+ 394:Generated_Source\PSoC5/PRS.c ****     *  Returns PRS value.
+ 395:Generated_Source\PSoC5/PRS.c ****     *
+ 396:Generated_Source\PSoC5/PRS.c ****     * Side Effects:
+ 397:Generated_Source\PSoC5/PRS.c ****     *  The seed value is cut according to mask = 2^(Resolution) - 1.
+ 398:Generated_Source\PSoC5/PRS.c ****     *  For example if PRS Resolution is 14 bits the mask value is:
+ 399:Generated_Source\PSoC5/PRS.c ****     *  mask = 2^(14) - 1 = 0x3FFFu.
+ 400:Generated_Source\PSoC5/PRS.c ****     *  The seed value = 0xFFFFu is cut:
+ 401:Generated_Source\PSoC5/PRS.c ****     *  seed & mask = 0xFFFFu & 0x3FFFu = 0x3FFFu.
+ 402:Generated_Source\PSoC5/PRS.c ****     *
+ 403:Generated_Source\PSoC5/PRS.c ****     *******************************************************************************/
+ 404:Generated_Source\PSoC5/PRS.c ****     uint16 PRS_Read(void) 
+ 405:Generated_Source\PSoC5/PRS.c ****     {
+ 128              		.loc 1 405 0
+ 129              		.cfi_startproc
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132              		@ link register save eliminated.
+ 406:Generated_Source\PSoC5/PRS.c ****         /* Read PRS */
+ 407:Generated_Source\PSoC5/PRS.c ****         #if (PRS_TIME_MULTIPLEXING_ENABLE)
+ 408:Generated_Source\PSoC5/PRS.c **** 
+ 409:Generated_Source\PSoC5/PRS.c ****             uint16 seed;
+ 410:Generated_Source\PSoC5/PRS.c **** 
+ 411:Generated_Source\PSoC5/PRS.c ****             #if (PRS_PRS_SIZE <= 16u)          /* 16 bits PRS */
+ 412:Generated_Source\PSoC5/PRS.c ****                 seed = ((uint16) PRS_SEED_A__A1_REG) << 8u;
+ 413:Generated_Source\PSoC5/PRS.c ****                 seed |= PRS_SEED_A__A0_REG;
+ 414:Generated_Source\PSoC5/PRS.c **** 
+ 415:Generated_Source\PSoC5/PRS.c ****             #elif (PRS_PRS_SIZE <= 24u)        /* 24 bits PRS */
+ 416:Generated_Source\PSoC5/PRS.c ****                 seed = ((uint32) (PRS_SEED_B__A1_REG)) << 16u;
+ 417:Generated_Source\PSoC5/PRS.c ****                 seed |= ((uint32) (PRS_SEED_B__A0_REG)) << 8u;
+ 418:Generated_Source\PSoC5/PRS.c ****                 seed |= PRS_SEED_A__A0_REG;
+ 419:Generated_Source\PSoC5/PRS.c **** 
+ 420:Generated_Source\PSoC5/PRS.c ****             #else                                           /* 32 bits PRS */
+ 421:Generated_Source\PSoC5/PRS.c ****                 seed = ((uint32) PRS_SEED_B__A1_REG) << 24u;
+ 422:Generated_Source\PSoC5/PRS.c ****                 seed |= ((uint32) PRS_SEED_A__A1_REG) << 16u;
+ 423:Generated_Source\PSoC5/PRS.c ****                 seed |= ((uint32) PRS_SEED_B__A0_REG) << 8u;
+ 424:Generated_Source\PSoC5/PRS.c ****                 seed |= PRS_SEED_A__A0_REG;
+ 425:Generated_Source\PSoC5/PRS.c **** 
+ 426:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_PRS_SIZE <= 8u) */
+ 427:Generated_Source\PSoC5/PRS.c **** 
+ 428:Generated_Source\PSoC5/PRS.c ****             return (seed  & PRS_MASK);
+ 429:Generated_Source\PSoC5/PRS.c **** 
+ 430:Generated_Source\PSoC5/PRS.c ****         #else
+ 431:Generated_Source\PSoC5/PRS.c **** 
+ 432:Generated_Source\PSoC5/PRS.c ****             return (CY_GET_REG16(PRS_SEED_PTR) & PRS_MASK);
+ 133              		.loc 1 432 0
+ 134 0000 014B     		ldr	r3, .L12
+ 135 0002 1888     		ldrh	r0, [r3]
+ 433:Generated_Source\PSoC5/PRS.c **** 
+ 434:Generated_Source\PSoC5/PRS.c ****         #endif  /* End (PRS_TIME_MULTIPLEXING_ENABLE) */
+ 435:Generated_Source\PSoC5/PRS.c ****     }
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 11
+
+
+ 136              		.loc 1 435 0
+ 137 0004 80B2     		uxth	r0, r0
+ 138 0006 7047     		bx	lr
+ 139              	.L13:
+ 140              		.align	2
+ 141              	.L12:
+ 142 0008 0A640040 		.word	1073767434
+ 143              		.cfi_endproc
+ 144              	.LFE5:
+ 145              		.size	PRS_Read, .-PRS_Read
+ 146              		.section	.text.PRS_WriteSeed,"ax",%progbits
+ 147              		.align	2
+ 148              		.global	PRS_WriteSeed
+ 149              		.thumb
+ 150              		.thumb_func
+ 151              		.type	PRS_WriteSeed, %function
+ 152              	PRS_WriteSeed:
+ 153              	.LFB6:
+ 436:Generated_Source\PSoC5/PRS.c **** 
+ 437:Generated_Source\PSoC5/PRS.c **** 
+ 438:Generated_Source\PSoC5/PRS.c ****     /*******************************************************************************
+ 439:Generated_Source\PSoC5/PRS.c ****     * Function Name: PRS_WriteSeed
+ 440:Generated_Source\PSoC5/PRS.c ****     ********************************************************************************
+ 441:Generated_Source\PSoC5/PRS.c ****     *
+ 442:Generated_Source\PSoC5/PRS.c ****     * Summary:
+ 443:Generated_Source\PSoC5/PRS.c ****     *  Writes seed value.
+ 444:Generated_Source\PSoC5/PRS.c ****     *
+ 445:Generated_Source\PSoC5/PRS.c ****     * Parameters:
+ 446:Generated_Source\PSoC5/PRS.c ****     *  seed:  Seed value.
+ 447:Generated_Source\PSoC5/PRS.c ****     *
+ 448:Generated_Source\PSoC5/PRS.c ****     * Return:
+ 449:Generated_Source\PSoC5/PRS.c ****     *  void
+ 450:Generated_Source\PSoC5/PRS.c ****     *
+ 451:Generated_Source\PSoC5/PRS.c ****     * Side Effects:
+ 452:Generated_Source\PSoC5/PRS.c ****     *  The seed value is cut according to mask = 2^(Resolution) - 1.
+ 453:Generated_Source\PSoC5/PRS.c ****     *  For example if PRS Resolution is 14 bits the mask value is:
+ 454:Generated_Source\PSoC5/PRS.c ****     *  mask = 2^(14) - 1 = 0x3FFFu.
+ 455:Generated_Source\PSoC5/PRS.c ****     *  The seed value = 0xFFFFu is cut:
+ 456:Generated_Source\PSoC5/PRS.c ****     *  seed & mask = 0xFFFFu & 0x3FFFu = 0x3FFFu.
+ 457:Generated_Source\PSoC5/PRS.c ****     *
+ 458:Generated_Source\PSoC5/PRS.c ****     *******************************************************************************/
+ 459:Generated_Source\PSoC5/PRS.c ****     void PRS_WriteSeed(uint16 seed) 
+ 460:Generated_Source\PSoC5/PRS.c ****     {
+ 154              		.loc 1 460 0
+ 155              		.cfi_startproc
+ 156              		@ args = 0, pretend = 0, frame = 0
+ 157              		@ frame_needed = 0, uses_anonymous_args = 0
+ 158              		@ link register save eliminated.
+ 159              	.LVL5:
+ 461:Generated_Source\PSoC5/PRS.c ****         /* Masks the Seed to cut unused bits */
+ 462:Generated_Source\PSoC5/PRS.c ****         seed &= PRS_MASK;
+ 463:Generated_Source\PSoC5/PRS.c **** 
+ 464:Generated_Source\PSoC5/PRS.c ****         /* Writes Seed */
+ 465:Generated_Source\PSoC5/PRS.c ****         #if (PRS_TIME_MULTIPLEXING_ENABLE)
+ 466:Generated_Source\PSoC5/PRS.c **** 
+ 467:Generated_Source\PSoC5/PRS.c ****             #if (PRS_PRS_SIZE <= 16u)          /* 16 bits PRS */
+ 468:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_A__A1_REG = HI8(seed);
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 12
+
+
+ 469:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_A__A0_REG = LO8(seed);
+ 470:Generated_Source\PSoC5/PRS.c **** 
+ 471:Generated_Source\PSoC5/PRS.c ****             #elif (PRS_PRS_SIZE <= 24u)        /* 24 bits PRS */
+ 472:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_B__A1_REG = LO8(HI16(seed));
+ 473:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_B__A0_REG = HI8(seed);
+ 474:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_A__A0_REG = LO8(seed);
+ 475:Generated_Source\PSoC5/PRS.c **** 
+ 476:Generated_Source\PSoC5/PRS.c ****             #else                                           /* 32 bits PRS */
+ 477:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_B__A1_REG = HI8(HI16(seed));
+ 478:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_A__A1_REG = LO8(HI16(seed));
+ 479:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_B__A0_REG = HI8(seed);
+ 480:Generated_Source\PSoC5/PRS.c ****                 PRS_SEED_A__A0_REG = LO8(seed);
+ 481:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_PRS_SIZE <= 32u) */
+ 482:Generated_Source\PSoC5/PRS.c **** 
+ 483:Generated_Source\PSoC5/PRS.c ****             /* Resets triggers */
+ 484:Generated_Source\PSoC5/PRS.c ****             #if (PRS_WAKEUP_BEHAVIOUR == PRS__RESUMEWORK)
+ 485:Generated_Source\PSoC5/PRS.c ****                 if((PRS_sleepState & PRS_NORMAL_SEQUENCE) != 0u)
+ 486:Generated_Source\PSoC5/PRS.c ****                 {
+ 487:Generated_Source\PSoC5/PRS.c ****                     PRS_EXECUTE_DFF_RESET;
+ 488:Generated_Source\PSoC5/PRS.c ****                 }
+ 489:Generated_Source\PSoC5/PRS.c ****             #else
+ 490:Generated_Source\PSoC5/PRS.c ****                 PRS_EXECUTE_DFF_RESET;
+ 491:Generated_Source\PSoC5/PRS.c ****             #endif  /* (PRS_WAKEUP_BEHAVIOUR == PRS__RESUMEWORK) */
+ 492:Generated_Source\PSoC5/PRS.c **** 
+ 493:Generated_Source\PSoC5/PRS.c ****         #else
+ 494:Generated_Source\PSoC5/PRS.c **** 
+ 495:Generated_Source\PSoC5/PRS.c ****             CY_SET_REG16(PRS_SEED_PTR, seed);
+ 160              		.loc 1 495 0
+ 161 0000 014B     		ldr	r3, .L15
+ 162 0002 1880     		strh	r0, [r3]	@ movhi
+ 163 0004 7047     		bx	lr
+ 164              	.L16:
+ 165 0006 00BF     		.align	2
+ 166              	.L15:
+ 167 0008 0A640040 		.word	1073767434
+ 168              		.cfi_endproc
+ 169              	.LFE6:
+ 170              		.size	PRS_WriteSeed, .-PRS_WriteSeed
+ 171              		.section	.text.PRS_ReadPolynomial,"ax",%progbits
+ 172              		.align	2
+ 173              		.global	PRS_ReadPolynomial
+ 174              		.thumb
+ 175              		.thumb_func
+ 176              		.type	PRS_ReadPolynomial, %function
+ 177              	PRS_ReadPolynomial:
+ 178              	.LFB7:
+ 496:Generated_Source\PSoC5/PRS.c **** 
+ 497:Generated_Source\PSoC5/PRS.c ****         #endif  /* End (PRS_TIME_MULTIPLEXING_ENABLE) */
+ 498:Generated_Source\PSoC5/PRS.c ****     }
+ 499:Generated_Source\PSoC5/PRS.c **** 
+ 500:Generated_Source\PSoC5/PRS.c **** 
+ 501:Generated_Source\PSoC5/PRS.c ****     /*******************************************************************************
+ 502:Generated_Source\PSoC5/PRS.c ****     * Function Name: PRS_ReadPolynomial
+ 503:Generated_Source\PSoC5/PRS.c ****     ********************************************************************************
+ 504:Generated_Source\PSoC5/PRS.c ****     *
+ 505:Generated_Source\PSoC5/PRS.c ****     * Summary:
+ 506:Generated_Source\PSoC5/PRS.c ****     *  Reads PRS polynomial value.
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 13
+
+
+ 507:Generated_Source\PSoC5/PRS.c ****     *
+ 508:Generated_Source\PSoC5/PRS.c ****     * Parameters:
+ 509:Generated_Source\PSoC5/PRS.c ****     *  void
+ 510:Generated_Source\PSoC5/PRS.c ****     *
+ 511:Generated_Source\PSoC5/PRS.c ****     * Return:
+ 512:Generated_Source\PSoC5/PRS.c ****     *  Returns PRS polynomial value.
+ 513:Generated_Source\PSoC5/PRS.c ****     *
+ 514:Generated_Source\PSoC5/PRS.c ****     *******************************************************************************/
+ 515:Generated_Source\PSoC5/PRS.c ****     uint16 PRS_ReadPolynomial(void)
+ 516:Generated_Source\PSoC5/PRS.c ****                                 
+ 517:Generated_Source\PSoC5/PRS.c ****     {
+ 179              		.loc 1 517 0
+ 180              		.cfi_startproc
+ 181              		@ args = 0, pretend = 0, frame = 0
+ 182              		@ frame_needed = 0, uses_anonymous_args = 0
+ 183              		@ link register save eliminated.
+ 518:Generated_Source\PSoC5/PRS.c ****         /* Reads polynomial */
+ 519:Generated_Source\PSoC5/PRS.c ****         #if (PRS_TIME_MULTIPLEXING_ENABLE)
+ 520:Generated_Source\PSoC5/PRS.c **** 
+ 521:Generated_Source\PSoC5/PRS.c ****             uint16 polynomial;
+ 522:Generated_Source\PSoC5/PRS.c **** 
+ 523:Generated_Source\PSoC5/PRS.c ****             #if (PRS_PRS_SIZE <= 16u)          /* 16 bits PRS */
+ 524:Generated_Source\PSoC5/PRS.c ****                 polynomial = ((uint16) PRS_POLYNOM_A__D1_REG) << 8u;
+ 525:Generated_Source\PSoC5/PRS.c ****                 polynomial |= (PRS_POLYNOM_A__D0_REG);
+ 526:Generated_Source\PSoC5/PRS.c **** 
+ 527:Generated_Source\PSoC5/PRS.c ****             #elif (PRS_PRS_SIZE <= 24u)        /* 24 bits PRS */
+ 528:Generated_Source\PSoC5/PRS.c ****                 polynomial = ((uint32) PRS_POLYNOM_B__D1_REG) << 16u;
+ 529:Generated_Source\PSoC5/PRS.c ****                 polynomial |= ((uint32) PRS_POLYNOM_B__D0_REG) << 8u;
+ 530:Generated_Source\PSoC5/PRS.c ****                 polynomial |= PRS_POLYNOM_A__D0_REG;
+ 531:Generated_Source\PSoC5/PRS.c **** 
+ 532:Generated_Source\PSoC5/PRS.c ****             #else                                           /* 32 bits PRS */
+ 533:Generated_Source\PSoC5/PRS.c ****                 polynomial = ((uint32) PRS_POLYNOM_B__D1_REG) << 24u;
+ 534:Generated_Source\PSoC5/PRS.c ****                 polynomial |= ((uint32) PRS_POLYNOM_A__D1_REG) << 16u;
+ 535:Generated_Source\PSoC5/PRS.c ****                 polynomial |= ((uint32) PRS_POLYNOM_B__D0_REG) << 8u;
+ 536:Generated_Source\PSoC5/PRS.c ****                 polynomial |= PRS_POLYNOM_A__D0_REG;
+ 537:Generated_Source\PSoC5/PRS.c **** 
+ 538:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_PRS_SIZE <= 32u) */
+ 539:Generated_Source\PSoC5/PRS.c **** 
+ 540:Generated_Source\PSoC5/PRS.c ****             return polynomial;
+ 541:Generated_Source\PSoC5/PRS.c **** 
+ 542:Generated_Source\PSoC5/PRS.c ****         #else
+ 543:Generated_Source\PSoC5/PRS.c **** 
+ 544:Generated_Source\PSoC5/PRS.c ****             return CY_GET_REG16(PRS_POLYNOM_PTR);
+ 184              		.loc 1 544 0
+ 185 0000 014B     		ldr	r3, .L18
+ 186 0002 1888     		ldrh	r0, [r3]
+ 545:Generated_Source\PSoC5/PRS.c **** 
+ 546:Generated_Source\PSoC5/PRS.c ****         #endif  /* End (PRS_TIME_MULTIPLEXING_ENABLE) */
+ 547:Generated_Source\PSoC5/PRS.c ****     }
+ 187              		.loc 1 547 0
+ 188 0004 80B2     		uxth	r0, r0
+ 189 0006 7047     		bx	lr
+ 190              	.L19:
+ 191              		.align	2
+ 192              	.L18:
+ 193 0008 2A640040 		.word	1073767466
+ 194              		.cfi_endproc
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 14
+
+
+ 195              	.LFE7:
+ 196              		.size	PRS_ReadPolynomial, .-PRS_ReadPolynomial
+ 197              		.section	.text.PRS_WritePolynomial,"ax",%progbits
+ 198              		.align	2
+ 199              		.global	PRS_WritePolynomial
+ 200              		.thumb
+ 201              		.thumb_func
+ 202              		.type	PRS_WritePolynomial, %function
+ 203              	PRS_WritePolynomial:
+ 204              	.LFB8:
+ 548:Generated_Source\PSoC5/PRS.c **** 
+ 549:Generated_Source\PSoC5/PRS.c **** 
+ 550:Generated_Source\PSoC5/PRS.c ****     /*******************************************************************************
+ 551:Generated_Source\PSoC5/PRS.c ****     * Function Name: PRS_WritePolynomial
+ 552:Generated_Source\PSoC5/PRS.c ****     ********************************************************************************
+ 553:Generated_Source\PSoC5/PRS.c ****     *
+ 554:Generated_Source\PSoC5/PRS.c ****     * Summary:
+ 555:Generated_Source\PSoC5/PRS.c ****     *  Writes PRS polynomial value.
+ 556:Generated_Source\PSoC5/PRS.c ****     *
+ 557:Generated_Source\PSoC5/PRS.c ****     * Parameters:
+ 558:Generated_Source\PSoC5/PRS.c ****     *  polynomial:  PRS polynomial.
+ 559:Generated_Source\PSoC5/PRS.c ****     *
+ 560:Generated_Source\PSoC5/PRS.c ****     * Return:
+ 561:Generated_Source\PSoC5/PRS.c ****     *  void
+ 562:Generated_Source\PSoC5/PRS.c ****     *
+ 563:Generated_Source\PSoC5/PRS.c ****     * Side Effects:
+ 564:Generated_Source\PSoC5/PRS.c ****     *  The polynomial value is cut according to mask = 2^(Resolution) - 1.
+ 565:Generated_Source\PSoC5/PRS.c ****     *  For example if PRS Resolution is 14 bits the mask value is:
+ 566:Generated_Source\PSoC5/PRS.c ****     *  mask = 2^(14) - 1 = 0x3FFFu.
+ 567:Generated_Source\PSoC5/PRS.c ****     *  The polynomial value = 0xFFFFu is cut:
+ 568:Generated_Source\PSoC5/PRS.c ****     *  polynomial & mask = 0xFFFFu & 0x3FFFu = 0x3FFFu.
+ 569:Generated_Source\PSoC5/PRS.c ****     *
+ 570:Generated_Source\PSoC5/PRS.c ****     *******************************************************************************/
+ 571:Generated_Source\PSoC5/PRS.c ****     void PRS_WritePolynomial(uint16 polynomial)
+ 572:Generated_Source\PSoC5/PRS.c ****                                           
+ 573:Generated_Source\PSoC5/PRS.c ****     {
+ 205              		.loc 1 573 0
+ 206              		.cfi_startproc
+ 207              		@ args = 0, pretend = 0, frame = 0
+ 208              		@ frame_needed = 0, uses_anonymous_args = 0
+ 209              		@ link register save eliminated.
+ 210              	.LVL6:
+ 574:Generated_Source\PSoC5/PRS.c ****         /* Mask polynomial to cut unused bits */
+ 575:Generated_Source\PSoC5/PRS.c ****         polynomial &= PRS_MASK;
+ 576:Generated_Source\PSoC5/PRS.c **** 
+ 577:Generated_Source\PSoC5/PRS.c ****         /* Write polynomial */
+ 578:Generated_Source\PSoC5/PRS.c ****         #if (PRS_TIME_MULTIPLEXING_ENABLE)
+ 579:Generated_Source\PSoC5/PRS.c **** 
+ 580:Generated_Source\PSoC5/PRS.c ****             #if (PRS_PRS_SIZE <= 16u)          /* 16 bits PRS */
+ 581:Generated_Source\PSoC5/PRS.c **** 
+ 582:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_A__D1_REG = HI8(polynomial);
+ 583:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_A__D0_REG = LO8(polynomial);
+ 584:Generated_Source\PSoC5/PRS.c **** 
+ 585:Generated_Source\PSoC5/PRS.c ****             #elif (PRS_PRS_SIZE <= 24u)        /* 24 bits PRS */
+ 586:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_B__D1_REG = LO8(HI16(polynomial));
+ 587:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_B__D0_REG = HI8(polynomial);
+ 588:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_A__D0_REG = LO8(polynomial);
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 15
+
+
+ 589:Generated_Source\PSoC5/PRS.c **** 
+ 590:Generated_Source\PSoC5/PRS.c ****             #else                                           /* 32 bits PRS */
+ 591:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_B__D1_REG = HI8(HI16(polynomial));
+ 592:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_A__D1_REG = LO8(HI16(polynomial));
+ 593:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_B__D0_REG = HI8(polynomial);
+ 594:Generated_Source\PSoC5/PRS.c ****                 PRS_POLYNOM_A__D0_REG = LO8(polynomial);
+ 595:Generated_Source\PSoC5/PRS.c **** 
+ 596:Generated_Source\PSoC5/PRS.c ****             #endif  /* End (PRS_PRS_SIZE <= 32u) */
+ 597:Generated_Source\PSoC5/PRS.c **** 
+ 598:Generated_Source\PSoC5/PRS.c ****             /* Resets triggers */
+ 599:Generated_Source\PSoC5/PRS.c ****             #if (PRS_WAKEUP_BEHAVIOUR == PRS__RESUMEWORK)
+ 600:Generated_Source\PSoC5/PRS.c ****                 if((PRS_sleepState & PRS_NORMAL_SEQUENCE) != 0u)
+ 601:Generated_Source\PSoC5/PRS.c ****                 {
+ 602:Generated_Source\PSoC5/PRS.c ****                     PRS_EXECUTE_DFF_RESET;
+ 603:Generated_Source\PSoC5/PRS.c ****                 }
+ 604:Generated_Source\PSoC5/PRS.c ****             #else
+ 605:Generated_Source\PSoC5/PRS.c ****                 PRS_EXECUTE_DFF_RESET;
+ 606:Generated_Source\PSoC5/PRS.c ****             #endif  /* (PRS_WAKEUP_BEHAVIOUR == PRS__RESUMEWORK) */
+ 607:Generated_Source\PSoC5/PRS.c **** 
+ 608:Generated_Source\PSoC5/PRS.c ****         #else
+ 609:Generated_Source\PSoC5/PRS.c **** 
+ 610:Generated_Source\PSoC5/PRS.c ****             CY_SET_REG16(PRS_POLYNOM_PTR, polynomial);
+ 211              		.loc 1 610 0
+ 212 0000 014B     		ldr	r3, .L21
+ 213 0002 1880     		strh	r0, [r3]	@ movhi
+ 214 0004 7047     		bx	lr
+ 215              	.L22:
+ 216 0006 00BF     		.align	2
+ 217              	.L21:
+ 218 0008 2A640040 		.word	1073767466
+ 219              		.cfi_endproc
+ 220              	.LFE8:
+ 221              		.size	PRS_WritePolynomial, .-PRS_WritePolynomial
+ 222              		.section	.text.PRS_Init,"ax",%progbits
+ 223              		.align	2
+ 224              		.global	PRS_Init
+ 225              		.thumb
+ 226              		.thumb_func
+ 227              		.type	PRS_Init, %function
+ 228              	PRS_Init:
+ 229              	.LFB0:
+  61:Generated_Source\PSoC5/PRS.c ****     /* Writes seed value and ponynom value provided for customizer */
+ 230              		.loc 1 61 0
+ 231              		.cfi_startproc
+ 232              		@ args = 0, pretend = 0, frame = 0
+ 233              		@ frame_needed = 0, uses_anonymous_args = 0
+ 234 0000 08B5     		push	{r3, lr}
+ 235              		.cfi_def_cfa_offset 8
+ 236              		.cfi_offset 3, -8
+ 237              		.cfi_offset 14, -4
+  64:Generated_Source\PSoC5/PRS.c ****         PRS_WriteSeed(PRS_DEFAULT_SEED);
+ 238              		.loc 1 64 0
+ 239 0002 4FF43440 		mov	r0, #46080
+ 240 0006 FFF7FEFF 		bl	PRS_WritePolynomial
+ 241              	.LVL7:
+  65:Generated_Source\PSoC5/PRS.c ****         #if (PRS_RUN_MODE == PRS__CLOCKED)
+ 242              		.loc 1 65 0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 16
+
+
+ 243 000a 4FF6FF70 		movw	r0, #65535
+ 244 000e FFF7FEFF 		bl	PRS_WriteSeed
+ 245              	.LVL8:
+  67:Generated_Source\PSoC5/PRS.c ****         #endif  /* End (PRS_RUN_MODE == PRS__CLOCKED) */
+ 246              		.loc 1 67 0
+ 247 0012 4FF6FF70 		movw	r0, #65535
+ 248 0016 FFF7FEFF 		bl	PRS_ResetSeedInit
+ 249              	.LVL9:
+  69:Generated_Source\PSoC5/PRS.c ****     #else
+ 250              		.loc 1 69 0
+ 251 001a FFF7FEFF 		bl	PRS_Enable
+ 252              	.LVL10:
+ 253 001e 08BD     		pop	{r3, pc}
+ 254              		.cfi_endproc
+ 255              	.LFE0:
+ 256              		.size	PRS_Init, .-PRS_Init
+ 257              		.section	.text.PRS_Start,"ax",%progbits
+ 258              		.align	2
+ 259              		.global	PRS_Start
+ 260              		.thumb
+ 261              		.thumb_func
+ 262              		.type	PRS_Start, %function
+ 263              	PRS_Start:
+ 264              	.LFB2:
+ 127:Generated_Source\PSoC5/PRS.c ****     /* Writes seed value and ponynom value provided from customizer */
+ 265              		.loc 1 127 0
+ 266              		.cfi_startproc
+ 267              		@ args = 0, pretend = 0, frame = 0
+ 268              		@ frame_needed = 0, uses_anonymous_args = 0
+ 269 0000 08B5     		push	{r3, lr}
+ 270              		.cfi_def_cfa_offset 8
+ 271              		.cfi_offset 3, -8
+ 272              		.cfi_offset 14, -4
+ 129:Generated_Source\PSoC5/PRS.c ****     {
+ 273              		.loc 1 129 0
+ 274 0002 054B     		ldr	r3, .L28
+ 275 0004 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 276 0006 23B9     		cbnz	r3, .L26
+ 131:Generated_Source\PSoC5/PRS.c ****         PRS_initVar = 1u;
+ 277              		.loc 1 131 0
+ 278 0008 FFF7FEFF 		bl	PRS_Init
+ 279              	.LVL11:
+ 132:Generated_Source\PSoC5/PRS.c ****     }
+ 280              		.loc 1 132 0
+ 281 000c 0122     		movs	r2, #1
+ 282 000e 024B     		ldr	r3, .L28
+ 283 0010 1A70     		strb	r2, [r3]
+ 284              	.L26:
+ 135:Generated_Source\PSoC5/PRS.c **** }
+ 285              		.loc 1 135 0
+ 286 0012 FFF7FEFF 		bl	PRS_Enable
+ 287              	.LVL12:
+ 288 0016 08BD     		pop	{r3, pc}
+ 289              	.L29:
+ 290              		.align	2
+ 291              	.L28:
+ 292 0018 00000000 		.word	.LANCHOR0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 17
+
+
+ 293              		.cfi_endproc
+ 294              	.LFE2:
+ 295              		.size	PRS_Start, .-PRS_Start
+ 296              		.global	PRS_backup
+ 297              		.global	PRS_initVar
+ 298              		.data
+ 299              		.align	2
+ 300              		.type	PRS_backup, %object
+ 301              		.size	PRS_backup, 4
+ 302              	PRS_backup:
+ 303 0000 00       		.byte	0
+ 304 0001 00       		.space	1
+ 305 0002 FFFF     		.short	-1
+ 306              		.bss
+ 307              		.set	.LANCHOR0,. + 0
+ 308              		.type	PRS_initVar, %object
+ 309              		.size	PRS_initVar, 1
+ 310              	PRS_initVar:
+ 311 0000 00       		.space	1
+ 312              		.text
+ 313              	.Letext0:
+ 314              		.file 2 "Generated_Source\\PSoC5\\cytypes.h"
+ 315              		.file 3 "Generated_Source\\PSoC5\\PRS.h"
+ 316              		.file 4 "Generated_Source\\PSoC5\\CyLib.h"
+ 317              		.section	.debug_info,"",%progbits
+ 318              	.Ldebug_info0:
+ 319 0000 8B020000 		.4byte	0x28b
+ 320 0004 0400     		.2byte	0x4
+ 321 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 322 000a 04       		.byte	0x4
+ 323 000b 01       		.uleb128 0x1
+ 324 000c A4000000 		.4byte	.LASF35
+ 325 0010 0C       		.byte	0xc
+ 326 0011 00000000 		.4byte	.LASF36
+ 327 0015 54000000 		.4byte	.LASF37
+ 328 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 329 001d 00000000 		.4byte	0
+ 330 0021 00000000 		.4byte	.Ldebug_line0
+ 331 0025 02       		.uleb128 0x2
+ 332 0026 01       		.byte	0x1
+ 333 0027 06       		.byte	0x6
+ 334 0028 75020000 		.4byte	.LASF0
+ 335 002c 02       		.uleb128 0x2
+ 336 002d 01       		.byte	0x1
+ 337 002e 08       		.byte	0x8
+ 338 002f 96000000 		.4byte	.LASF1
+ 339 0033 02       		.uleb128 0x2
+ 340 0034 02       		.byte	0x2
+ 341 0035 05       		.byte	0x5
+ 342 0036 1E020000 		.4byte	.LASF2
+ 343 003a 02       		.uleb128 0x2
+ 344 003b 02       		.byte	0x2
+ 345 003c 07       		.byte	0x7
+ 346 003d 26000000 		.4byte	.LASF3
+ 347 0041 02       		.uleb128 0x2
+ 348 0042 04       		.byte	0x4
+ 349 0043 05       		.byte	0x5
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 18
+
+
+ 350 0044 42020000 		.4byte	.LASF4
+ 351 0048 02       		.uleb128 0x2
+ 352 0049 04       		.byte	0x4
+ 353 004a 07       		.byte	0x7
+ 354 004b 37010000 		.4byte	.LASF5
+ 355 004f 02       		.uleb128 0x2
+ 356 0050 08       		.byte	0x8
+ 357 0051 05       		.byte	0x5
+ 358 0052 FD010000 		.4byte	.LASF6
+ 359 0056 02       		.uleb128 0x2
+ 360 0057 08       		.byte	0x8
+ 361 0058 07       		.byte	0x7
+ 362 0059 7F000000 		.4byte	.LASF7
+ 363 005d 03       		.uleb128 0x3
+ 364 005e 04       		.byte	0x4
+ 365 005f 05       		.byte	0x5
+ 366 0060 696E7400 		.ascii	"int\000"
+ 367 0064 02       		.uleb128 0x2
+ 368 0065 04       		.byte	0x4
+ 369 0066 07       		.byte	0x7
+ 370 0067 BA010000 		.4byte	.LASF8
+ 371 006b 04       		.uleb128 0x4
+ 372 006c 49010000 		.4byte	.LASF9
+ 373 0070 02       		.byte	0x2
+ 374 0071 E401     		.2byte	0x1e4
+ 375 0073 2C000000 		.4byte	0x2c
+ 376 0077 04       		.uleb128 0x4
+ 377 0078 97010000 		.4byte	.LASF10
+ 378 007c 02       		.byte	0x2
+ 379 007d E501     		.2byte	0x1e5
+ 380 007f 3A000000 		.4byte	0x3a
+ 381 0083 02       		.uleb128 0x2
+ 382 0084 04       		.byte	0x4
+ 383 0085 04       		.byte	0x4
+ 384 0086 4E000000 		.4byte	.LASF11
+ 385 008a 02       		.uleb128 0x2
+ 386 008b 08       		.byte	0x8
+ 387 008c 04       		.byte	0x4
+ 388 008d 7C010000 		.4byte	.LASF12
+ 389 0091 02       		.uleb128 0x2
+ 390 0092 01       		.byte	0x1
+ 391 0093 08       		.byte	0x8
+ 392 0094 19020000 		.4byte	.LASF13
+ 393 0098 04       		.uleb128 0x4
+ 394 0099 32010000 		.4byte	.LASF14
+ 395 009d 02       		.byte	0x2
+ 396 009e 8E02     		.2byte	0x28e
+ 397 00a0 A4000000 		.4byte	0xa4
+ 398 00a4 05       		.uleb128 0x5
+ 399 00a5 6B000000 		.4byte	0x6b
+ 400 00a9 04       		.uleb128 0x4
+ 401 00aa 28020000 		.4byte	.LASF15
+ 402 00ae 02       		.byte	0x2
+ 403 00af 8F02     		.2byte	0x28f
+ 404 00b1 B5000000 		.4byte	0xb5
+ 405 00b5 05       		.uleb128 0x5
+ 406 00b6 77000000 		.4byte	0x77
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 19
+
+
+ 407 00ba 02       		.uleb128 0x2
+ 408 00bb 08       		.byte	0x8
+ 409 00bc 04       		.byte	0x4
+ 410 00bd 69020000 		.4byte	.LASF16
+ 411 00c1 02       		.uleb128 0x2
+ 412 00c2 04       		.byte	0x4
+ 413 00c3 07       		.byte	0x7
+ 414 00c4 E9010000 		.4byte	.LASF17
+ 415 00c8 06       		.uleb128 0x6
+ 416 00c9 04       		.byte	0x4
+ 417 00ca 03       		.byte	0x3
+ 418 00cb 31       		.byte	0x31
+ 419 00cc E9000000 		.4byte	0xe9
+ 420 00d0 07       		.uleb128 0x7
+ 421 00d1 4B020000 		.4byte	.LASF18
+ 422 00d5 03       		.byte	0x3
+ 423 00d6 33       		.byte	0x33
+ 424 00d7 6B000000 		.4byte	0x6b
+ 425 00db 00       		.byte	0
+ 426 00dc 07       		.uleb128 0x7
+ 427 00dd B5010000 		.4byte	.LASF19
+ 428 00e1 03       		.byte	0x3
+ 429 00e2 3D       		.byte	0x3d
+ 430 00e3 77000000 		.4byte	0x77
+ 431 00e7 02       		.byte	0x2
+ 432 00e8 00       		.byte	0
+ 433 00e9 08       		.uleb128 0x8
+ 434 00ea 57020000 		.4byte	.LASF20
+ 435 00ee 03       		.byte	0x3
+ 436 00ef 47       		.byte	0x47
+ 437 00f0 C8000000 		.4byte	0xc8
+ 438 00f4 09       		.uleb128 0x9
+ 439 00f5 F2010000 		.4byte	.LASF21
+ 440 00f9 01       		.byte	0x1
+ 441 00fa 62       		.byte	0x62
+ 442 00fb 00000000 		.4byte	.LFB1
+ 443 00ff 10000000 		.4byte	.LFE1-.LFB1
+ 444 0103 01       		.uleb128 0x1
+ 445 0104 9C       		.byte	0x9c
+ 446 0105 09       		.uleb128 0x9
+ 447 0106 4F010000 		.4byte	.LASF22
+ 448 010a 01       		.byte	0x1
+ 449 010b 99       		.byte	0x99
+ 450 010c 00000000 		.4byte	.LFB3
+ 451 0110 10000000 		.4byte	.LFE3-.LFB3
+ 452 0114 01       		.uleb128 0x1
+ 453 0115 9C       		.byte	0x9c
+ 454 0116 0A       		.uleb128 0xa
+ 455 0117 81020000 		.4byte	.LASF23
+ 456 011b 01       		.byte	0x1
+ 457 011c D0       		.byte	0xd0
+ 458 011d 00000000 		.4byte	.LFB4
+ 459 0121 30000000 		.4byte	.LFE4-.LFB4
+ 460 0125 01       		.uleb128 0x1
+ 461 0126 9C       		.byte	0x9c
+ 462 0127 5C010000 		.4byte	0x15c
+ 463 012b 0B       		.uleb128 0xb
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 20
+
+
+ 464 012c B5010000 		.4byte	.LASF19
+ 465 0130 01       		.byte	0x1
+ 466 0131 D0       		.byte	0xd0
+ 467 0132 77000000 		.4byte	0x77
+ 468 0136 00000000 		.4byte	.LLST0
+ 469 013a 0C       		.uleb128 0xc
+ 470 013b 6B010000 		.4byte	.LASF38
+ 471 013f 01       		.byte	0x1
+ 472 0140 D3       		.byte	0xd3
+ 473 0141 6B000000 		.4byte	0x6b
+ 474 0145 2A000000 		.4byte	.LLST1
+ 475 0149 0D       		.uleb128 0xd
+ 476 014a 08000000 		.4byte	.LVL2
+ 477 014e 78020000 		.4byte	0x278
+ 478 0152 0D       		.uleb128 0xd
+ 479 0153 20000000 		.4byte	.LVL3
+ 480 0157 83020000 		.4byte	0x283
+ 481 015b 00       		.byte	0
+ 482 015c 0E       		.uleb128 0xe
+ 483 015d 8E010000 		.4byte	.LASF25
+ 484 0161 01       		.byte	0x1
+ 485 0162 9401     		.2byte	0x194
+ 486 0164 77000000 		.4byte	0x77
+ 487 0168 00000000 		.4byte	.LFB5
+ 488 016c 0C000000 		.4byte	.LFE5-.LFB5
+ 489 0170 01       		.uleb128 0x1
+ 490 0171 9C       		.byte	0x9c
+ 491 0172 0F       		.uleb128 0xf
+ 492 0173 0B020000 		.4byte	.LASF24
+ 493 0177 01       		.byte	0x1
+ 494 0178 CB01     		.2byte	0x1cb
+ 495 017a 00000000 		.4byte	.LFB6
+ 496 017e 0C000000 		.4byte	.LFE6-.LFB6
+ 497 0182 01       		.uleb128 0x1
+ 498 0183 9C       		.byte	0x9c
+ 499 0184 97010000 		.4byte	0x197
+ 500 0188 10       		.uleb128 0x10
+ 501 0189 B5010000 		.4byte	.LASF19
+ 502 018d 01       		.byte	0x1
+ 503 018e CB01     		.2byte	0x1cb
+ 504 0190 77000000 		.4byte	0x77
+ 505 0194 01       		.uleb128 0x1
+ 506 0195 50       		.byte	0x50
+ 507 0196 00       		.byte	0
+ 508 0197 0E       		.uleb128 0xe
+ 509 0198 58010000 		.4byte	.LASF26
+ 510 019c 01       		.byte	0x1
+ 511 019d 0302     		.2byte	0x203
+ 512 019f 77000000 		.4byte	0x77
+ 513 01a3 00000000 		.4byte	.LFB7
+ 514 01a7 0C000000 		.4byte	.LFE7-.LFB7
+ 515 01ab 01       		.uleb128 0x1
+ 516 01ac 9C       		.byte	0x9c
+ 517 01ad 0F       		.uleb128 0xf
+ 518 01ae 2E020000 		.4byte	.LASF27
+ 519 01b2 01       		.byte	0x1
+ 520 01b3 3B02     		.2byte	0x23b
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 21
+
+
+ 521 01b5 00000000 		.4byte	.LFB8
+ 522 01b9 0C000000 		.4byte	.LFE8-.LFB8
+ 523 01bd 01       		.uleb128 0x1
+ 524 01be 9C       		.byte	0x9c
+ 525 01bf D2010000 		.4byte	0x1d2
+ 526 01c3 10       		.uleb128 0x10
+ 527 01c4 83010000 		.4byte	.LASF28
+ 528 01c8 01       		.byte	0x1
+ 529 01c9 3B02     		.2byte	0x23b
+ 530 01cb 77000000 		.4byte	0x77
+ 531 01cf 01       		.uleb128 0x1
+ 532 01d0 50       		.byte	0x50
+ 533 01d1 00       		.byte	0
+ 534 01d2 0A       		.uleb128 0xa
+ 535 01d3 1D000000 		.4byte	.LASF29
+ 536 01d7 01       		.byte	0x1
+ 537 01d8 3C       		.byte	0x3c
+ 538 01d9 00000000 		.4byte	.LFB0
+ 539 01dd 20000000 		.4byte	.LFE0-.LFB0
+ 540 01e1 01       		.uleb128 0x1
+ 541 01e2 9C       		.byte	0x9c
+ 542 01e3 2E020000 		.4byte	0x22e
+ 543 01e7 11       		.uleb128 0x11
+ 544 01e8 0A000000 		.4byte	.LVL7
+ 545 01ec AD010000 		.4byte	0x1ad
+ 546 01f0 FC010000 		.4byte	0x1fc
+ 547 01f4 12       		.uleb128 0x12
+ 548 01f5 01       		.uleb128 0x1
+ 549 01f6 50       		.byte	0x50
+ 550 01f7 03       		.uleb128 0x3
+ 551 01f8 0B       		.byte	0xb
+ 552 01f9 00B4     		.2byte	0xb400
+ 553 01fb 00       		.byte	0
+ 554 01fc 11       		.uleb128 0x11
+ 555 01fd 12000000 		.4byte	.LVL8
+ 556 0201 72010000 		.4byte	0x172
+ 557 0205 10020000 		.4byte	0x210
+ 558 0209 12       		.uleb128 0x12
+ 559 020a 01       		.uleb128 0x1
+ 560 020b 50       		.byte	0x50
+ 561 020c 02       		.uleb128 0x2
+ 562 020d 09       		.byte	0x9
+ 563 020e FF       		.byte	0xff
+ 564 020f 00       		.byte	0
+ 565 0210 11       		.uleb128 0x11
+ 566 0211 1A000000 		.4byte	.LVL9
+ 567 0215 16010000 		.4byte	0x116
+ 568 0219 24020000 		.4byte	0x224
+ 569 021d 12       		.uleb128 0x12
+ 570 021e 01       		.uleb128 0x1
+ 571 021f 50       		.byte	0x50
+ 572 0220 02       		.uleb128 0x2
+ 573 0221 09       		.byte	0x9
+ 574 0222 FF       		.byte	0xff
+ 575 0223 00       		.byte	0
+ 576 0224 0D       		.uleb128 0xd
+ 577 0225 1E000000 		.4byte	.LVL10
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 22
+
+
+ 578 0229 F4000000 		.4byte	0xf4
+ 579 022d 00       		.byte	0
+ 580 022e 0A       		.uleb128 0xa
+ 581 022f 44000000 		.4byte	.LASF30
+ 582 0233 01       		.byte	0x1
+ 583 0234 7E       		.byte	0x7e
+ 584 0235 00000000 		.4byte	.LFB2
+ 585 0239 1C000000 		.4byte	.LFE2-.LFB2
+ 586 023d 01       		.uleb128 0x1
+ 587 023e 9C       		.byte	0x9c
+ 588 023f 56020000 		.4byte	0x256
+ 589 0243 0D       		.uleb128 0xd
+ 590 0244 0C000000 		.4byte	.LVL11
+ 591 0248 D2010000 		.4byte	0x1d2
+ 592 024c 0D       		.uleb128 0xd
+ 593 024d 16000000 		.4byte	.LVL12
+ 594 0251 F4000000 		.4byte	0xf4
+ 595 0255 00       		.byte	0
+ 596 0256 13       		.uleb128 0x13
+ 597 0257 DD010000 		.4byte	.LASF31
+ 598 025b 01       		.byte	0x1
+ 599 025c 14       		.byte	0x14
+ 600 025d 6B000000 		.4byte	0x6b
+ 601 0261 05       		.uleb128 0x5
+ 602 0262 03       		.byte	0x3
+ 603 0263 00000000 		.4byte	PRS_initVar
+ 604 0267 13       		.uleb128 0x13
+ 605 0268 39000000 		.4byte	.LASF32
+ 606 026c 01       		.byte	0x1
+ 607 026d 16       		.byte	0x16
+ 608 026e E9000000 		.4byte	0xe9
+ 609 0272 05       		.uleb128 0x5
+ 610 0273 03       		.byte	0x3
+ 611 0274 00000000 		.4byte	PRS_backup
+ 612 0278 14       		.uleb128 0x14
+ 613 0279 9E010000 		.4byte	.LASF33
+ 614 027d 9E010000 		.4byte	.LASF33
+ 615 0281 04       		.byte	0x4
+ 616 0282 7D       		.byte	0x7d
+ 617 0283 14       		.uleb128 0x14
+ 618 0284 C7010000 		.4byte	.LASF34
+ 619 0288 C7010000 		.4byte	.LASF34
+ 620 028c 04       		.byte	0x4
+ 621 028d 7E       		.byte	0x7e
+ 622 028e 00       		.byte	0
+ 623              		.section	.debug_abbrev,"",%progbits
+ 624              	.Ldebug_abbrev0:
+ 625 0000 01       		.uleb128 0x1
+ 626 0001 11       		.uleb128 0x11
+ 627 0002 01       		.byte	0x1
+ 628 0003 25       		.uleb128 0x25
+ 629 0004 0E       		.uleb128 0xe
+ 630 0005 13       		.uleb128 0x13
+ 631 0006 0B       		.uleb128 0xb
+ 632 0007 03       		.uleb128 0x3
+ 633 0008 0E       		.uleb128 0xe
+ 634 0009 1B       		.uleb128 0x1b
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 23
+
+
+ 635 000a 0E       		.uleb128 0xe
+ 636 000b 55       		.uleb128 0x55
+ 637 000c 17       		.uleb128 0x17
+ 638 000d 11       		.uleb128 0x11
+ 639 000e 01       		.uleb128 0x1
+ 640 000f 10       		.uleb128 0x10
+ 641 0010 17       		.uleb128 0x17
+ 642 0011 00       		.byte	0
+ 643 0012 00       		.byte	0
+ 644 0013 02       		.uleb128 0x2
+ 645 0014 24       		.uleb128 0x24
+ 646 0015 00       		.byte	0
+ 647 0016 0B       		.uleb128 0xb
+ 648 0017 0B       		.uleb128 0xb
+ 649 0018 3E       		.uleb128 0x3e
+ 650 0019 0B       		.uleb128 0xb
+ 651 001a 03       		.uleb128 0x3
+ 652 001b 0E       		.uleb128 0xe
+ 653 001c 00       		.byte	0
+ 654 001d 00       		.byte	0
+ 655 001e 03       		.uleb128 0x3
+ 656 001f 24       		.uleb128 0x24
+ 657 0020 00       		.byte	0
+ 658 0021 0B       		.uleb128 0xb
+ 659 0022 0B       		.uleb128 0xb
+ 660 0023 3E       		.uleb128 0x3e
+ 661 0024 0B       		.uleb128 0xb
+ 662 0025 03       		.uleb128 0x3
+ 663 0026 08       		.uleb128 0x8
+ 664 0027 00       		.byte	0
+ 665 0028 00       		.byte	0
+ 666 0029 04       		.uleb128 0x4
+ 667 002a 16       		.uleb128 0x16
+ 668 002b 00       		.byte	0
+ 669 002c 03       		.uleb128 0x3
+ 670 002d 0E       		.uleb128 0xe
+ 671 002e 3A       		.uleb128 0x3a
+ 672 002f 0B       		.uleb128 0xb
+ 673 0030 3B       		.uleb128 0x3b
+ 674 0031 05       		.uleb128 0x5
+ 675 0032 49       		.uleb128 0x49
+ 676 0033 13       		.uleb128 0x13
+ 677 0034 00       		.byte	0
+ 678 0035 00       		.byte	0
+ 679 0036 05       		.uleb128 0x5
+ 680 0037 35       		.uleb128 0x35
+ 681 0038 00       		.byte	0
+ 682 0039 49       		.uleb128 0x49
+ 683 003a 13       		.uleb128 0x13
+ 684 003b 00       		.byte	0
+ 685 003c 00       		.byte	0
+ 686 003d 06       		.uleb128 0x6
+ 687 003e 13       		.uleb128 0x13
+ 688 003f 01       		.byte	0x1
+ 689 0040 0B       		.uleb128 0xb
+ 690 0041 0B       		.uleb128 0xb
+ 691 0042 3A       		.uleb128 0x3a
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 24
+
+
+ 692 0043 0B       		.uleb128 0xb
+ 693 0044 3B       		.uleb128 0x3b
+ 694 0045 0B       		.uleb128 0xb
+ 695 0046 01       		.uleb128 0x1
+ 696 0047 13       		.uleb128 0x13
+ 697 0048 00       		.byte	0
+ 698 0049 00       		.byte	0
+ 699 004a 07       		.uleb128 0x7
+ 700 004b 0D       		.uleb128 0xd
+ 701 004c 00       		.byte	0
+ 702 004d 03       		.uleb128 0x3
+ 703 004e 0E       		.uleb128 0xe
+ 704 004f 3A       		.uleb128 0x3a
+ 705 0050 0B       		.uleb128 0xb
+ 706 0051 3B       		.uleb128 0x3b
+ 707 0052 0B       		.uleb128 0xb
+ 708 0053 49       		.uleb128 0x49
+ 709 0054 13       		.uleb128 0x13
+ 710 0055 38       		.uleb128 0x38
+ 711 0056 0B       		.uleb128 0xb
+ 712 0057 00       		.byte	0
+ 713 0058 00       		.byte	0
+ 714 0059 08       		.uleb128 0x8
+ 715 005a 16       		.uleb128 0x16
+ 716 005b 00       		.byte	0
+ 717 005c 03       		.uleb128 0x3
+ 718 005d 0E       		.uleb128 0xe
+ 719 005e 3A       		.uleb128 0x3a
+ 720 005f 0B       		.uleb128 0xb
+ 721 0060 3B       		.uleb128 0x3b
+ 722 0061 0B       		.uleb128 0xb
+ 723 0062 49       		.uleb128 0x49
+ 724 0063 13       		.uleb128 0x13
+ 725 0064 00       		.byte	0
+ 726 0065 00       		.byte	0
+ 727 0066 09       		.uleb128 0x9
+ 728 0067 2E       		.uleb128 0x2e
+ 729 0068 00       		.byte	0
+ 730 0069 3F       		.uleb128 0x3f
+ 731 006a 19       		.uleb128 0x19
+ 732 006b 03       		.uleb128 0x3
+ 733 006c 0E       		.uleb128 0xe
+ 734 006d 3A       		.uleb128 0x3a
+ 735 006e 0B       		.uleb128 0xb
+ 736 006f 3B       		.uleb128 0x3b
+ 737 0070 0B       		.uleb128 0xb
+ 738 0071 27       		.uleb128 0x27
+ 739 0072 19       		.uleb128 0x19
+ 740 0073 11       		.uleb128 0x11
+ 741 0074 01       		.uleb128 0x1
+ 742 0075 12       		.uleb128 0x12
+ 743 0076 06       		.uleb128 0x6
+ 744 0077 40       		.uleb128 0x40
+ 745 0078 18       		.uleb128 0x18
+ 746 0079 9742     		.uleb128 0x2117
+ 747 007b 19       		.uleb128 0x19
+ 748 007c 00       		.byte	0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 25
+
+
+ 749 007d 00       		.byte	0
+ 750 007e 0A       		.uleb128 0xa
+ 751 007f 2E       		.uleb128 0x2e
+ 752 0080 01       		.byte	0x1
+ 753 0081 3F       		.uleb128 0x3f
+ 754 0082 19       		.uleb128 0x19
+ 755 0083 03       		.uleb128 0x3
+ 756 0084 0E       		.uleb128 0xe
+ 757 0085 3A       		.uleb128 0x3a
+ 758 0086 0B       		.uleb128 0xb
+ 759 0087 3B       		.uleb128 0x3b
+ 760 0088 0B       		.uleb128 0xb
+ 761 0089 27       		.uleb128 0x27
+ 762 008a 19       		.uleb128 0x19
+ 763 008b 11       		.uleb128 0x11
+ 764 008c 01       		.uleb128 0x1
+ 765 008d 12       		.uleb128 0x12
+ 766 008e 06       		.uleb128 0x6
+ 767 008f 40       		.uleb128 0x40
+ 768 0090 18       		.uleb128 0x18
+ 769 0091 9742     		.uleb128 0x2117
+ 770 0093 19       		.uleb128 0x19
+ 771 0094 01       		.uleb128 0x1
+ 772 0095 13       		.uleb128 0x13
+ 773 0096 00       		.byte	0
+ 774 0097 00       		.byte	0
+ 775 0098 0B       		.uleb128 0xb
+ 776 0099 05       		.uleb128 0x5
+ 777 009a 00       		.byte	0
+ 778 009b 03       		.uleb128 0x3
+ 779 009c 0E       		.uleb128 0xe
+ 780 009d 3A       		.uleb128 0x3a
+ 781 009e 0B       		.uleb128 0xb
+ 782 009f 3B       		.uleb128 0x3b
+ 783 00a0 0B       		.uleb128 0xb
+ 784 00a1 49       		.uleb128 0x49
+ 785 00a2 13       		.uleb128 0x13
+ 786 00a3 02       		.uleb128 0x2
+ 787 00a4 17       		.uleb128 0x17
+ 788 00a5 00       		.byte	0
+ 789 00a6 00       		.byte	0
+ 790 00a7 0C       		.uleb128 0xc
+ 791 00a8 34       		.uleb128 0x34
+ 792 00a9 00       		.byte	0
+ 793 00aa 03       		.uleb128 0x3
+ 794 00ab 0E       		.uleb128 0xe
+ 795 00ac 3A       		.uleb128 0x3a
+ 796 00ad 0B       		.uleb128 0xb
+ 797 00ae 3B       		.uleb128 0x3b
+ 798 00af 0B       		.uleb128 0xb
+ 799 00b0 49       		.uleb128 0x49
+ 800 00b1 13       		.uleb128 0x13
+ 801 00b2 02       		.uleb128 0x2
+ 802 00b3 17       		.uleb128 0x17
+ 803 00b4 00       		.byte	0
+ 804 00b5 00       		.byte	0
+ 805 00b6 0D       		.uleb128 0xd
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 26
+
+
+ 806 00b7 898201   		.uleb128 0x4109
+ 807 00ba 00       		.byte	0
+ 808 00bb 11       		.uleb128 0x11
+ 809 00bc 01       		.uleb128 0x1
+ 810 00bd 31       		.uleb128 0x31
+ 811 00be 13       		.uleb128 0x13
+ 812 00bf 00       		.byte	0
+ 813 00c0 00       		.byte	0
+ 814 00c1 0E       		.uleb128 0xe
+ 815 00c2 2E       		.uleb128 0x2e
+ 816 00c3 00       		.byte	0
+ 817 00c4 3F       		.uleb128 0x3f
+ 818 00c5 19       		.uleb128 0x19
+ 819 00c6 03       		.uleb128 0x3
+ 820 00c7 0E       		.uleb128 0xe
+ 821 00c8 3A       		.uleb128 0x3a
+ 822 00c9 0B       		.uleb128 0xb
+ 823 00ca 3B       		.uleb128 0x3b
+ 824 00cb 05       		.uleb128 0x5
+ 825 00cc 27       		.uleb128 0x27
+ 826 00cd 19       		.uleb128 0x19
+ 827 00ce 49       		.uleb128 0x49
+ 828 00cf 13       		.uleb128 0x13
+ 829 00d0 11       		.uleb128 0x11
+ 830 00d1 01       		.uleb128 0x1
+ 831 00d2 12       		.uleb128 0x12
+ 832 00d3 06       		.uleb128 0x6
+ 833 00d4 40       		.uleb128 0x40
+ 834 00d5 18       		.uleb128 0x18
+ 835 00d6 9742     		.uleb128 0x2117
+ 836 00d8 19       		.uleb128 0x19
+ 837 00d9 00       		.byte	0
+ 838 00da 00       		.byte	0
+ 839 00db 0F       		.uleb128 0xf
+ 840 00dc 2E       		.uleb128 0x2e
+ 841 00dd 01       		.byte	0x1
+ 842 00de 3F       		.uleb128 0x3f
+ 843 00df 19       		.uleb128 0x19
+ 844 00e0 03       		.uleb128 0x3
+ 845 00e1 0E       		.uleb128 0xe
+ 846 00e2 3A       		.uleb128 0x3a
+ 847 00e3 0B       		.uleb128 0xb
+ 848 00e4 3B       		.uleb128 0x3b
+ 849 00e5 05       		.uleb128 0x5
+ 850 00e6 27       		.uleb128 0x27
+ 851 00e7 19       		.uleb128 0x19
+ 852 00e8 11       		.uleb128 0x11
+ 853 00e9 01       		.uleb128 0x1
+ 854 00ea 12       		.uleb128 0x12
+ 855 00eb 06       		.uleb128 0x6
+ 856 00ec 40       		.uleb128 0x40
+ 857 00ed 18       		.uleb128 0x18
+ 858 00ee 9742     		.uleb128 0x2117
+ 859 00f0 19       		.uleb128 0x19
+ 860 00f1 01       		.uleb128 0x1
+ 861 00f2 13       		.uleb128 0x13
+ 862 00f3 00       		.byte	0
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 27
+
+
+ 863 00f4 00       		.byte	0
+ 864 00f5 10       		.uleb128 0x10
+ 865 00f6 05       		.uleb128 0x5
+ 866 00f7 00       		.byte	0
+ 867 00f8 03       		.uleb128 0x3
+ 868 00f9 0E       		.uleb128 0xe
+ 869 00fa 3A       		.uleb128 0x3a
+ 870 00fb 0B       		.uleb128 0xb
+ 871 00fc 3B       		.uleb128 0x3b
+ 872 00fd 05       		.uleb128 0x5
+ 873 00fe 49       		.uleb128 0x49
+ 874 00ff 13       		.uleb128 0x13
+ 875 0100 02       		.uleb128 0x2
+ 876 0101 18       		.uleb128 0x18
+ 877 0102 00       		.byte	0
+ 878 0103 00       		.byte	0
+ 879 0104 11       		.uleb128 0x11
+ 880 0105 898201   		.uleb128 0x4109
+ 881 0108 01       		.byte	0x1
+ 882 0109 11       		.uleb128 0x11
+ 883 010a 01       		.uleb128 0x1
+ 884 010b 31       		.uleb128 0x31
+ 885 010c 13       		.uleb128 0x13
+ 886 010d 01       		.uleb128 0x1
+ 887 010e 13       		.uleb128 0x13
+ 888 010f 00       		.byte	0
+ 889 0110 00       		.byte	0
+ 890 0111 12       		.uleb128 0x12
+ 891 0112 8A8201   		.uleb128 0x410a
+ 892 0115 00       		.byte	0
+ 893 0116 02       		.uleb128 0x2
+ 894 0117 18       		.uleb128 0x18
+ 895 0118 9142     		.uleb128 0x2111
+ 896 011a 18       		.uleb128 0x18
+ 897 011b 00       		.byte	0
+ 898 011c 00       		.byte	0
+ 899 011d 13       		.uleb128 0x13
+ 900 011e 34       		.uleb128 0x34
+ 901 011f 00       		.byte	0
+ 902 0120 03       		.uleb128 0x3
+ 903 0121 0E       		.uleb128 0xe
+ 904 0122 3A       		.uleb128 0x3a
+ 905 0123 0B       		.uleb128 0xb
+ 906 0124 3B       		.uleb128 0x3b
+ 907 0125 0B       		.uleb128 0xb
+ 908 0126 49       		.uleb128 0x49
+ 909 0127 13       		.uleb128 0x13
+ 910 0128 3F       		.uleb128 0x3f
+ 911 0129 19       		.uleb128 0x19
+ 912 012a 02       		.uleb128 0x2
+ 913 012b 18       		.uleb128 0x18
+ 914 012c 00       		.byte	0
+ 915 012d 00       		.byte	0
+ 916 012e 14       		.uleb128 0x14
+ 917 012f 2E       		.uleb128 0x2e
+ 918 0130 00       		.byte	0
+ 919 0131 3F       		.uleb128 0x3f
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 28
+
+
+ 920 0132 19       		.uleb128 0x19
+ 921 0133 3C       		.uleb128 0x3c
+ 922 0134 19       		.uleb128 0x19
+ 923 0135 6E       		.uleb128 0x6e
+ 924 0136 0E       		.uleb128 0xe
+ 925 0137 03       		.uleb128 0x3
+ 926 0138 0E       		.uleb128 0xe
+ 927 0139 3A       		.uleb128 0x3a
+ 928 013a 0B       		.uleb128 0xb
+ 929 013b 3B       		.uleb128 0x3b
+ 930 013c 0B       		.uleb128 0xb
+ 931 013d 00       		.byte	0
+ 932 013e 00       		.byte	0
+ 933 013f 00       		.byte	0
+ 934              		.section	.debug_loc,"",%progbits
+ 935              	.Ldebug_loc0:
+ 936              	.LLST0:
+ 937 0000 00000000 		.4byte	.LVL0
+ 938 0004 04000000 		.4byte	.LVL1
+ 939 0008 0100     		.2byte	0x1
+ 940 000a 50       		.byte	0x50
+ 941 000b 04000000 		.4byte	.LVL1
+ 942 000f 26000000 		.4byte	.LVL4
+ 943 0013 0100     		.2byte	0x1
+ 944 0015 54       		.byte	0x54
+ 945 0016 26000000 		.4byte	.LVL4
+ 946 001a 30000000 		.4byte	.LFE4
+ 947 001e 0200     		.2byte	0x2
+ 948 0020 73       		.byte	0x73
+ 949 0021 00       		.sleb128 0
+ 950 0022 00000000 		.4byte	0
+ 951 0026 00000000 		.4byte	0
+ 952              	.LLST1:
+ 953 002a 08000000 		.4byte	.LVL2
+ 954 002e 1F000000 		.4byte	.LVL3-1
+ 955 0032 0100     		.2byte	0x1
+ 956 0034 50       		.byte	0x50
+ 957 0035 00000000 		.4byte	0
+ 958 0039 00000000 		.4byte	0
+ 959              		.section	.debug_aranges,"",%progbits
+ 960 0000 5C000000 		.4byte	0x5c
+ 961 0004 0200     		.2byte	0x2
+ 962 0006 00000000 		.4byte	.Ldebug_info0
+ 963 000a 04       		.byte	0x4
+ 964 000b 00       		.byte	0
+ 965 000c 0000     		.2byte	0
+ 966 000e 0000     		.2byte	0
+ 967 0010 00000000 		.4byte	.LFB1
+ 968 0014 10000000 		.4byte	.LFE1-.LFB1
+ 969 0018 00000000 		.4byte	.LFB3
+ 970 001c 10000000 		.4byte	.LFE3-.LFB3
+ 971 0020 00000000 		.4byte	.LFB4
+ 972 0024 30000000 		.4byte	.LFE4-.LFB4
+ 973 0028 00000000 		.4byte	.LFB5
+ 974 002c 0C000000 		.4byte	.LFE5-.LFB5
+ 975 0030 00000000 		.4byte	.LFB6
+ 976 0034 0C000000 		.4byte	.LFE6-.LFB6
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 29
+
+
+ 977 0038 00000000 		.4byte	.LFB7
+ 978 003c 0C000000 		.4byte	.LFE7-.LFB7
+ 979 0040 00000000 		.4byte	.LFB8
+ 980 0044 0C000000 		.4byte	.LFE8-.LFB8
+ 981 0048 00000000 		.4byte	.LFB0
+ 982 004c 20000000 		.4byte	.LFE0-.LFB0
+ 983 0050 00000000 		.4byte	.LFB2
+ 984 0054 1C000000 		.4byte	.LFE2-.LFB2
+ 985 0058 00000000 		.4byte	0
+ 986 005c 00000000 		.4byte	0
+ 987              		.section	.debug_ranges,"",%progbits
+ 988              	.Ldebug_ranges0:
+ 989 0000 00000000 		.4byte	.LFB1
+ 990 0004 10000000 		.4byte	.LFE1
+ 991 0008 00000000 		.4byte	.LFB3
+ 992 000c 10000000 		.4byte	.LFE3
+ 993 0010 00000000 		.4byte	.LFB4
+ 994 0014 30000000 		.4byte	.LFE4
+ 995 0018 00000000 		.4byte	.LFB5
+ 996 001c 0C000000 		.4byte	.LFE5
+ 997 0020 00000000 		.4byte	.LFB6
+ 998 0024 0C000000 		.4byte	.LFE6
+ 999 0028 00000000 		.4byte	.LFB7
+ 1000 002c 0C000000 		.4byte	.LFE7
+ 1001 0030 00000000 		.4byte	.LFB8
+ 1002 0034 0C000000 		.4byte	.LFE8
+ 1003 0038 00000000 		.4byte	.LFB0
+ 1004 003c 20000000 		.4byte	.LFE0
+ 1005 0040 00000000 		.4byte	.LFB2
+ 1006 0044 1C000000 		.4byte	.LFE2
+ 1007 0048 00000000 		.4byte	0
+ 1008 004c 00000000 		.4byte	0
+ 1009              		.section	.debug_line,"",%progbits
+ 1010              	.Ldebug_line0:
+ 1011 0000 0A010000 		.section	.debug_str,"MS",%progbits,1
+ 1011      02005400 
+ 1011      00000201 
+ 1011      FB0E0D00 
+ 1011      01010101 
+ 1012              	.LASF36:
+ 1013 0000 47656E65 		.ascii	"Generated_Source\\PSoC5\\PRS.c\000"
+ 1013      72617465 
+ 1013      645F536F 
+ 1013      75726365 
+ 1013      5C50536F 
+ 1014              	.LASF29:
+ 1015 001d 5052535F 		.ascii	"PRS_Init\000"
+ 1015      496E6974 
+ 1015      00
+ 1016              	.LASF3:
+ 1017 0026 73686F72 		.ascii	"short unsigned int\000"
+ 1017      7420756E 
+ 1017      7369676E 
+ 1017      65642069 
+ 1017      6E7400
+ 1018              	.LASF32:
+ 1019 0039 5052535F 		.ascii	"PRS_backup\000"
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 30
+
+
+ 1019      6261636B 
+ 1019      757000
+ 1020              	.LASF30:
+ 1021 0044 5052535F 		.ascii	"PRS_Start\000"
+ 1021      53746172 
+ 1021      7400
+ 1022              	.LASF11:
+ 1023 004e 666C6F61 		.ascii	"float\000"
+ 1023      7400
+ 1024              	.LASF37:
+ 1025 0054 433A5C45 		.ascii	"C:\\ECE381_Labs\\Lab04_Game\\Lab04_Game.cydsn\000"
+ 1025      43453338 
+ 1025      315F4C61 
+ 1025      62735C4C 
+ 1025      61623034 
+ 1026              	.LASF7:
+ 1027 007f 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1027      206C6F6E 
+ 1027      6720756E 
+ 1027      7369676E 
+ 1027      65642069 
+ 1028              	.LASF1:
+ 1029 0096 756E7369 		.ascii	"unsigned char\000"
+ 1029      676E6564 
+ 1029      20636861 
+ 1029      7200
+ 1030              	.LASF35:
+ 1031 00a4 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1031      43313120 
+ 1031      352E342E 
+ 1031      31203230 
+ 1031      31363036 
+ 1032 00d7 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1032      20726576 
+ 1032      6973696F 
+ 1032      6E203233 
+ 1032      37373135 
+ 1033 010a 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1033      66756E63 
+ 1033      74696F6E 
+ 1033      2D736563 
+ 1033      74696F6E 
+ 1034              	.LASF14:
+ 1035 0132 72656738 		.ascii	"reg8\000"
+ 1035      00
+ 1036              	.LASF5:
+ 1037 0137 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1037      20756E73 
+ 1037      69676E65 
+ 1037      6420696E 
+ 1037      7400
+ 1038              	.LASF9:
+ 1039 0149 75696E74 		.ascii	"uint8\000"
+ 1039      3800
+ 1040              	.LASF22:
+ 1041 014f 5052535F 		.ascii	"PRS_Stop\000"
+ 1041      53746F70 
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 31
+
+
+ 1041      00
+ 1042              	.LASF26:
+ 1043 0158 5052535F 		.ascii	"PRS_ReadPolynomial\000"
+ 1043      52656164 
+ 1043      506F6C79 
+ 1043      6E6F6D69 
+ 1043      616C00
+ 1044              	.LASF38:
+ 1045 016b 656E6162 		.ascii	"enableInterrupts\000"
+ 1045      6C65496E 
+ 1045      74657272 
+ 1045      75707473 
+ 1045      00
+ 1046              	.LASF12:
+ 1047 017c 646F7562 		.ascii	"double\000"
+ 1047      6C6500
+ 1048              	.LASF28:
+ 1049 0183 706F6C79 		.ascii	"polynomial\000"
+ 1049      6E6F6D69 
+ 1049      616C00
+ 1050              	.LASF25:
+ 1051 018e 5052535F 		.ascii	"PRS_Read\000"
+ 1051      52656164 
+ 1051      00
+ 1052              	.LASF10:
+ 1053 0197 75696E74 		.ascii	"uint16\000"
+ 1053      313600
+ 1054              	.LASF33:
+ 1055 019e 4379456E 		.ascii	"CyEnterCriticalSection\000"
+ 1055      74657243 
+ 1055      72697469 
+ 1055      63616C53 
+ 1055      65637469 
+ 1056              	.LASF19:
+ 1057 01b5 73656564 		.ascii	"seed\000"
+ 1057      00
+ 1058              	.LASF8:
+ 1059 01ba 756E7369 		.ascii	"unsigned int\000"
+ 1059      676E6564 
+ 1059      20696E74 
+ 1059      00
+ 1060              	.LASF34:
+ 1061 01c7 43794578 		.ascii	"CyExitCriticalSection\000"
+ 1061      69744372 
+ 1061      69746963 
+ 1061      616C5365 
+ 1061      6374696F 
+ 1062              	.LASF31:
+ 1063 01dd 5052535F 		.ascii	"PRS_initVar\000"
+ 1063      696E6974 
+ 1063      56617200 
+ 1064              	.LASF17:
+ 1065 01e9 73697A65 		.ascii	"sizetype\000"
+ 1065      74797065 
+ 1065      00
+ 1066              	.LASF21:
+ 1067 01f2 5052535F 		.ascii	"PRS_Enable\000"
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 32
+
+
+ 1067      456E6162 
+ 1067      6C6500
+ 1068              	.LASF6:
+ 1069 01fd 6C6F6E67 		.ascii	"long long int\000"
+ 1069      206C6F6E 
+ 1069      6720696E 
+ 1069      7400
+ 1070              	.LASF24:
+ 1071 020b 5052535F 		.ascii	"PRS_WriteSeed\000"
+ 1071      57726974 
+ 1071      65536565 
+ 1071      6400
+ 1072              	.LASF13:
+ 1073 0219 63686172 		.ascii	"char\000"
+ 1073      00
+ 1074              	.LASF2:
+ 1075 021e 73686F72 		.ascii	"short int\000"
+ 1075      7420696E 
+ 1075      7400
+ 1076              	.LASF15:
+ 1077 0228 72656731 		.ascii	"reg16\000"
+ 1077      3600
+ 1078              	.LASF27:
+ 1079 022e 5052535F 		.ascii	"PRS_WritePolynomial\000"
+ 1079      57726974 
+ 1079      65506F6C 
+ 1079      796E6F6D 
+ 1079      69616C00 
+ 1080              	.LASF4:
+ 1081 0242 6C6F6E67 		.ascii	"long int\000"
+ 1081      20696E74 
+ 1081      00
+ 1082              	.LASF18:
+ 1083 024b 656E6162 		.ascii	"enableState\000"
+ 1083      6C655374 
+ 1083      61746500 
+ 1084              	.LASF20:
+ 1085 0257 5052535F 		.ascii	"PRS_BACKUP_STRUCT\000"
+ 1085      4241434B 
+ 1085      55505F53 
+ 1085      54525543 
+ 1085      5400
+ 1086              	.LASF16:
+ 1087 0269 6C6F6E67 		.ascii	"long double\000"
+ 1087      20646F75 
+ 1087      626C6500 
+ 1088              	.LASF0:
+ 1089 0275 7369676E 		.ascii	"signed char\000"
+ 1089      65642063 
+ 1089      68617200 
+ 1090              	.LASF23:
+ 1091 0281 5052535F 		.ascii	"PRS_ResetSeedInit\000"
+ 1091      52657365 
+ 1091      74536565 
+ 1091      64496E69 
+ 1091      7400
+ 1092              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
+ARM GAS  C:\Users\danza\AppData\Local\Temp\cc3T320V.s 			page 33
+
+
